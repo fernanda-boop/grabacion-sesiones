@@ -5,13 +5,675 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Grabadora profesional de sesiones clínicas de psicología con transcripción automática">
   <meta name="theme-color" content="#8b5cf6">
-  <title>Grabadora de Sesiones - Psicología</title><!-- PWA Meta Tags -->
-  <link rel="manifest" href="manifest.json">
-  <link rel="apple-touch-icon" href="icon-192.png">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Grabadora Clínica">
-  <link rel="stylesheet" href="styles.css">
+  <title>Grabadora de Sesiones - Psicología</title>
+  <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+            box-sizing: border-box;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .category-section {
+            margin-bottom: 30px;
+        }
+
+        .category-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .category-card h2 {
+            margin-bottom: 20px;
+            color: #667eea;
+            font-size: 1.5rem;
+        }
+
+        .category-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .category-btn {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border: 2px solid transparent;
+            border-radius: 15px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .category-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .category-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+        }
+
+        .category-icon {
+            font-size: 2rem;
+        }
+
+        .category-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .category-count {
+            background: rgba(0,0,0,0.1);
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .category-btn.active .category-count {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .recorder-section {
+            margin-bottom: 30px;
+        }
+
+        .recorder-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .current-category-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+
+        .recording-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #10b981;
+        }
+
+        .status-dot.recording {
+            background: #ef4444;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .timer {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #667eea;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .transcription-mode-info {
+            background: #f0f9ff;
+            border-left: 4px solid #3b82f6;
+            padding: 12px 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        #liveTranscriptionContainer {
+            background: #f9fafb;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        #liveTranscriptionContainer h4 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        #liveTranscription {
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-record {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+
+        .btn-record:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-stop {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+        }
+
+        .btn-stop:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
+        }
+
+        .btn-save {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+        }
+
+        .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+
+        .btn-icon {
+            font-size: 1.2rem;
+        }
+
+        .audio-preview {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 2px solid #e5e7eb;
+        }
+
+        .audio-preview.hidden {
+            display: none;
+        }
+
+        .audio-preview h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        #audioPlayback {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .preview-controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .search-section {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .search-bar {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 15px 45px 15px 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn-clear-search {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-clear-search:hover {
+            background: #dc2626;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .filter-bar {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: flex-end;
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .date-input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 0.95rem;
+        }
+
+        .date-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn-small {
+            padding: 10px 20px;
+            font-size: 0.9rem;
+        }
+
+        .search-results {
+            margin-top: 15px;
+            padding: 12px;
+            background: #f0f9ff;
+            border-left: 4px solid #3b82f6;
+            border-radius: 8px;
+            font-weight: 600;
+            color: #1e40af;
+        }
+
+        .search-highlight {
+            background: #fef08a;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .recordings-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .section-header h2 {
+            color: #667eea;
+            font-size: 1.8rem;
+        }
+
+        .btn-backup {
+            background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+            color: white;
+        }
+
+        .btn-backup:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #9ca3af;
+        }
+
+        .empty-state.hidden {
+            display: none;
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .empty-state p {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .empty-subtitle {
+            font-size: 1rem;
+            opacity: 0.7;
+        }
+
+        .recordings-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .recording-item {
+            border: 2px solid #e5e7eb;
+            border-radius: 15px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .recording-item:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+        }
+
+        .recording-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .recording-info h3 {
+            color: #1f2937;
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+        }
+
+        .patient-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+        }
+
+        .recording-date {
+            color: #6b7280;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .recording-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-download {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+
+        .btn-download:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-delete {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+        }
+
+        .btn-delete:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(239, 68, 68, 0.3);
+        }
+
+        .recording-audio {
+            margin: 15px 0;
+        }
+
+        .recording-audio audio {
+            width: 100%;
+        }
+
+        .recording-notes {
+            background: #f9fafb;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+
+        .recording-notes h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .recording-notes p {
+            color: #374151;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1f2937;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 1000;
+            animation: slideUp 0.3s ease;
+        }
+
+        .toast.success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+
+        .toast.error {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        }
+
+        .toast.info {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateX(-50%) translateY(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(-50%) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+
+            .category-buttons {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .recording-actions {
+                width: 100%;
+            }
+
+            .recording-actions .btn {
+                flex: 1;
+            }
+
+            .timer {
+                font-size: 2.5rem;
+            }
+
+            .filter-bar {
+                flex-direction: column;
+            }
+
+            .filter-group {
+                width: 100%;
+            }
+        }
+    </style>
   <style>@view-transition { navigation: auto; }</style>
   <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
   <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
@@ -22,14 +684,14 @@
    <header>
     <h1>🎙️ Grabadora de Sesiones Clínicas</h1>
     <p class="subtitle">Registra y organiza tus sesiones por categoría</p>
-   </header><!-- Sección de Categorías -->
+   </header>
    <section class="category-section">
     <div class="category-card">
      <h2>📁 Selecciona una Categoría</h2>
-     <div class="category-buttons" id="categoryButtons"><button class="category-btn active" data-category="general"> <span class="category-icon">📋</span> <span class="category-name">General</span> <span class="category-count">0</span> </button> <button class="category-btn" data-category="individual"> <span class="category-icon">👤</span> <span class="category-name">Individual</span> <span class="category-count">0</span> </button> <button class="category-btn" data-category="pareja"> <span class="category-icon">💑</span> <span class="category-name">Pareja</span> <span class="category-count">0</span> </button> <button class="category-btn" data-category="familiar"> <span class="category-icon">👨‍👩‍👧‍👦</span> <span class="category-name">Familiar</span> <span class="category-count">0</span> </button> <button class="category-btn" data-category="grupal"> <span class="category-icon">👥</span> <span class="category-name">Grupal</span> <span class="category-count">0</span> </button> <button class="category-btn" data-category="evaluacion"> <span class="category-icon">📊</span> <span class="category-name">Evaluaci����n</span> <span class="category-count">0</span> </button>
+     <div class="category-buttons" id="categoryButtons"><button class="category-btn active" data-category="general"> <span class="category-icon">📋</span> <span class="category-name">General</span> <span class="category-count">0</span> </button> <button class="category-btn" data-category="individual"> <span class="category-icon">👤</span> <span class="category-name">Individual</span> <span class="category-count">0</span> </button> <button class="category-btn" data-category="pareja"> <span class="category-icon">💑</span> <span class="category-name">Pareja</span> <span class="category-count">0</span> </button> <button class="category-btn" data-category="familiar"> <span class="category-icon">👨‍👩‍👧‍👦</span> <span class="category-name">Familiar</span> <span class="category-count">0</span> </button> <button class="category-btn" data-category="grupal"> <span class="category-icon">👥</span> <span class="category-name">Grupal</span> <span class="category-count">0</span> </button> <button class="category-btn" data-category="evaluacion"> <span class="category-icon">📊</span> <span class="category-name">Evaluacion</span> <span class="category-count">0</span> </button>
      </div>
     </div>
-   </section><!-- Sección de Grabación -->
+   </section>
    <section class="recorder-section">
     <div class="recorder-card">
      <div id="currentCategoryBadge" class="current-category-badge">
@@ -59,7 +721,7 @@
       </div>
      </div>
     </div>
-   </section><!-- Sección de Búsqueda y Filtros -->
+   </section>
    <section class="search-section">
     <div class="search-bar"><input type="text" id="searchInput" placeholder="🔍 Buscar por nombre de paciente o palabra clave..." class="search-input"> <button id="clearSearchBtn" class="btn-clear-search" style="display: none;">✕</button>
     </div>
@@ -71,7 +733,7 @@
     </div>
     <div id="searchResults" class="search-results" style="display: none;"><span id="resultsCount"></span>
     </div>
-   </section><!-- Sección de Grabaciones -->
+   </section>
    <section class="recordings-section">
     <div class="section-header">
      <h2>📚 Mis Grabaciones</h2><button id="backupBtn" class="btn btn-backup"> <span class="btn-icon">💾</span> Descargar Respaldo </button>
@@ -87,10 +749,6 @@
    </section>
   </div>
   <script>
-        // ============================================
-        // VARIABLES GLOBALES Y CONFIGURACIÓN
-        // ============================================
-        
         let mediaRecorder;
         let audioChunks = [];
         let recordingStartTime;
@@ -100,7 +758,7 @@
         let recognition;
         let isRecognitionActive = false;
         let liveTranscript = '';
-        let transcriptionMode = 'none'; // 'automatic', 'manual', 'none'
+        let transcriptionMode = 'none';
 
         const CATEGORIES = {
             general: { name: 'General', icon: '📋' },
@@ -108,13 +766,9 @@
             pareja: { name: 'Pareja', icon: '💑' },
             familiar: { name: 'Familiar', icon: '👨‍👩‍👧‍👦' },
             grupal: { name: 'Grupal', icon: '👥' },
-            evaluacion: { name: 'Evaluación', icon: '📊' }
+            evaluacion: { name: 'Evaluacion', icon: '📊' }
         };
 
-        // ============================================
-        // ELEMENTOS DEL DOM
-        // ============================================
-        
         const recordBtn = document.getElementById('recordBtn');
         const stopBtn = document.getElementById('stopBtn');
         const saveBtn = document.getElementById('saveBtn');
@@ -143,13 +797,8 @@
         const filterDateTo = document.getElementById('filterDateTo');
         const clearFiltersBtn = document.getElementById('clearFiltersBtn');
 
-        // ============================================
-        // INICIALIZACIÓN
-        // ============================================
-        
         console.log('Inicializando app...');
         
-        // Detectar y configurar reconocimiento de voz
         function initializeSpeechRecognition() {
             if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
                 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -197,23 +846,19 @@
                 };
 
                 transcriptionMode = 'automatic';
-                console.log('✅ Transcripción automática disponible (PC/Desktop)');
+                console.log('Transcripcion automatica disponible');
             } else {
                 transcriptionMode = 'manual';
-                console.log('⚠️ Transcripción manual activada (Móvil/Tablet)');
+                console.log('Transcripcion manual activada');
             }
         }
 
         initializeSpeechRecognition();
 
-        // ============================================
-        // GESTIÓN DE CATEGORÍAS
-        // ============================================
-        
         categoryButtons.forEach(btn => {
             btn.addEventListener('click', () => {
                 if (mediaRecorder && mediaRecorder.state === 'recording') {
-                    showToast('No puedes cambiar de categoría durante una grabación', 'error');
+                    showToast('No puedes cambiar de categoria durante una grabacion', 'error');
                     return;
                 }
 
@@ -221,12 +866,12 @@
                 btn.classList.add('active');
                 currentCategory = btn.dataset.category;
                 updateCurrentCategoryBadge();
-                showToast(`Categoría cambiada a: ${CATEGORIES[currentCategory].name}`, 'success');
+                showToast('Categoria cambiada a: ' + CATEGORIES[currentCategory].name, 'success');
             });
         });
 
         function updateCurrentCategoryBadge() {
-            currentCategoryBadge.innerHTML = `Grabando en: <strong>${CATEGORIES[currentCategory].name}</strong>`;
+            currentCategoryBadge.innerHTML = 'Grabando en: <strong>' + CATEGORIES[currentCategory].name + '</strong>';
         }
 
         function updateCategoryCounts() {
@@ -248,10 +893,6 @@
             });
         }
 
-        // ============================================
-        // GRABACIÓN DE AUDIO
-        // ============================================
-        
         recordBtn.addEventListener('click', startRecording);
         stopBtn.addEventListener('click', stopRecording);
 
@@ -276,11 +917,10 @@
                     
                     stream.getTracks().forEach(track => track.stop());
 
-                    // Transferir transcripción al área de notas
                     if (liveTranscript.trim()) {
                         sessionNotes.value = liveTranscript.trim();
                     } else if (transcriptionMode === 'manual') {
-                        sessionNotes.placeholder = 'Escribe aquí tus notas y observaciones de la sesión...';
+                        sessionNotes.placeholder = 'Escribe aqui tus notas y observaciones de la sesion...';
                     }
                 };
 
@@ -293,28 +933,27 @@
                 statusText.textContent = 'Grabando...';
                 statusDot.classList.add('recording');
 
-                // Iniciar transcripción si está disponible
                 if (recognition && transcriptionMode === 'automatic') {
                     isRecognitionActive = true;
                     try {
                         recognition.start();
                         liveTranscriptionContainer.style.display = 'block';
                         transcriptionModeInfo.style.display = 'block';
-                        transcriptionModeText.textContent = '🎤 Transcripción automática activa';
+                        transcriptionModeText.textContent = 'Transcripcion automatica activa';
                         transcriptionModeText.style.color = '#10b981';
                     } catch (e) {
                         console.log('Error iniciando reconocimiento:', e);
                     }
                 } else if (transcriptionMode === 'manual') {
                     transcriptionModeInfo.style.display = 'block';
-                    transcriptionModeText.textContent = '✍️ Modo manual: Escribe tus notas después de grabar';
+                    transcriptionModeText.textContent = 'Modo manual: Escribe tus notas despues de grabar';
                     transcriptionModeText.style.color = '#f59e0b';
                 }
 
-                showToast('Grabación iniciada', 'success');
+                showToast('Grabacion iniciada', 'success');
             } catch (error) {
-                console.error('Error al acceder al micrófono:', error);
-                showToast('Error: No se pudo acceder al micrófono', 'error');
+                console.error('Error al acceder al microfono:', error);
+                showToast('Error: No se pudo acceder al microfono', 'error');
             }
         }
 
@@ -325,7 +964,7 @@
 
                 recordBtn.disabled = false;
                 stopBtn.disabled = true;
-                statusText.textContent = 'Grabación detenida';
+                statusText.textContent = 'Grabacion detenida';
                 statusDot.classList.remove('recording');
 
                 if (recognition && isRecognitionActive) {
@@ -335,7 +974,7 @@
 
                 transcriptionModeInfo.style.display = 'none';
 
-                showToast('Grabación finalizada', 'success');
+                showToast('Grabacion finalizada', 'success');
             }
         }
 
@@ -346,7 +985,7 @@
                 const minutes = Math.floor((elapsed % 3600000) / 60000);
                 const seconds = Math.floor((elapsed % 60000) / 1000);
                 
-                timer.textContent = `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+                timer.textContent = pad(hours) + ':' + pad(minutes) + ':' + pad(seconds);
             }, 1000);
         }
 
@@ -359,10 +998,6 @@
             return num.toString().padStart(2, '0');
         }
 
-        // ============================================
-        // GUARDAR Y GESTIONAR GRABACIONES
-        // ============================================
-        
         saveBtn.addEventListener('click', saveRecording);
         discardBtn.addEventListener('click', discardRecording);
 
@@ -383,7 +1018,7 @@
                     category: currentCategory,
                     patientName: name,
                     notes: notes,
-                    transcription: notes, // Guardar transcripción separadamente
+                    transcription: notes,
                     date: new Date().toISOString(),
                     audio: base64Audio,
                     duration: audioPlayback.duration || 0,
@@ -394,7 +1029,7 @@
                 recordings.push(recording);
                 localStorage.setItem('recordings', JSON.stringify(recordings));
 
-                showToast('Grabación guardada exitosamente', 'success');
+                showToast('Grabacion guardada exitosamente', 'success');
                 resetRecordingForm();
                 loadRecordings();
                 updateCategoryCounts();
@@ -404,10 +1039,30 @@
         }
 
         function discardRecording() {
-            if (confirm('¿Estás seguro de que deseas descartar esta grabación?')) {
+            const customConfirm = document.createElement('div');
+            customConfirm.innerHTML = `
+                <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 10000;">
+                    <div style="background: white; padding: 30px; border-radius: 15px; max-width: 400px; text-align: center;">
+                        <h3 style="margin-bottom: 15px; color: #667eea;">¿Descartar grabacion?</h3>
+                        <p style="margin-bottom: 25px; color: #6b7280;">Esta accion no se puede deshacer</p>
+                        <div style="display: flex; gap: 15px; justify-content: center;">
+                            <button id="confirmDiscard" style="padding: 12px 24px; background: #ef4444; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">Si, descartar</button>
+                            <button id="cancelDiscard" style="padding: 12px 24px; background: #f3f4f6; color: #374151; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(customConfirm);
+
+            document.getElementById('confirmDiscard').onclick = () => {
                 resetRecordingForm();
-                showToast('Grabación descartada', 'success');
-            }
+                showToast('Grabacion descartada', 'success');
+                customConfirm.remove();
+            };
+
+            document.getElementById('cancelDiscard').onclick = () => {
+                customConfirm.remove();
+            };
         }
 
         function resetRecordingForm() {
@@ -427,10 +1082,6 @@
             return data ? JSON.parse(data) : [];
         }
 
-        // ============================================
-        // BÚSQUEDA Y FILTROS
-        // ============================================
-        
         searchInput.addEventListener('input', handleSearch);
         clearSearchBtn.addEventListener('click', clearSearch);
         filterDateFrom.addEventListener('change', applyFilters);
@@ -471,10 +1122,8 @@
             let recordings = getRecordings();
             let filteredRecordings = recordings;
 
-            // Filtrar por categoría actual
             filteredRecordings = filteredRecordings.filter(rec => rec.category === currentCategory);
 
-            // Filtrar por búsqueda
             if (searchTerm) {
                 filteredRecordings = filteredRecordings.filter(rec => {
                     const nameMatch = rec.patientName.toLowerCase().includes(searchTerm);
@@ -484,7 +1133,6 @@
                 });
             }
 
-            // Filtrar por fechas
             if (dateFrom || dateTo) {
                 filteredRecordings = filteredRecordings.filter(rec => {
                     const recDate = new Date(rec.date);
@@ -494,10 +1142,9 @@
                 });
             }
 
-            // Mostrar resultados
             if (searchTerm || dateFrom || dateTo) {
                 searchResults.style.display = 'block';
-                resultsCount.textContent = `${filteredRecordings.length} resultado(s) encontrado(s)`;
+                resultsCount.textContent = filteredRecordings.length + ' resultado(s) encontrado(s)';
             } else {
                 searchResults.style.display = 'none';
             }
@@ -508,14 +1155,10 @@
         function highlightText(text, searchTerm) {
             if (!searchTerm) return text;
             
-            const regex = new RegExp(`(${searchTerm})`, 'gi');
+            const regex = new RegExp('(' + searchTerm + ')', 'gi');
             return text.replace(regex, '<span class="search-highlight">$1</span>');
         }
 
-        // ============================================
-        // RENDERIZAR GRABACIONES
-        // ============================================
-        
         function loadRecordings() {
             applyFilters();
         }
@@ -523,7 +1166,6 @@
         function renderRecordings(recordings, searchTerm = '') {
             recordingsList.innerHTML = '';
 
-            // Filtrar por categoría actual
             const categoryRecordings = recordings.filter(rec => rec.category === currentCategory);
 
             if (categoryRecordings.length === 0) {
@@ -533,7 +1175,6 @@
 
             emptyState.classList.add('hidden');
 
-            // Ordenar por fecha (más reciente primero)
             categoryRecordings.sort((a, b) => new Date(b.date) - new Date(a.date));
 
             categoryRecordings.forEach(recording => {
@@ -555,8 +1196,8 @@
                 const categoryInfo = CATEGORIES[recording.category];
 
                 const transcriptionBadge = recording.transcriptionMode === 'automatic' 
-                    ? '<span style="background: #10b981; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; margin-left: 8px;">🎤 Transcripción automática</span>'
-                    : '<span style="background: #f59e0b; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; margin-left: 8px;">✍️ Notas manuales</span>';
+                    ? '<span style="background: #10b981; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; margin-left: 8px;">Transcripcion automatica</span>'
+                    : '<span style="background: #f59e0b; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; margin-left: 8px;">Notas manuales</span>';
 
                 item.innerHTML = `
                     <div class="recording-header">
@@ -564,8 +1205,8 @@
                             <div class="patient-badge">${categoryInfo.icon} ${categoryInfo.name}</div>
                             <h3>${highlightedName} ${transcriptionBadge}</h3>
                             <div class="recording-date">
-                                📅 ${formattedDate}<br>
-                                ⏱️ Duración: ${formatDuration(recording.duration)}
+                                ${formattedDate}<br>
+                                Duracion: ${formatDuration(recording.duration)}
                             </div>
                         </div>
                         <div class="recording-actions">
@@ -587,7 +1228,7 @@
                         <audio controls src="${recording.audio}"></audio>
                     </div>
                     <div class="recording-notes">
-                        <h4>📝 ${recording.transcriptionMode === 'automatic' ? 'Transcripción' : 'Notas'} de la sesión:</h4>
+                        <h4>Notas de la sesion:</h4>
                         <p>${highlightedNotes}</p>
                     </div>
                 `;
@@ -600,13 +1241,9 @@
             if (!seconds || isNaN(seconds)) return '00:00';
             const mins = Math.floor(seconds / 60);
             const secs = Math.floor(seconds % 60);
-            return `${pad(mins)}:${pad(secs)}`;
+            return pad(mins) + ':' + pad(secs);
         }
 
-        // ============================================
-        // ACCIONES DE GRABACIONES
-        // ============================================
-        
         function downloadRecording(id) {
             const recordings = getRecordings();
             const recording = recordings.find(r => r.id === id);
@@ -615,7 +1252,7 @@
 
             const link = document.createElement('a');
             link.href = recording.audio;
-            link.download = `Audio_${recording.patientName}_${new Date(recording.date).toLocaleDateString('es-ES').replace(/\//g, '-')}.wav`;
+            link.download = 'Audio_' + recording.patientName + '_' + new Date(recording.date).toLocaleDateString('es-ES').replace(/\//g, '-') + '.wav';
             link.click();
 
             showToast('Descargando audio...', 'success');
@@ -628,27 +1265,18 @@
             if (!recording) return;
 
             const transcriptionText = `
-═══════════════════════════════════════════════════════
-    TRANSCRIPCIÓN DE SESIÓN CLÍNICA
-═══════════════════════════════════════════════════════
+TRANSCRIPCION DE SESION CLINICA
+================================
 
-📋 INFORMACIÓN GENERAL
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Paciente: ${recording.patientName}
-Categoría: ${CATEGORIES[recording.category].icon} ${CATEGORIES[recording.category].name}
+Categoria: ${CATEGORIES[recording.category].icon} ${CATEGORIES[recording.category].name}
 Fecha: ${new Date(recording.date).toLocaleString('es-ES')}
-Duración: ${formatDuration(recording.duration)}
-Tipo: ${recording.transcriptionMode === 'automatic' ? 'Transcripción Automática' : 'Notas Manuales'}
+Duracion: ${formatDuration(recording.duration)}
+Tipo: ${recording.transcriptionMode === 'automatic' ? 'Transcripcion Automatica' : 'Notas Manuales'}
 
-═══════════════════════════════════════════════════════
-    CONTENIDO DE LA SESIÓN
-═══════════════════════════════════════════════════════
-
+CONTENIDO:
 ${recording.transcription || recording.notes || 'Sin contenido'}
 
-═══════════════════════════════════════════════════════
-    FIN DE TRANSCRIPCIÓN
-══════════════════════════════════════════════��════════
 Generado el: ${new Date().toLocaleString('es-ES')}
             `;
 
@@ -656,31 +1284,45 @@ Generado el: ${new Date().toLocaleString('es-ES')}
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
-            link.download = `Transcripcion_${recording.patientName}_${new Date(recording.date).toLocaleDateString('es-ES').replace(/\//g, '-')}.txt`;
+            link.download = 'Transcripcion_' + recording.patientName + '_' + new Date(recording.date).toLocaleDateString('es-ES').replace(/\//g, '-') + '.txt';
             link.click();
             URL.revokeObjectURL(url);
 
-            showToast('Descargando transcripción...', 'success');
+            showToast('Descargando transcripcion...', 'success');
         }
 
         function deleteRecording(id) {
-            if (!confirm('¿Estás seguro de que deseas eliminar esta grabación? Se eliminará el audio y la transcripción.')) {
-                return;
-            }
+            const customConfirm = document.createElement('div');
+            customConfirm.innerHTML = `
+                <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 10000;">
+                    <div style="background: white; padding: 30px; border-radius: 15px; max-width: 400px; text-align: center;">
+                        <h3 style="margin-bottom: 15px; color: #667eea;">¿Eliminar grabacion?</h3>
+                        <p style="margin-bottom: 25px; color: #6b7280;">Se eliminara el audio y la transcripcion</p>
+                        <div style="display: flex; gap: 15px; justify-content: center;">
+                            <button id="confirmDelete" style="padding: 12px 24px; background: #ef4444; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">Si, eliminar</button>
+                            <button id="cancelDelete" style="padding: 12px 24px; background: #f3f4f6; color: #374151; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(customConfirm);
 
-            let recordings = getRecordings();
-            recordings = recordings.filter(r => r.id !== id);
-            localStorage.setItem('recordings', JSON.stringify(recordings));
+            document.getElementById('confirmDelete').onclick = () => {
+                let recordings = getRecordings();
+                recordings = recordings.filter(r => r.id !== id);
+                localStorage.setItem('recordings', JSON.stringify(recordings));
 
-            showToast('Grabación eliminada', 'success');
-            loadRecordings();
-            updateCategoryCounts();
+                showToast('Grabacion eliminada', 'success');
+                loadRecordings();
+                updateCategoryCounts();
+                customConfirm.remove();
+            };
+
+            document.getElementById('cancelDelete').onclick = () => {
+                customConfirm.remove();
+            };
         }
 
-        // ============================================
-        // RESPALDO DE DATOS
-        // ============================================
-        
         backupBtn.addEventListener('click', downloadBackup);
 
         function downloadBackup() {
@@ -691,23 +1333,20 @@ Generado el: ${new Date().toLocaleString('es-ES')}
                 return;
             }
 
-            // Crear respaldo completo en JSON
             const dataStr = JSON.stringify(recordings, null, 2);
             const dataBlob = new Blob([dataStr], { type: 'application/json' });
             const url = URL.createObjectURL(dataBlob);
             
             const link = document.createElement('a');
             link.href = url;
-            link.download = `Respaldo_Completo_${new Date().toISOString().split('T')[0]}.json`;
+            link.download = 'Respaldo_Completo_' + new Date().toISOString().split('T')[0] + '.json';
             link.click();
             
             URL.revokeObjectURL(url);
 
-            // También crear un archivo de texto con todas las transcripciones
             let allTranscriptions = `
-╔═══════════════════════════════════════════════════════╗
-║      RESPALDO DE TODAS LAS TRANSCRIPCIONES           ║
-╚═══════════════════════════════════════════════════════╝
+RESPALDO DE TODAS LAS TRANSCRIPCIONES
+=====================================
 
 Fecha de respaldo: ${new Date().toLocaleString('es-ES')}
 Total de sesiones: ${recordings.length}
@@ -716,14 +1355,13 @@ Total de sesiones: ${recordings.length}
 
             recordings.forEach((rec, index) => {
                 allTranscriptions += `
-═══════════════════════════════════════════════════════
-SESIÓN #${index + 1}
-═══════════════════════════════════════════════════════
+SESION #${index + 1}
+====================
 Paciente: ${rec.patientName}
-Categoría: ${CATEGORIES[rec.category].icon} ${CATEGORIES[rec.category].name}
+Categoria: ${CATEGORIES[rec.category].icon} ${CATEGORIES[rec.category].name}
 Fecha: ${new Date(rec.date).toLocaleString('es-ES')}
-Duración: ${formatDuration(rec.duration)}
-Tipo: ${rec.transcriptionMode === 'automatic' ? 'Transcripción Automática' : 'Notas Manuales'}
+Duracion: ${formatDuration(rec.duration)}
+Tipo: ${rec.transcriptionMode === 'automatic' ? 'Transcripcion Automatica' : 'Notas Manuales'}
 
 CONTENIDO:
 ${rec.transcription || rec.notes || 'Sin contenido'}
@@ -735,20 +1373,16 @@ ${rec.transcription || rec.notes || 'Sin contenido'}
             const textUrl = URL.createObjectURL(textBlob);
             const textLink = document.createElement('a');
             textLink.href = textUrl;
-            textLink.download = `Transcripciones_Todas_${new Date().toISOString().split('T')[0]}.txt`;
+            textLink.download = 'Transcripciones_Todas_' + new Date().toISOString().split('T')[0] + '.txt';
             textLink.click();
             URL.revokeObjectURL(textUrl);
 
-            showToast('Respaldo completo descargado (JSON + Transcripciones)', 'success');
+            showToast('Respaldo completo descargado', 'success');
         }
 
-        // ============================================
-        // UTILIDADES
-        // ============================================
-        
         function showToast(message, type = 'success') {
             const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
+            toast.className = 'toast ' + type;
             toast.textContent = message;
             document.body.appendChild(toast);
 
@@ -757,81 +1391,19 @@ ${rec.transcription || rec.notes || 'Sin contenido'}
             }, 3000);
         }
 
-        // ============================================
-        // INICIALIZACIÓN AL CARGAR
-        // ============================================
-        
         document.addEventListener('DOMContentLoaded', () => {
             loadRecordings();
             updateCategoryCounts();
             updateCurrentCategoryBadge();
 
-            // Mostrar información sobre el modo de transcripción
             if (transcriptionMode === 'manual') {
-                showToast('📱 Modo móvil: Escribe tus notas después de cada grabación', 'info');
+                showToast('Modo movil: Escribe tus notas despues de cada grabacion', 'info');
             } else {
-                showToast('🎤 Transcripción automática disponible', 'success');
+                showToast('Transcripcion automatica disponible', 'success');
             }
         });
 
-        console.log('App cargada. Modo de transcripción:', transcriptionMode);
-
-        // ============================================
-        // PWA - SERVICE WORKER Y INSTALACIÓN
-        // ============================================
-        
-        let deferredPrompt;
-
-        // Registrar Service Worker
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('service-worker.js')
-                .then(registration => console.log('✅ Service Worker registrado'))
-                .catch(error => console.log('❌ Error al registrar Service Worker:', error));
-        }
-
-        // Detectar evento de instalación
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            
-            // Mostrar botón de instalación
-            const installButton = document.createElement('button');
-            installButton.className = 'btn btn-install';
-            installButton.innerHTML = '<span class="btn-icon">📱</span> Instalar en tu dispositivo';
-            installButton.style.cssText = `
-                position: fixed;
-                bottom: 20px;
-                right: 20px;
-                z-index: 1000;
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-                animation: pulse 2s infinite;
-            `;
-            
-            installButton.addEventListener('click', async () => {
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                
-                if (outcome === 'accepted') {
-                    showToast('¡App instalada! Ahora puedes abrirla desde tu pantalla de inicio', 'success');
-                }
-                
-                installButton.remove();
-                deferredPrompt = null;
-            });
-            
-            document.body.appendChild(installButton);
-            
-            setTimeout(() => {
-                showToast('💡 ¡Puedes instalar esta app en tu dispositivo!', 'info');
-            }, 3000);
-        });
-
-        // Detectar cuando la app ya está instalada
-        window.addEventListener('appinstalled', () => {
-            console.log('✅ PWA instalada correctamente');
-            showToast('¡Aplicación instalada correctamente!', 'success');
-        });
+        console.log('App cargada. Modo de transcripcion:', transcriptionMode);
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c46aada33a39c0b',t:'MTc2OTUwMDMxMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c46de8047109c0b',t:'MTc2OTUwMjQyOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
