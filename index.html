@@ -33,6 +33,8 @@
      <div class="timer" id="timer">
       00:00:00
      </div>
+     <div id="transcriptionModeInfo" class="transcription-mode-info" style="display: none;"><span id="transcriptionModeText"></span>
+     </div>
      <div id="liveTranscriptionContainer" style="display: none;">
       <h4>📝 Transcripción en vivo:</h4>
       <div id="liveTranscription"></div>
@@ -44,7 +46,7 @@
       <audio id="audioPlayback" controls></audio>
       <div class="form-group"><label for="patientName">Nombre del Paciente:</label> <input type="text" id="patientName" placeholder="Ej: Juan Pérez">
       </div>
-      <div class="form-group"><label for="sessionNotes">Notas de la Sesión:</label> <textarea id="sessionNotes" placeholder="Observaciones, diagnóstico, plan de tratamiento..."></textarea>
+      <div class="form-group"><label for="sessionNotes">Notas de la Sesión / Transcripción:</label> <textarea id="sessionNotes" placeholder="Observaciones, diagnóstico, plan de tratamiento... (puedes editar la transcripción aquí)"></textarea>
       </div>
       <div class="preview-controls"><button id="saveBtn" class="btn btn-save"> <span class="btn-icon">💾</span> Guardar Grabación </button> <button id="discardBtn" class="btn btn-secondary"> <span class="btn-icon">🗑️</span> Descartar </button>
       </div>
@@ -91,6 +93,7 @@
         let recognition;
         let isRecognitionActive = false;
         let liveTranscript = '';
+        let transcriptionMode = 'none'; // 'automatic', 'manual', 'none'
 
         const CATEGORIES = {
             general: { name: 'General', icon: '📋' },
@@ -123,6 +126,8 @@
         const currentCategoryBadge = document.getElementById('currentCategoryBadge');
         const liveTranscriptionContainer = document.getElementById('liveTranscriptionContainer');
         const liveTranscriptionDiv = document.getElementById('liveTranscription');
+        const transcriptionModeInfo = document.getElementById('transcriptionModeInfo');
+        const transcriptionModeText = document.getElementById('transcriptionModeText');
         const searchInput = document.getElementById('searchInput');
         const clearSearchBtn = document.getElementById('clearSearchBtn');
         const searchResults = document.getElementById('searchResults');
@@ -137,52 +142,62 @@
         
         console.log('Inicializando app...');
         
-        // Inicializar reconocimiento de voz
-        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            recognition = new SpeechRecognition();
-            recognition.continuous = true;
-            recognition.interimResults = true;
-            recognition.lang = 'es-ES';
+        // Detectar y configurar reconocimiento de voz
+        function initializeSpeechRecognition() {
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+                recognition.continuous = true;
+                recognition.interimResults = true;
+                recognition.lang = 'es-ES';
 
-            recognition.onresult = (event) => {
-                let interimTranscript = '';
-                let finalTranscript = '';
+                recognition.onresult = (event) => {
+                    let interimTranscript = '';
+                    let finalTranscript = '';
 
-                for (let i = event.resultIndex; i < event.results.length; i++) {
-                    const transcript = event.results[i][0].transcript;
-                    if (event.results[i].isFinal) {
-                        finalTranscript += transcript + ' ';
-                    } else {
-                        interimTranscript += transcript;
+                    for (let i = event.resultIndex; i < event.results.length; i++) {
+                        const transcript = event.results[i][0].transcript;
+                        if (event.results[i].isFinal) {
+                            finalTranscript += transcript + ' ';
+                        } else {
+                            interimTranscript += transcript;
+                        }
                     }
-                }
 
-                if (finalTranscript) {
-                    liveTranscript += finalTranscript;
-                }
-
-                liveTranscriptionDiv.textContent = liveTranscript + interimTranscript;
-                liveTranscriptionDiv.scrollTop = liveTranscriptionDiv.scrollHeight;
-            };
-
-            recognition.onerror = (event) => {
-                console.error('Error en reconocimiento de voz:', event.error);
-                if (event.error === 'no-speech') {
-                    console.log('No se detectó habla, continuando...');
-                }
-            };
-
-            recognition.onend = () => {
-                if (isRecognitionActive) {
-                    try {
-                        recognition.start();
-                    } catch (e) {
-                        console.log('Reconocimiento ya iniciado');
+                    if (finalTranscript) {
+                        liveTranscript += finalTranscript;
                     }
-                }
-            };
+
+                    liveTranscriptionDiv.textContent = liveTranscript + interimTranscript;
+                    liveTranscriptionDiv.scrollTop = liveTranscriptionDiv.scrollHeight;
+                };
+
+                recognition.onerror = (event) => {
+                    console.error('Error en reconocimiento de voz:', event.error);
+                    if (event.error === 'no-speech') {
+                        console.log('No se detectó habla, continuando...');
+                    }
+                };
+
+                recognition.onend = () => {
+                    if (isRecognitionActive) {
+                        try {
+                            recognition.start();
+                        } catch (e) {
+                            console.log('Reconocimiento ya iniciado');
+                        }
+                    }
+                };
+
+                transcriptionMode = 'automatic';
+                console.log('✅ Transcripción automática disponible (PC/Desktop)');
+            } else {
+                transcriptionMode = 'manual';
+                console.log('⚠️ Transcripción manual activada (Móvil/Tablet)');
+            }
         }
+
+        initializeSpeechRecognition();
 
         // ============================================
         // GESTIÓN DE CATEGORÍAS
@@ -254,8 +269,11 @@
                     
                     stream.getTracks().forEach(track => track.stop());
 
+                    // Transferir transcripción al área de notas
                     if (liveTranscript.trim()) {
                         sessionNotes.value = liveTranscript.trim();
+                    } else if (transcriptionMode === 'manual') {
+                        sessionNotes.placeholder = 'Escribe aquí tus notas y observaciones de la sesión...';
                     }
                 };
 
@@ -268,14 +286,22 @@
                 statusText.textContent = 'Grabando...';
                 statusDot.classList.add('recording');
 
-                if (recognition) {
+                // Iniciar transcripción si está disponible
+                if (recognition && transcriptionMode === 'automatic') {
                     isRecognitionActive = true;
                     try {
                         recognition.start();
                         liveTranscriptionContainer.style.display = 'block';
+                        transcriptionModeInfo.style.display = 'block';
+                        transcriptionModeText.textContent = '🎤 Transcripción automática activa';
+                        transcriptionModeText.style.color = '#10b981';
                     } catch (e) {
                         console.log('Error iniciando reconocimiento:', e);
                     }
+                } else if (transcriptionMode === 'manual') {
+                    transcriptionModeInfo.style.display = 'block';
+                    transcriptionModeText.textContent = '✍️ Modo manual: Escribe tus notas después de grabar';
+                    transcriptionModeText.style.color = '#f59e0b';
                 }
 
                 showToast('Grabación iniciada', 'success');
@@ -299,6 +325,8 @@
                     isRecognitionActive = false;
                     recognition.stop();
                 }
+
+                transcriptionModeInfo.style.display = 'none';
 
                 showToast('Grabación finalizada', 'success');
             }
@@ -348,9 +376,11 @@
                     category: currentCategory,
                     patientName: name,
                     notes: notes,
+                    transcription: notes, // Guardar transcripción separadamente
                     date: new Date().toISOString(),
                     audio: base64Audio,
-                    duration: audioPlayback.duration || 0
+                    duration: audioPlayback.duration || 0,
+                    transcriptionMode: transcriptionMode
                 };
 
                 const recordings = getRecordings();
@@ -382,6 +412,7 @@
             liveTranscript = '';
             liveTranscriptionDiv.textContent = '';
             liveTranscriptionContainer.style.display = 'none';
+            transcriptionModeInfo.style.display = 'none';
         }
 
         function getRecordings() {
@@ -440,8 +471,9 @@
             if (searchTerm) {
                 filteredRecordings = filteredRecordings.filter(rec => {
                     const nameMatch = rec.patientName.toLowerCase().includes(searchTerm);
-                    const notesMatch = rec.notes.toLowerCase().includes(searchTerm);
-                    return nameMatch || notesMatch;
+                    const notesMatch = (rec.notes || '').toLowerCase().includes(searchTerm);
+                    const transcriptionMatch = (rec.transcription || '').toLowerCase().includes(searchTerm);
+                    return nameMatch || notesMatch || transcriptionMatch;
                 });
             }
 
@@ -511,24 +543,32 @@
                 });
 
                 const highlightedName = highlightText(recording.patientName, searchTerm);
-                const highlightedNotes = highlightText(recording.notes, searchTerm);
+                const highlightedNotes = highlightText(recording.notes || recording.transcription || 'Sin notas', searchTerm);
 
                 const categoryInfo = CATEGORIES[recording.category];
+
+                const transcriptionBadge = recording.transcriptionMode === 'automatic' 
+                    ? '<span style="background: #10b981; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; margin-left: 8px;">🎤 Transcripción automática</span>'
+                    : '<span style="background: #f59e0b; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; margin-left: 8px;">✍️ Notas manuales</span>';
 
                 item.innerHTML = `
                     <div class="recording-header">
                         <div class="recording-info">
                             <div class="patient-badge">${categoryInfo.icon} ${categoryInfo.name}</div>
-                            <h3>${highlightedName}</h3>
+                            <h3>${highlightedName} ${transcriptionBadge}</h3>
                             <div class="recording-date">
                                 📅 ${formattedDate}<br>
                                 ⏱️ Duración: ${formatDuration(recording.duration)}
                             </div>
                         </div>
                         <div class="recording-actions">
+                            <button class="btn btn-small btn-download" onclick="downloadTranscription(${recording.id})">
+                                <span class="btn-icon">📄</span>
+                                Texto
+                            </button>
                             <button class="btn btn-small btn-download" onclick="downloadRecording(${recording.id})">
-                                <span class="btn-icon">⬇️</span>
-                                Descargar
+                                <span class="btn-icon">🎵</span>
+                                Audio
                             </button>
                             <button class="btn btn-small btn-delete" onclick="deleteRecording(${recording.id})">
                                 <span class="btn-icon">🗑️</span>
@@ -540,7 +580,7 @@
                         <audio controls src="${recording.audio}"></audio>
                     </div>
                     <div class="recording-notes">
-                        <h4>📝 Notas de la sesión:</h4>
+                        <h4>📝 ${recording.transcriptionMode === 'automatic' ? 'Transcripción' : 'Notas'} de la sesión:</h4>
                         <p>${highlightedNotes}</p>
                     </div>
                 `;
@@ -568,14 +608,56 @@
 
             const link = document.createElement('a');
             link.href = recording.audio;
-            link.download = `${recording.patientName}_${new Date(recording.date).toLocaleDateString()}.wav`;
+            link.download = `Audio_${recording.patientName}_${new Date(recording.date).toLocaleDateString('es-ES').replace(/\//g, '-')}.wav`;
             link.click();
 
-            showToast('Descargando grabación...', 'success');
+            showToast('Descargando audio...', 'success');
+        }
+
+        function downloadTranscription(id) {
+            const recordings = getRecordings();
+            const recording = recordings.find(r => r.id === id);
+            
+            if (!recording) return;
+
+            const transcriptionText = `
+═══════════════════════════════════════════════════════
+    TRANSCRIPCIÓN DE SESIÓN CLÍNICA
+═══════════════════════════════════════════════════════
+
+📋 INFORMACIÓN GENERAL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Paciente: ${recording.patientName}
+Categoría: ${CATEGORIES[recording.category].icon} ${CATEGORIES[recording.category].name}
+Fecha: ${new Date(recording.date).toLocaleString('es-ES')}
+Duración: ${formatDuration(recording.duration)}
+Tipo: ${recording.transcriptionMode === 'automatic' ? 'Transcripción Automática' : 'Notas Manuales'}
+
+═══════════════════════════════════════════════════════
+    CONTENIDO DE LA SESIÓN
+═══════════════════════════════════════════════════════
+
+${recording.transcription || recording.notes || 'Sin contenido'}
+
+═══════════════════════════════════════════════════════
+    FIN DE TRANSCRIPCIÓN
+═══════════════════════════════════════════════════════
+Generado el: ${new Date().toLocaleString('es-ES')}
+            `;
+
+            const blob = new Blob([transcriptionText], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `Transcripcion_${recording.patientName}_${new Date(recording.date).toLocaleDateString('es-ES').replace(/\//g, '-')}.txt`;
+            link.click();
+            URL.revokeObjectURL(url);
+
+            showToast('Descargando transcripción...', 'success');
         }
 
         function deleteRecording(id) {
-            if (!confirm('¿Estás seguro de que deseas eliminar esta grabación?')) {
+            if (!confirm('¿Estás seguro de que deseas eliminar esta grabación? Se eliminará el audio y la transcripción.')) {
                 return;
             }
 
@@ -602,17 +684,55 @@
                 return;
             }
 
+            // Crear respaldo completo en JSON
             const dataStr = JSON.stringify(recordings, null, 2);
             const dataBlob = new Blob([dataStr], { type: 'application/json' });
             const url = URL.createObjectURL(dataBlob);
             
             const link = document.createElement('a');
             link.href = url;
-            link.download = `respaldo_sesiones_${new Date().toISOString().split('T')[0]}.json`;
+            link.download = `Respaldo_Completo_${new Date().toISOString().split('T')[0]}.json`;
             link.click();
             
             URL.revokeObjectURL(url);
-            showToast('Respaldo descargado exitosamente', 'success');
+
+            // También crear un archivo de texto con todas las transcripciones
+            let allTranscriptions = `
+╔═══════════════════════════════════════════════════════╗
+║      RESPALDO DE TODAS LAS TRANSCRIPCIONES           ║
+╚═══════════════════════════════════════════════════════╝
+
+Fecha de respaldo: ${new Date().toLocaleString('es-ES')}
+Total de sesiones: ${recordings.length}
+
+`;
+
+            recordings.forEach((rec, index) => {
+                allTranscriptions += `
+═══════════════════════════════════════════════════════
+SESIÓN #${index + 1}
+═══════════════════════════════════════════════════════
+Paciente: ${rec.patientName}
+Categoría: ${CATEGORIES[rec.category].icon} ${CATEGORIES[rec.category].name}
+Fecha: ${new Date(rec.date).toLocaleString('es-ES')}
+Duración: ${formatDuration(rec.duration)}
+Tipo: ${rec.transcriptionMode === 'automatic' ? 'Transcripción Automática' : 'Notas Manuales'}
+
+CONTENIDO:
+${rec.transcription || rec.notes || 'Sin contenido'}
+
+`;
+            });
+
+            const textBlob = new Blob([allTranscriptions], { type: 'text/plain;charset=utf-8' });
+            const textUrl = URL.createObjectURL(textBlob);
+            const textLink = document.createElement('a');
+            textLink.href = textUrl;
+            textLink.download = `Transcripciones_Todas_${new Date().toISOString().split('T')[0]}.txt`;
+            textLink.click();
+            URL.revokeObjectURL(textUrl);
+
+            showToast('Respaldo completo descargado (JSON + Transcripciones)', 'success');
         }
 
         // ============================================
@@ -638,9 +758,16 @@
             loadRecordings();
             updateCategoryCounts();
             updateCurrentCategoryBadge();
+
+            // Mostrar información sobre el modo de transcripción
+            if (transcriptionMode === 'manual') {
+                showToast('📱 Modo móvil: Escribe tus notas después de cada grabación', 'info');
+            } else {
+                showToast('🎤 Transcripción automática disponible', 'success');
+            }
         });
 
-        console.log('Grabaciones cargadas');
+        console.log('App cargada. Modo de transcripción:', transcriptionMode);
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c469c4665d39c0b',t:'MTc2OTQ5OTcxNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c46a723d2579c0b',t:'MTc2OTUwMDE2MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
