@@ -4,1633 +4,643 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Grabadora de Sesiones - Psicología</title>
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        header {
-            text-align: center;
-            color: white;
-            margin-bottom: 40px;
-            animation: fadeInDown 0.6s ease;
-        }
-
-        header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-        }
-
-        .subtitle {
-            font-size: 1.1rem;
-            opacity: 0.9;
-        }
-
-        /* Sección de Categorías */
-        .category-section {
-            margin-bottom: 30px;
-            animation: fadeIn 0.8s ease;
-        }
-
-        .category-card {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-        }
-
-        .category-card h2 {
-            color: #2d3748;
-            margin-bottom: 20px;
-            font-size: 1.5rem;
-            text-align: center;
-        }
-
-        .category-buttons {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-        }
-
-        .category-btn {
-            background: #f7fafc;
-            border: 3px solid #e2e8f0;
-            border-radius: 16px;
-            padding: 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            position: relative;
-        }
-
-        .category-btn:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-            border-color: #cbd5e0;
-        }
-
-        .category-btn.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-color: #667eea;
-            color: white;
-        }
-
-        .category-icon {
-            font-size: 2.5rem;
-        }
-
-        .category-name {
-            font-size: 1.1rem;
-            font-weight: 600;
-        }
-
-        .category-btn.active .category-name,
-        .category-btn.active .category-count {
-            color: white;
-        }
-
-        .category-count {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: #48bb78;
-            color: white;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.85rem;
-            font-weight: bold;
-        }
-
-        .category-btn.active .category-count {
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-        /* Badge de categoría actual */
-        .current-category-badge {
-            text-align: center;
-            padding: 12px 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            font-size: 0.95rem;
-        }
-
-        .current-category-badge strong {
-            font-weight: 700;
-        }
-
-        /* Sección de grabación */
-        .recorder-section {
-            margin-bottom: 40px;
-            animation: fadeIn 1s ease;
-        }
-
-        .recorder-card {
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-            text-align: center;
-        }
-
-        .recording-status {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 20px;
-            font-size: 1.1rem;
-            color: #4a5568;
-        }
-
-        .status-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #48bb78;
-        }
-
-        .status-dot.recording {
-            background: #f56565;
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(1.2); }
-        }
-
-        .timer {
-            font-size: 3rem;
-            font-weight: bold;
-            color: #2d3748;
-            margin-bottom: 30px;
-            font-variant-numeric: tabular-nums;
-        }
-
-        /* Transcripción en vivo */
-        #liveTranscriptionContainer {
-            animation: fadeIn 0.3s ease;
-            margin: 20px 0;
-            padding: 20px;
-            background: #f7fafc;
-            border-radius: 12px;
-            border-left: 4px solid #48bb78;
-        }
-
-        #liveTranscriptionContainer h4 {
-            color: #2d3748;
-            margin-bottom: 10px;
-            font-size: 0.9rem;
-        }
-
-        #liveTranscription {
-            color: #4a5568;
-            line-height: 1.6;
-            max-height: 150px;
-            overflow-y: auto;
-            font-size: 0.95rem;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-        }
-
-        #liveTranscription::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        #liveTranscription::-webkit-scrollbar-track {
-            background: #e2e8f0;
-            border-radius: 10px;
-        }
-
-        #liveTranscription::-webkit-scrollbar-thumb {
-            background: #48bb78;
-            border-radius: 10px;
-        }
-
-        /* Controles */
-        .controls {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            padding: 15px 30px;
-            border: none;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-        }
-
-        .btn:active {
-            transform: translateY(0);
-        }
-
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .btn-record {
-            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
-            color: white;
-        }
-
-        .btn-stop {
-            background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
-            color: white;
-        }
-
-        .btn-save {
-            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
-            color: white;
-        }
-
-        .btn-secondary {
-            background: #e2e8f0;
-            color: #2d3748;
-        }
-
-        .btn-backup {
-            background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
-            color: white;
-        }
-
-        .btn-small {
-            padding: 8px 16px;
-            font-size: 0.9rem;
-        }
-
-        .btn-download {
-            background: linear-gradient(135deg, #9f7aea 0%, #805ad5 100%);
-            color: white;
-        }
-
-        .btn-delete {
-            background: #fc8181;
-            color: white;
-        }
-
-        .btn-icon {
-            font-size: 1.3rem;
-        }
-
-        /* Preview del audio */
-        .audio-preview {
-            margin-top: 30px;
-            padding: 30px;
-            background: #f7fafc;
-            border-radius: 16px;
-            animation: slideUp 0.4s ease;
-        }
-
-        .audio-preview.hidden {
-            display: none;
-        }
-
-        .audio-preview h3 {
-            color: #2d3748;
-            margin-bottom: 20px;
-            text-align: left;
-        }
-
-        .audio-preview audio {
-            width: 100%;
-            margin-bottom: 20px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-            text-align: left;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #2d3748;
-            font-weight: 600;
-        }
-
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e2e8f0;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-family: inherit;
-            transition: border-color 0.3s ease;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .preview-controls {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin-top: 20px;
-        }
-
-        /* Buscador y Filtros */
-        .search-section {
-            background: white;
-            border-radius: 16px;
-            padding: 25px;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-            animation: fadeIn 1s ease;
-        }
-
-        .search-bar {
-            position: relative;
-            margin-bottom: 20px;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 15px 45px 15px 20px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            font-family: inherit;
-        }
-
-        .search-input:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .btn-clear-search {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: #e2e8f0;
-            border: none;
-            border-radius: 50%;
-            width: 28px;
-            height: 28px;
-            cursor: pointer;
-            font-size: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
-        }
-
-        .btn-clear-search:hover {
-            background: #cbd5e0;
-            transform: translateY(-50%) scale(1.1);
-        }
-
-        .filter-bar {
-            display: flex;
-            gap: 15px;
-            align-items: flex-end;
-            flex-wrap: wrap;
-        }
-
-        .filter-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .filter-group label {
-            font-size: 0.9rem;
-            color: #4a5568;
-            font-weight: 600;
-        }
-
-        .date-input {
-            padding: 10px 15px;
-            border: 2px solid #e2e8f0;
-            border-radius: 10px;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-            font-family: inherit;
-            min-width: 160px;
-        }
-
-        .date-input:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .search-results {
-            margin-top: 15px;
-            padding: 12px 18px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-radius: 10px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            text-align: center;
-        }
-
-        /* Highlight de resultados de búsqueda */
-        .search-highlight {
-            background-color: #fef08a;
-            padding: 2px 4px;
-            border-radius: 3px;
-            font-weight: 600;
-        }
-
-        /* Sección de grabaciones */
-        .recordings-section {
-            animation: fadeIn 1.2s ease;
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .section-header h2 {
-            color: white;
-            font-size: 1.8rem;
-        }
-
-        .recordings-list {
-            display: grid;
-            gap: 20px;
-        }
-
-        .recording-item {
-            background: white;
-            border-radius: 16px;
-            padding: 25px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            animation: slideUp 0.4s ease;
-        }
-
-        .recording-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-        }
-
-        .recording-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 20px;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
-        .recording-info h3 {
-            color: #2d3748;
-            margin-bottom: 8px;
-            font-size: 1.3rem;
-        }
-
-        .recording-date {
-            color: #718096;
-            font-size: 0.95rem;
-            line-height: 1.6;
-        }
-
-        /* Badge de paciente */
-        .patient-badge {
-            display: inline-block;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .recording-actions {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .recording-audio {
-            margin-bottom: 20px;
-        }
-
-        .recording-audio audio {
-            width: 100%;
-        }
-
-        .recording-notes {
-            background: #f7fafc;
-            padding: 20px;
-            border-radius: 12px;
-            border-left: 4px solid #667eea;
-        }
-
-        .recording-notes h4 {
-            color: #2d3748;
-            margin-bottom: 12px;
-            font-size: 1rem;
-        }
-
-        .recording-notes p {
-            color: #4a5568;
-            line-height: 1.7;
-            white-space: pre-wrap;
-        }
-
-        /* Estado vacío */
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: white;
-        }
-
-        .empty-state.hidden {
-            display: none;
-        }
-
-        .empty-icon {
-            font-size: 4rem;
-            margin-bottom: 20px;
-            opacity: 0.7;
-        }
-
-        .empty-state p {
-            font-size: 1.2rem;
-            margin-bottom: 10px;
-        }
-
-        .empty-subtitle {
-            opacity: 0.8;
-            font-size: 1rem;
-        }
-
-        /* Toast notifications */
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            padding: 15px 25px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-            font-weight: 600;
-            z-index: 1000;
-            animation: slideInRight 0.3s ease;
-        }
-
-        .toast.success {
-            border-left: 4px solid #48bb78;
-            color: #2d3748;
-        }
-
-        .toast.error {
-            border-left: 4px solid #f56565;
-            color: #2d3748;
-        }
-
-        /* Animaciones */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(100px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            header h1 {
-                font-size: 2rem;
-            }
-
-            .category-buttons {
-                grid-template-columns: 1fr;
-            }
-
-            .category-card {
-                padding: 20px;
-            }
-
-            .current-category-badge {
-                font-size: 0.85rem;
-                padding: 10px 15px;
-            }
-
-            .recorder-card {
-                padding: 25px;
-            }
-
-            .timer {
-                font-size: 2.5rem;
-            }
-
-            .controls {
-                flex-direction: column;
-            }
-
-            .btn {
-                width: 100%;
-                justify-content: center;
-            }
-
-            .section-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .section-header h2 {
-                font-size: 1.5rem;
-            }
-
-            .recording-header {
-                flex-direction: column;
-            }
-
-            .recording-actions {
-                width: 100%;
-            }
-
-            .recording-actions .btn-small {
-                flex: 1;
-            }
-
-            .toast {
-                left: 20px;
-                right: 20px;
-            }
-
-            .filter-bar {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .filter-group {
-                width: 100%;
-            }
-
-            .date-input {
-                width: 100%;
-            }
-
-            .search-section {
-                padding: 18px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            body {
-                padding: 10px;
-            }
-
-            header h1 {
-                font-size: 1.6rem;
-            }
-
-            .subtitle {
-                font-size: 0.95rem;
-            }
-
-            .timer {
-                font-size: 2rem;
-            }
-
-            .btn {
-                font-size: 1rem;
-                padding: 12px 20px;
-            }
-        }
-        { 
-            { <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <link rel="stylesheet" href="styles.css">
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
   <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
   <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
  </head>
  <body>
-  <div class="container"><!-- Header -->
+  <div class="container">
    <header>
-    <h1>🎙️ Grabadora de Sesiones</h1>
-    <p class="subtitle">Graba y organiza tus sesiones de terapia</p>
-   </header><!-- Selector de Categoría -->
+    <h1>🎙️ Grabadora de Sesiones Clínicas</h1>
+    <p class="subtitle">Registra y organiza tus sesiones por categoría</p>
+   </header><!-- Sección de Categorías -->
    <section class="category-section">
     <div class="category-card">
-     <h2>📂 Selecciona una categoría</h2>
-     <div class="category-buttons"><button class="category-btn active" data-category="anivi" onclick="selectCategory('anivi')"> <span class="category-icon">👥</span> <span class="category-name">Pacientes ANIVI</span> <span class="category-count" id="count-anivi">0</span> </button> <button class="category-btn" data-category="consultorio" onclick="selectCategory('consultorio')"> <span class="category-icon">🏥</span> <span class="category-name">Pacientes Consultorio</span> <span class="category-count" id="count-consultorio">0</span> </button> <button class="category-btn" data-category="recordatorios" onclick="selectCategory('recordatorios')"> <span class="category-icon">📌</span> <span class="category-name">Recordatorios</span> <span class="category-count" id="count-recordatorios">0</span> </button>
+     <h2>📁 Selecciona una Categoría</h2>
+     <div class="category-buttons" id="categoryButtons"><button class="category-btn active" data-category="general"> <span class="category-icon">📋</span> <span class="category-name">General</span> <span class="category-count">0</span> </button> <button class="category-btn" data-category="individual"> <span class="category-icon">👤</span> <span class="category-name">Individual</span> <span class="category-count">0</span> </button> <button class="category-btn" data-category="pareja"> <span class="category-icon">💑</span> <span class="category-name">Pareja</span> <span class="category-count">0</span> </button> <button class="category-btn" data-category="familiar"> <span class="category-icon">👨‍👩‍👧‍👦</span> <span class="category-name">Familiar</span> <span class="category-count">0</span> </button> <button class="category-btn" data-category="grupal"> <span class="category-icon">👥</span> <span class="category-name">Grupal</span> <span class="category-count">0</span> </button> <button class="category-btn" data-category="evaluacion"> <span class="category-icon">📊</span> <span class="category-name">Evaluación</span> <span class="category-count">0</span> </button>
      </div>
     </div>
-   </section><!-- Grabación -->
+   </section><!-- Sección de Grabación -->
    <section class="recorder-section">
     <div class="recorder-card">
-     <div class="current-category-badge" id="currentCategoryBadge">
-      👥 Grabando en: <strong>Pacientes ANIVI</strong>
+     <div id="currentCategoryBadge" class="current-category-badge">
+      Grabando en: <strong>General</strong>
      </div>
-     <div class="recording-status" id="recordingStatus">
-      <div class="status-dot"></div><span>Listo para grabar</span>
+     <div class="recording-status"><span class="status-dot" id="statusDot"></span> <span id="statusText">Listo para grabar</span>
      </div>
      <div class="timer" id="timer">
-      00:00
-     </div><!-- Transcripción en vivo -->
+      00:00:00
+     </div>
      <div id="liveTranscriptionContainer" style="display: none;">
-      <h4>📝 Transcripción en tiempo real:</h4>
+      <h4>📝 Transcripción en vivo:</h4>
       <div id="liveTranscription"></div>
      </div>
-     <div class="controls"><button id="startBtn" class="btn btn-record"> <span class="btn-icon">⏺</span> Iniciar Grabación </button> <button id="stopBtn" class="btn btn-stop" disabled> <span class="btn-icon">⏹</span> Detener </button>
-     </div><!-- Preview del audio grabado -->
+     <div class="controls"><button id="recordBtn" class="btn btn-record"> <span class="btn-icon">⏺️</span> Iniciar Grabación </button> <button id="stopBtn" class="btn btn-stop" disabled> <span class="btn-icon">⏹️</span> Detener </button>
+     </div>
      <div id="audioPreview" class="audio-preview hidden">
-      <h3>Vista Previa</h3>
-      <audio id="previewPlayer" controls></audio>
-      <div class="form-group"><label for="patientName">👤 Nombre del paciente: *</label> <input type="text" id="patientName" placeholder="Ej: Juan Pérez" required>
+      <h3>🎵 Vista Previa de la Grabación</h3>
+      <audio id="audioPlayback" controls></audio>
+      <div class="form-group"><label for="patientName">Nombre del Paciente:</label> <input type="text" id="patientName" placeholder="Ej: Juan Pérez">
       </div>
-      <div class="form-group"><label for="sessionDate">📅 Fecha de la sesión: *</label> <input type="date" id="sessionDate" required>
+      <div class="form-group"><label for="sessionNotes">Notas de la Sesión:</label> <textarea id="sessionNotes" placeholder="Observaciones, diagnóstico, plan de tratamiento..."></textarea>
       </div>
-      <div class="form-group"><label for="sessionTitle">📝 Título adicional (opcional):</label> <input type="text" id="sessionTitle" placeholder="Ej: Primera consulta, Seguimiento, etc.">
-      </div>
-      <div class="form-group"><label for="sessionNotes">📄 Notas / Transcripción:</label> <textarea id="sessionNotes" rows="6" placeholder="La transcripción automática aparecerá aquí..."></textarea>
-      </div>
-      <div class="preview-controls"><button id="saveBtn" class="btn btn-save"> 💾 Guardar Sesión </button> <button id="discardBtn" class="btn btn-secondary"> 🗑️ Descartar </button>
+      <div class="preview-controls"><button id="saveBtn" class="btn btn-save"> <span class="btn-icon">💾</span> Guardar Grabación </button> <button id="discardBtn" class="btn btn-secondary"> <span class="btn-icon">🗑️</span> Descartar </button>
       </div>
      </div>
     </div>
-   </section><!-- Lista de grabaciones -->
+   </section><!-- Sección de Búsqueda y Filtros -->
+   <section class="search-section">
+    <div class="search-bar"><input type="text" id="searchInput" placeholder="🔍 Buscar por nombre de paciente o palabra clave..." class="search-input"> <button id="clearSearchBtn" class="btn-clear-search" style="display: none;">✕</button>
+    </div>
+    <div class="filter-bar">
+     <div class="filter-group"><label for="filterDateFrom">Desde:</label> <input type="date" id="filterDateFrom" class="date-input">
+     </div>
+     <div class="filter-group"><label for="filterDateTo">Hasta:</label> <input type="date" id="filterDateTo" class="date-input">
+     </div><button id="clearFiltersBtn" class="btn btn-secondary btn-small"> 🔄 Limpiar Filtros </button>
+    </div>
+    <div id="searchResults" class="search-results" style="display: none;"><span id="resultsCount"></span>
+    </div>
+   </section><!-- Sección de Grabaciones -->
    <section class="recordings-section">
     <div class="section-header">
-     <h2 id="recordingsSectionTitle">📚 Pacientes ANIVI</h2><button id="downloadAllBtn" class="btn btn-backup"> 📦 Descargar Backup </button>
-    </div><!-- Buscador Avanzado -->
-    <div class="search-section">
-     <div class="search-bar"><input type="text" id="searchInput" placeholder="🔍 Buscar por nombre de paciente o palabra clave..." class="search-input"> <button id="clearSearchBtn" class="btn-clear-search" style="display: none;">✕</button>
-     </div>
-     <div class="filter-bar">
-      <div class="filter-group"><label for="filterStartDate">📅 Desde:</label> <input type="date" id="filterStartDate" class="date-input">
-      </div>
-      <div class="filter-group"><label for="filterEndDate">📅 Hasta:</label> <input type="date" id="filterEndDate" class="date-input">
-      </div><button id="clearFiltersBtn" class="btn btn-small btn-secondary"> 🔄 Limpiar Filtros </button>
-     </div>
-     <div id="searchResults" class="search-results" style="display: none;"><span id="resultsCount"></span>
-     </div>
-    </div>
-    <div id="recordingsList" class="recordings-list"><!-- Las grabaciones se cargarán aquí -->
+     <h2>📚 Mis Grabaciones</h2><button id="backupBtn" class="btn btn-backup"> <span class="btn-icon">💾</span> Descargar Respaldo </button>
     </div>
     <div id="emptyState" class="empty-state">
      <div class="empty-icon">
-      🎤
+      🎙️
      </div>
-     <p>No hay grabaciones en esta categoría</p>
+     <p>Aún no tienes grabaciones</p>
      <p class="empty-subtitle">Comienza grabando tu primera sesión</p>
     </div>
+    <div id="recordingsList" class="recordings-list"></div>
    </section>
   </div>
   <script>
-        // Variables globales
+        // ============================================
+        // VARIABLES GLOBALES Y CONFIGURACIÓN
+        // ============================================
+        
         let mediaRecorder;
         let audioChunks = [];
-        let startTime;
+        let recordingStartTime;
         let timerInterval;
-        let recordings = {
-            anivi: [],
-            consultorio: [],
-            recordatorios: []
-        };
-        let currentCategory = 'anivi';
-        let currentAudioBlob = null;
-        let recognition = null;
+        let currentAudioBlob;
+        let currentCategory = 'general';
+        let recognition;
         let isRecognitionActive = false;
-        let transcriptionText = '';
-        let searchTerm = '';
-        let startDateFilter = '';
-        let endDateFilter = '';
+        let liveTranscript = '';
 
-        // Elementos del DOM
-        const startBtn = document.getElementById('startBtn');
+        const CATEGORIES = {
+            general: { name: 'General', icon: '📋' },
+            individual: { name: 'Individual', icon: '👤' },
+            pareja: { name: 'Pareja', icon: '💑' },
+            familiar: { name: 'Familiar', icon: '👨‍👩‍👧‍👦' },
+            grupal: { name: 'Grupal', icon: '👥' },
+            evaluacion: { name: 'Evaluación', icon: '📊' }
+        };
+
+        // ============================================
+        // ELEMENTOS DEL DOM
+        // ============================================
+        
+        const recordBtn = document.getElementById('recordBtn');
         const stopBtn = document.getElementById('stopBtn');
-        const timer = document.getElementById('timer');
-        const recordingStatus = document.getElementById('recordingStatus');
-        const audioPreview = document.getElementById('audioPreview');
-        const previewPlayer = document.getElementById('previewPlayer');
-        const patientName = document.getElementById('patientName');
-        const sessionDate = document.getElementById('sessionDate');
-        const sessionTitle = document.getElementById('sessionTitle');
-        const sessionNotes = document.getElementById('sessionNotes');
         const saveBtn = document.getElementById('saveBtn');
         const discardBtn = document.getElementById('discardBtn');
+        const backupBtn = document.getElementById('backupBtn');
+        const timer = document.getElementById('timer');
+        const statusText = document.getElementById('statusText');
+        const statusDot = document.getElementById('statusDot');
+        const audioPreview = document.getElementById('audioPreview');
+        const audioPlayback = document.getElementById('audioPlayback');
+        const patientName = document.getElementById('patientName');
+        const sessionNotes = document.getElementById('sessionNotes');
         const recordingsList = document.getElementById('recordingsList');
         const emptyState = document.getElementById('emptyState');
-        const downloadAllBtn = document.getElementById('downloadAllBtn');
-        const liveTranscription = document.getElementById('liveTranscription');
+        const categoryButtons = document.querySelectorAll('.category-btn');
         const currentCategoryBadge = document.getElementById('currentCategoryBadge');
-        const recordingsSectionTitle = document.getElementById('recordingsSectionTitle');
+        const liveTranscriptionContainer = document.getElementById('liveTranscriptionContainer');
+        const liveTranscriptionDiv = document.getElementById('liveTranscription');
         const searchInput = document.getElementById('searchInput');
         const clearSearchBtn = document.getElementById('clearSearchBtn');
-        const filterStartDate = document.getElementById('filterStartDate');
-        const filterEndDate = document.getElementById('filterEndDate');
-        const clearFiltersBtn = document.getElementById('clearFiltersBtn');
         const searchResults = document.getElementById('searchResults');
         const resultsCount = document.getElementById('resultsCount');
+        const filterDateFrom = document.getElementById('filterDateFrom');
+        const filterDateTo = document.getElementById('filterDateTo');
+        const clearFiltersBtn = document.getElementById('clearFiltersBtn');
 
-        // Nombres de categorías
-        const categoryNames = {
-            anivi: 'Pacientes ANIVI',
-            consultorio: 'Pacientes Consultorio',
-            recordatorios: 'Recordatorios'
-        };
-
-        const categoryIcons = {
-            anivi: '👥',
-            consultorio: '🏥',
-            recordatorios: '📌'
-        };
-
-        // Inicializar la app
-        function init() {
-            console.log('Inicializando app...');
-            loadRecordings();
-            updateCategoryCounts();
-            renderRecordings();
-            
-            // Establecer fecha actual por defecto
-            const today = new Date().toISOString().split('T')[0];
-            sessionDate.value = today;
-            
-            startBtn.addEventListener('click', startRecording);
-            stopBtn.addEventListener('click', stopRecording);
-            saveBtn.addEventListener('click', saveRecording);
-            discardBtn.addEventListener('click', discardRecording);
-            downloadAllBtn.addEventListener('click', downloadAllRecordings);
-            
-            // Eventos del buscador
-            searchInput.addEventListener('input', handleSearch);
-            clearSearchBtn.addEventListener('click', clearSearch);
-            filterStartDate.addEventListener('change', handleSearch);
-            filterEndDate.addEventListener('change', handleSearch);
-            clearFiltersBtn.addEventListener('click', clearAllFilters);
-            
-            // Verificar soporte de MediaRecorder
-            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                showToast('Tu navegador no soporta grabación de audio', 'error');
-                startBtn.disabled = true;
-            }
-            
-            // Verificar soporte de reconocimiento de voz
-            initSpeechRecognition();
-        }
-
-        // Manejo de búsqueda
-        function handleSearch() {
-            searchTerm = searchInput.value.toLowerCase().trim();
-            startDateFilter = filterStartDate.value;
-            endDateFilter = filterEndDate.value;
-            
-            // Mostrar/ocultar botón de limpiar búsqueda
-            if (searchTerm) {
-                clearSearchBtn.style.display = 'flex';
-            } else {
-                clearSearchBtn.style.display = 'none';
-            }
-            
-            renderRecordings();
-        }
-
-        // Limpiar búsqueda
-        function clearSearch() {
-            searchInput.value = '';
-            searchTerm = '';
-            clearSearchBtn.style.display = 'none';
-            renderRecordings();
-        }
-
-        // Limpiar todos los filtros
-        function clearAllFilters() {
-            searchInput.value = '';
-            filterStartDate.value = '';
-            filterEndDate.value = '';
-            searchTerm = '';
-            startDateFilter = '';
-            endDateFilter = '';
-            clearSearchBtn.style.display = 'none';
-            renderRecordings();
-        }
-
-        // Filtrar grabaciones
-        function filterRecordings(recordingsArray) {
-            let filtered = recordingsArray;
-            
-            // Filtro por búsqueda de texto
-            if (searchTerm) {
-                filtered = filtered.filter(recording => {
-                    const searchableText = `
-                        ${recording.patientName || ''}
-                        ${recording.title || ''}
-                        ${recording.notes || ''}
-                    `.toLowerCase();
-                    
-                    return searchableText.includes(searchTerm);
-                });
-            }
-            
-            // Filtro por fecha de inicio
-            if (startDateFilter) {
-                filtered = filtered.filter(recording => {
-                    const recDate = recording.sessionDate || recording.date;
-                    return new Date(recDate) >= new Date(startDateFilter);
-                });
-            }
-            
-            // Filtro por fecha de fin
-            if (endDateFilter) {
-                filtered = filtered.filter(recording => {
-                    const recDate = recording.sessionDate || recording.date;
-                    return new Date(recDate) <= new Date(endDateFilter + 'T23:59:59');
-                });
-            }
-            
-            return filtered;
-        }
-
-        // Resaltar texto en búsqueda
-        function highlightText(text, search) {
-            if (!search || !text) return escapeHtml(text);
-            
-            const escapedText = escapeHtml(text);
-            const regex = new RegExp(`(${escapeHtml(search).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
-            return escapedText.replace(regex, '<span class="search-highlight">$1</span>');
-        }
-
-        // Seleccionar categoría
-        function selectCategory(category) {
-            currentCategory = category;
-            
-            // Actualizar botones
-            document.querySelectorAll('.category-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            document.querySelector(`[data-category="${category}"]`).classList.add('active');
-            
-            // Actualizar badge
-            currentCategoryBadge.innerHTML = `${categoryIcons[category]} Grabando en: <strong>${categoryNames[category]}</strong>`;
-            
-            // Actualizar título de sección
-            recordingsSectionTitle.textContent = `${categoryIcons[category]} ${categoryNames[category]}`;
-            
-            // Limpiar filtros al cambiar de categoría
-            clearAllFilters();
-            
-            // Renderizar grabaciones de la categoría
-            renderRecordings();
-        }
-
-        // Actualizar contadores de categorías
-        function updateCategoryCounts() {
-            Object.keys(recordings).forEach(category => {
-                const count = recordings[category].length;
-                const countElement = document.getElementById(`count-${category}`);
-                if (countElement) {
-                    countElement.textContent = count;
-                }
-            });
-        }
-
+        // ============================================
+        // INICIALIZACIÓN
+        // ============================================
+        
+        console.log('Inicializando app...');
+        
         // Inicializar reconocimiento de voz
-        function initSpeechRecognition() {
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            
-            if (!SpeechRecognition) {
-                console.log('Reconocimiento de voz no disponible en este navegador');
-                showToast('Transcripción automática no disponible. Usa Chrome.', 'error');
-                return;
-            }
-            
             recognition = new SpeechRecognition();
             recognition.continuous = true;
             recognition.interimResults = true;
             recognition.lang = 'es-ES';
-            recognition.maxAlternatives = 1;
-            
-            recognition.onstart = () => {
-                console.log('Reconocimiento de voz iniciado');
-                isRecognitionActive = true;
-            };
-            
+
             recognition.onresult = (event) => {
                 let interimTranscript = '';
                 let finalTranscript = '';
-                
+
                 for (let i = event.resultIndex; i < event.results.length; i++) {
                     const transcript = event.results[i][0].transcript;
-                    
                     if (event.results[i].isFinal) {
                         finalTranscript += transcript + ' ';
                     } else {
                         interimTranscript += transcript;
                     }
                 }
-                
+
                 if (finalTranscript) {
-                    transcriptionText += finalTranscript;
+                    liveTranscript += finalTranscript;
                 }
-                
-                if (liveTranscription) {
-                    liveTranscription.textContent = transcriptionText + interimTranscript;
-                    liveTranscription.scrollTop = liveTranscription.scrollHeight;
-                }
+
+                liveTranscriptionDiv.textContent = liveTranscript + interimTranscript;
+                liveTranscriptionDiv.scrollTop = liveTranscriptionDiv.scrollHeight;
             };
-            
+
             recognition.onerror = (event) => {
                 console.error('Error en reconocimiento de voz:', event.error);
-                
                 if (event.error === 'no-speech') {
                     console.log('No se detectó habla, continuando...');
-                } else if (event.error === 'network') {
-                    showToast('Error de red en transcripción', 'error');
-                } else if (event.error !== 'aborted') {
-                    showToast('Error en transcripción: ' + event.error, 'error');
                 }
             };
-            
+
             recognition.onend = () => {
-                console.log('Reconocimiento de voz terminado');
-                isRecognitionActive = false;
-                
-                if (mediaRecorder && mediaRecorder.state === 'recording') {
+                if (isRecognitionActive) {
                     try {
                         recognition.start();
                     } catch (e) {
-                        console.log('No se pudo reiniciar reconocimiento:', e);
+                        console.log('Reconocimiento ya iniciado');
                     }
                 }
             };
         }
 
-        // Iniciar grabación
-        async function startRecording() {
-            console.log('Intentando iniciar grabación...');
-            transcriptionText = '';
-            
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ 
-                    audio: {
-                        echoCancellation: true,
-                        noiseSuppression: true,
-                        sampleRate: 44100
-                    } 
-                });
-                
-                console.log('Permisos de micrófono obtenidos');
-                
-                let mimeType = 'audio/webm';
-                if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
-                    mimeType = 'audio/webm;codecs=opus';
-                } else if (MediaRecorder.isTypeSupported('audio/ogg;codecs=opus')) {
-                    mimeType = 'audio/ogg;codecs=opus';
-                } else if (MediaRecorder.isTypeSupported('audio/mp4')) {
-                    mimeType = 'audio/mp4';
+        // ============================================
+        // GESTIÓN DE CATEGORÍAS
+        // ============================================
+        
+        categoryButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (mediaRecorder && mediaRecorder.state === 'recording') {
+                    showToast('No puedes cambiar de categoría durante una grabación', 'error');
+                    return;
                 }
-                
-                mediaRecorder = new MediaRecorder(stream, { mimeType: mimeType });
+
+                categoryButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentCategory = btn.dataset.category;
+                updateCurrentCategoryBadge();
+                showToast(`Categoría cambiada a: ${CATEGORIES[currentCategory].name}`, 'success');
+            });
+        });
+
+        function updateCurrentCategoryBadge() {
+            currentCategoryBadge.innerHTML = `Grabando en: <strong>${CATEGORIES[currentCategory].name}</strong>`;
+        }
+
+        function updateCategoryCounts() {
+            const recordings = getRecordings();
+            const counts = {};
+            
+            Object.keys(CATEGORIES).forEach(cat => counts[cat] = 0);
+            
+            recordings.forEach(rec => {
+                if (counts.hasOwnProperty(rec.category)) {
+                    counts[rec.category]++;
+                }
+            });
+
+            categoryButtons.forEach(btn => {
+                const category = btn.dataset.category;
+                const countSpan = btn.querySelector('.category-count');
+                countSpan.textContent = counts[category] || 0;
+            });
+        }
+
+        // ============================================
+        // GRABACIÓN DE AUDIO
+        // ============================================
+        
+        recordBtn.addEventListener('click', startRecording);
+        stopBtn.addEventListener('click', stopRecording);
+
+        async function startRecording() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
                 audioChunks = [];
-                
+                liveTranscript = '';
+                liveTranscriptionDiv.textContent = '';
+
                 mediaRecorder.ondataavailable = (event) => {
-                    if (event.data.size > 0) {
-                        audioChunks.push(event.data);
-                    }
+                    audioChunks.push(event.data);
                 };
-                
+
                 mediaRecorder.onstop = () => {
-                    console.log('Grabación detenida. Procesando audio...');
-                    const audioBlob = new Blob(audioChunks, { type: mimeType });
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
                     currentAudioBlob = audioBlob;
                     const audioUrl = URL.createObjectURL(audioBlob);
-                    previewPlayer.src = audioUrl;
+                    audioPlayback.src = audioUrl;
                     audioPreview.classList.remove('hidden');
                     
-                    // Establecer fecha actual
-                    const today = new Date().toISOString().split('T')[0];
-                    sessionDate.value = today;
-                    
-                    // Insertar transcripción automática en las notas
-                    sessionNotes.value = transcriptionText.trim();
-                    
-                    // Limpiar el stream
                     stream.getTracks().forEach(track => track.stop());
+
+                    if (liveTranscript.trim()) {
+                        sessionNotes.value = liveTranscript.trim();
+                    }
                 };
-                
-                mediaRecorder.onerror = (event) => {
-                    console.error('Error en MediaRecorder:', event.error);
-                    showToast('Error durante la grabación', 'error');
-                };
-                
-                mediaRecorder.start(1000);
-                startTime = Date.now();
-                timerInterval = setInterval(updateTimer, 1000);
-                
+
+                mediaRecorder.start();
+                recordingStartTime = Date.now();
+                startTimer();
+
+                recordBtn.disabled = true;
+                stopBtn.disabled = false;
+                statusText.textContent = 'Grabando...';
+                statusDot.classList.add('recording');
+
                 if (recognition) {
+                    isRecognitionActive = true;
                     try {
                         recognition.start();
-                        console.log('Transcripción automática iniciada');
-                        showToast('Grabación y transcripción iniciadas', 'success');
+                        liveTranscriptionContainer.style.display = 'block';
                     } catch (e) {
-                        console.log('No se pudo iniciar transcripción:', e);
-                        showToast('Grabación iniciada (sin transcripción)', 'success');
+                        console.log('Error iniciando reconocimiento:', e);
                     }
-                } else {
-                    showToast('Grabación iniciada (sin transcripción automática)', 'success');
                 }
-                
-                startBtn.disabled = true;
-                stopBtn.disabled = false;
-                recordingStatus.innerHTML = '<div class="status-dot recording"></div><span>Grabando y transcribiendo...</span>';
-                
-                if (liveTranscription) {
-                    liveTranscription.parentElement.style.display = 'block';
-                }
-                
+
+                showToast('Grabación iniciada', 'success');
             } catch (error) {
-                console.error('Error completo:', error);
-                
-                if (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError') {
-                    showToast('Permiso denegado. Por favor permite el acceso al micrófono', 'error');
-                } else if (error.name === 'NotFoundError') {
-                    showToast('No se encontró ningún micrófono', 'error');
-                } else if (error.name === 'NotReadableError') {
-                    showToast('El micrófono está siendo usado por otra aplicación', 'error');
-                } else {
-                    showToast('Error: ' + error.message, 'error');
-                }
+                console.error('Error al acceder al micrófono:', error);
+                showToast('Error: No se pudo acceder al micrófono', 'error');
             }
         }
 
-        // Detener grabación
         function stopRecording() {
-            console.log('Deteniendo grabación...');
-            
-            if (recognition && isRecognitionActive) {
-                try {
-                    recognition.stop();
-                } catch (e) {
-                    console.log('Error al detener reconocimiento:', e);
-                }
-            }
-            
-            if (liveTranscription) {
-                liveTranscription.parentElement.style.display = 'none';
-            }
-            
             if (mediaRecorder && mediaRecorder.state !== 'inactive') {
                 mediaRecorder.stop();
-                clearInterval(timerInterval);
-                
-                startBtn.disabled = false;
+                stopTimer();
+
+                recordBtn.disabled = false;
                 stopBtn.disabled = true;
-                recordingStatus.innerHTML = '<div class="status-dot"></div><span>Listo para grabar</span>';
-                timer.textContent = '00:00';
-                
-                showToast('Grabación y transcripción detenidas', 'success');
+                statusText.textContent = 'Grabación detenida';
+                statusDot.classList.remove('recording');
+
+                if (recognition && isRecognitionActive) {
+                    isRecognitionActive = false;
+                    recognition.stop();
+                }
+
+                showToast('Grabación finalizada', 'success');
             }
         }
 
-        // Actualizar temporizador
-        function updateTimer() {
-            const elapsed = Date.now() - startTime;
-            const minutes = Math.floor(elapsed / 60000);
-            const seconds = Math.floor((elapsed % 60000) / 1000);
-            timer.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                const elapsed = Date.now() - recordingStartTime;
+                const hours = Math.floor(elapsed / 3600000);
+                const minutes = Math.floor((elapsed % 3600000) / 60000);
+                const seconds = Math.floor((elapsed % 60000) / 1000);
+                
+                timer.textContent = `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+            }, 1000);
         }
 
-        // Guardar grabación
+        function stopTimer() {
+            clearInterval(timerInterval);
+            timer.textContent = '00:00:00';
+        }
+
+        function pad(num) {
+            return num.toString().padStart(2, '0');
+        }
+
+        // ============================================
+        // GUARDAR Y GESTIONAR GRABACIONES
+        // ============================================
+        
+        saveBtn.addEventListener('click', saveRecording);
+        discardBtn.addEventListener('click', discardRecording);
+
         function saveRecording() {
-            console.log('Guardando grabación...');
-            
+            const name = patientName.value.trim() || 'Sin nombre';
+            const notes = sessionNotes.value.trim() || 'Sin notas';
+
             if (!currentAudioBlob) {
                 showToast('No hay audio para guardar', 'error');
                 return;
             }
-            
-            const patient = patientName.value.trim();
-            const date = sessionDate.value;
-            const title = sessionTitle.value.trim();
-            const notes = sessionNotes.value.trim();
-            
-            if (!patient) {
-                showToast('Por favor ingresa el nombre del paciente', 'error');
-                patientName.focus();
-                return;
-            }
-            
-            if (!date) {
-                showToast('Por favor selecciona la fecha de la sesión', 'error');
-                sessionDate.focus();
-                return;
-            }
-            
+
             const reader = new FileReader();
             reader.onloadend = () => {
+                const base64Audio = reader.result;
                 const recording = {
                     id: Date.now(),
-                    patientName: patient,
-                    sessionDate: date,
-                    title: title,
+                    category: currentCategory,
+                    patientName: name,
                     notes: notes,
                     date: new Date().toISOString(),
-                    audioData: reader.result,
-                    category: currentCategory
+                    audio: base64Audio,
+                    duration: audioPlayback.duration || 0
                 };
-                
-                recordings[currentCategory].push(recording);
-                saveToLocalStorage();
+
+                const recordings = getRecordings();
+                recordings.push(recording);
+                localStorage.setItem('recordings', JSON.stringify(recordings));
+
+                showToast('Grabación guardada exitosamente', 'success');
+                resetRecordingForm();
+                loadRecordings();
                 updateCategoryCounts();
-                renderRecordings();
-                discardRecording();
-                
-                console.log('Grabación guardada con ID:', recording.id);
-                showToast('Sesión guardada correctamente', 'success');
             };
-            
-            reader.onerror = () => {
-                console.error('Error al leer el audio');
-                showToast('Error al guardar el audio', 'error');
-            };
-            
+
             reader.readAsDataURL(currentAudioBlob);
         }
 
-        // Descartar grabación
         function discardRecording() {
-            audioPreview.classList.add('hidden');
-            previewPlayer.src = '';
-            patientName.value = '';
-            sessionDate.value = new Date().toISOString().split('T')[0];
-            sessionTitle.value = '';
-            sessionNotes.value = '';
-            currentAudioBlob = null;
-            transcriptionText = '';
-            if (liveTranscription) {
-                liveTranscription.textContent = '';
+            if (confirm('¿Estás seguro de que deseas descartar esta grabación?')) {
+                resetRecordingForm();
+                showToast('Grabación descartada', 'success');
             }
         }
 
-        // Renderizar lista de grabaciones
-        function renderRecordings() {
-            const categoryRecordings = recordings[currentCategory];
-            const filteredRecordings = filterRecordings(categoryRecordings);
+        function resetRecordingForm() {
+            audioPreview.classList.add('hidden');
+            patientName.value = '';
+            sessionNotes.value = '';
+            currentAudioBlob = null;
+            audioPlayback.src = '';
+            liveTranscript = '';
+            liveTranscriptionDiv.textContent = '';
+            liveTranscriptionContainer.style.display = 'none';
+        }
+
+        function getRecordings() {
+            const data = localStorage.getItem('recordings');
+            return data ? JSON.parse(data) : [];
+        }
+
+        // ============================================
+        // BÚSQUEDA Y FILTROS
+        // ============================================
+        
+        searchInput.addEventListener('input', handleSearch);
+        clearSearchBtn.addEventListener('click', clearSearch);
+        filterDateFrom.addEventListener('change', applyFilters);
+        filterDateTo.addEventListener('change', applyFilters);
+        clearFiltersBtn.addEventListener('click', clearFilters);
+
+        function handleSearch() {
+            const searchTerm = searchInput.value.trim();
             
-            // Mostrar resultados de búsqueda
-            const hasActiveFilters = searchTerm || startDateFilter || endDateFilter;
-            if (hasActiveFilters) {
+            if (searchTerm) {
+                clearSearchBtn.style.display = 'flex';
+            } else {
+                clearSearchBtn.style.display = 'none';
+            }
+            
+            applyFilters();
+        }
+
+        function clearSearch() {
+            searchInput.value = '';
+            clearSearchBtn.style.display = 'none';
+            applyFilters();
+        }
+
+        function clearFilters() {
+            searchInput.value = '';
+            filterDateFrom.value = '';
+            filterDateTo.value = '';
+            clearSearchBtn.style.display = 'none';
+            applyFilters();
+        }
+
+        function applyFilters() {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            const dateFrom = filterDateFrom.value ? new Date(filterDateFrom.value) : null;
+            const dateTo = filterDateTo.value ? new Date(filterDateTo.value + 'T23:59:59') : null;
+            
+            let recordings = getRecordings();
+            let filteredRecordings = recordings;
+
+            // Filtrar por categoría actual
+            filteredRecordings = filteredRecordings.filter(rec => rec.category === currentCategory);
+
+            // Filtrar por búsqueda
+            if (searchTerm) {
+                filteredRecordings = filteredRecordings.filter(rec => {
+                    const nameMatch = rec.patientName.toLowerCase().includes(searchTerm);
+                    const notesMatch = rec.notes.toLowerCase().includes(searchTerm);
+                    return nameMatch || notesMatch;
+                });
+            }
+
+            // Filtrar por fechas
+            if (dateFrom || dateTo) {
+                filteredRecordings = filteredRecordings.filter(rec => {
+                    const recDate = new Date(rec.date);
+                    if (dateFrom && recDate < dateFrom) return false;
+                    if (dateTo && recDate > dateTo) return false;
+                    return true;
+                });
+            }
+
+            // Mostrar resultados
+            if (searchTerm || dateFrom || dateTo) {
                 searchResults.style.display = 'block';
-                resultsCount.textContent = `📊 ${filteredRecordings.length} resultado(s) encontrado(s) de ${categoryRecordings.length} total`;
+                resultsCount.textContent = `${filteredRecordings.length} resultado(s) encontrado(s)`;
             } else {
                 searchResults.style.display = 'none';
             }
+
+            renderRecordings(filteredRecordings, searchTerm);
+        }
+
+        function highlightText(text, searchTerm) {
+            if (!searchTerm) return text;
             
-            if (filteredRecordings.length === 0) {
-                recordingsList.innerHTML = '';
+            const regex = new RegExp(`(${searchTerm})`, 'gi');
+            return text.replace(regex, '<span class="search-highlight">$1</span>');
+        }
+
+        // ============================================
+        // RENDERIZAR GRABACIONES
+        // ============================================
+        
+        function loadRecordings() {
+            applyFilters();
+        }
+
+        function renderRecordings(recordings, searchTerm = '') {
+            recordingsList.innerHTML = '';
+
+            // Filtrar por categoría actual
+            const categoryRecordings = recordings.filter(rec => rec.category === currentCategory);
+
+            if (categoryRecordings.length === 0) {
                 emptyState.classList.remove('hidden');
-                
-                if (hasActiveFilters) {
-                    emptyState.innerHTML = `
-                        <div class="empty-icon">🔍</div>
-                        <p>No se encontraron resultados</p>
-                        <p class="empty-subtitle">Intenta con otros criterios de búsqueda</p>
-                    `;
-                } else {
-                    emptyState.innerHTML = `
-                        <div class="empty-icon">🎤</div>
-                        <p>No hay grabaciones en esta categoría</p>
-                        <p class="empty-subtitle">Comienza grabando tu primera sesión</p>
-                    `;
-                }
                 return;
             }
-            
+
             emptyState.classList.add('hidden');
-            
-            recordingsList.innerHTML = filteredRecordings
-                .sort((a, b) => {
-                    const dateA = new Date(a.sessionDate || a.date);
-                    const dateB = new Date(b.sessionDate || b.date);
-                    return dateB - dateA;
-                })
-                .map(recording => {
-                    const sessionDateObj = new Date(recording.sessionDate || recording.date);
-                    const formattedSessionDate = sessionDateObj.toLocaleDateString('es-ES', {
-                        weekday: 'long',
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                    });
-                    
-                    const creationDate = new Date(recording.date);
-                    const formattedCreationTime = creationDate.toLocaleTimeString('es-ES', {
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    });
-                    
-                    return `
-                        <div class="recording-item" data-id="${recording.id}">
-                            <div class="recording-header">
-                                <div class="recording-info">
-                                    <div class="patient-badge">
-                                        👤 ${highlightText(recording.patientName || 'Sin nombre', searchTerm)}
-                                    </div>
-                                    <h3>${highlightText(recording.title || 'Sin título', searchTerm)}</h3>
-                                    <div class="recording-date">
-                                        📅 Sesión: ${formattedSessionDate}
-                                        <br>
-                                        🕐 Grabado: ${formattedCreationTime}
-                                    </div>
-                                </div>
-                                <div class="recording-actions">
-                                    <button class="btn btn-small btn-download" onclick="downloadAudio(${recording.id})">
-                                        💾 Audio
-                                    </button>
-                                    <button class="btn btn-small btn-download" onclick="downloadNotes(${recording.id})">
-                                        📄 Notas
-                                    </button>
-                                    <button class="btn btn-small btn-delete" onclick="deleteRecording(${recording.id})">
-                                        🗑️
-                                    </button>
-                                </div>
+
+            // Ordenar por fecha (más reciente primero)
+            categoryRecordings.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            categoryRecordings.forEach(recording => {
+                const item = document.createElement('div');
+                item.className = 'recording-item';
+                
+                const date = new Date(recording.date);
+                const formattedDate = date.toLocaleDateString('es-ES', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+
+                const highlightedName = highlightText(recording.patientName, searchTerm);
+                const highlightedNotes = highlightText(recording.notes, searchTerm);
+
+                const categoryInfo = CATEGORIES[recording.category];
+
+                item.innerHTML = `
+                    <div class="recording-header">
+                        <div class="recording-info">
+                            <div class="patient-badge">${categoryInfo.icon} ${categoryInfo.name}</div>
+                            <h3>${highlightedName}</h3>
+                            <div class="recording-date">
+                                📅 ${formattedDate}<br>
+                                ⏱️ Duración: ${formatDuration(recording.duration)}
                             </div>
-                            
-                            <div class="recording-audio">
-                                <audio controls src="${recording.audioData}"></audio>
-                            </div>
-                            
-                            ${recording.notes ? `
-                                <div class="recording-notes">
-                                    <h4>📝 Transcripción Automática:</h4>
-                                    <p>${highlightText(recording.notes, searchTerm)}</p>
-                                </div>
-                            ` : ''}
                         </div>
-                    `;
-                })
-                .join('');
+                        <div class="recording-actions">
+                            <button class="btn btn-small btn-download" onclick="downloadRecording(${recording.id})">
+                                <span class="btn-icon">⬇️</span>
+                                Descargar
+                            </button>
+                            <button class="btn btn-small btn-delete" onclick="deleteRecording(${recording.id})">
+                                <span class="btn-icon">🗑️</span>
+                                Eliminar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="recording-audio">
+                        <audio controls src="${recording.audio}"></audio>
+                    </div>
+                    <div class="recording-notes">
+                        <h4>📝 Notas de la sesión:</h4>
+                        <p>${highlightedNotes}</p>
+                    </div>
+                `;
+                
+                recordingsList.appendChild(item);
+            });
         }
 
-        // Función para escapar HTML
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
+        function formatDuration(seconds) {
+            if (!seconds || isNaN(seconds)) return '00:00';
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${pad(mins)}:${pad(secs)}`;
         }
 
-        // Descargar audio individual
-        function downloadAudio(id) {
-            const recording = recordings[currentCategory].find(r => r.id === id);
-            if (!recording) return;
+        // ============================================
+        // ACCIONES DE GRABACIONES
+        // ============================================
+        
+        function downloadRecording(id) {
+            const recordings = getRecordings();
+            const recording = recordings.find(r => r.id === id);
             
+            if (!recording) return;
+
             const link = document.createElement('a');
-            link.href = recording.audioData;
-            const extension = recording.audioData.includes('audio/mp4') ? '.m4a' : '.webm';
-            const fileName = `${recording.patientName || 'paciente'}_${recording.sessionDate || 'fecha'}${extension}`;
-            link.download = fileName;
+            link.href = recording.audio;
+            link.download = `${recording.patientName}_${new Date(recording.date).toLocaleDateString()}.wav`;
             link.click();
-            
-            showToast('Descargando audio...', 'success');
+
+            showToast('Descargando grabación...', 'success');
         }
 
-        // Descargar notas individuales
-        function downloadNotes(id) {
-            const recording = recordings[currentCategory].find(r => r.id === id);
-            if (!recording) return;
-            
-            const content = `PACIENTE: ${recording.patientName || 'Sin nombre'}
-FECHA DE SESIÓN: ${new Date(recording.sessionDate || recording.date).toLocaleDateString('es-ES')}
-TÍTULO: ${recording.title || 'Sin título'}
-${'='.repeat(50)}
+        function deleteRecording(id) {
+            if (!confirm('¿Estás seguro de que deseas eliminar esta grabación?')) {
+                return;
+            }
 
-TRANSCRIPCIÓN:
-${recording.notes || 'Sin transcripción'}
+            let recordings = getRecordings();
+            recordings = recordings.filter(r => r.id !== id);
+            localStorage.setItem('recordings', JSON.stringify(recordings));
 
-${'='.repeat(50)}
-Grabado el: ${new Date(recording.date).toLocaleString('es-ES')}`;
+            showToast('Grabación eliminada', 'success');
+            loadRecordings();
+            updateCategoryCounts();
+        }
+
+        // ============================================
+        // RESPALDO DE DATOS
+        // ============================================
+        
+        backupBtn.addEventListener('click', downloadBackup);
+
+        function downloadBackup() {
+            const recordings = getRecordings();
             
-            const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
+            if (recordings.length === 0) {
+                showToast('No hay grabaciones para respaldar', 'error');
+                return;
+            }
+
+            const dataStr = JSON.stringify(recordings, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
             
             const link = document.createElement('a');
             link.href = url;
-            const fileName = `${recording.patientName || 'paciente'}_${recording.sessionDate || 'fecha'}_Transcripcion.txt`;
-            link.download = fileName;
+            link.download = `respaldo_sesiones_${new Date().toISOString().split('T')[0]}.json`;
             link.click();
             
             URL.revokeObjectURL(url);
-            showToast('Descargando transcripción...', 'success');
+            showToast('Respaldo descargado exitosamente', 'success');
         }
 
-        // Descargar backup completo
-        function downloadAllRecordings() {
-            const categoryRecordings = recordings[currentCategory];
-            
-            if (categoryRecordings.length === 0) {
-                showToast('No hay grabaciones para descargar', 'error');
-                return;
-            }
-            
-            let allNotes = `BACKUP COMPLETO - ${categoryNames[currentCategory].toUpperCase()}\n`;
-            allNotes += '='.repeat(70) + '\n';
-            allNotes += `Fecha de backup: ${new Date().toLocaleString('es-ES')}\n`;
-            allNotes += `Total de sesiones: ${categoryRecordings.length}\n`;
-            allNotes += '='.repeat(70) + '\n\n';
-            
-            categoryRecordings
-                .sort((a, b) => new Date(a.sessionDate || a.date) - new Date(b.sessionDate || b.date))
-                .forEach((recording, index) => {
-                    allNotes += `SESIÓN ${index + 1}\n`;
-                    allNotes += `Paciente: ${recording.patientName || 'Sin nombre'}\n`;
-                    allNotes += `Fecha de sesión: ${new Date(recording.sessionDate || recording.date).toLocaleDateString('es-ES')}\n`;
-                    allNotes += `Título: ${recording.title || 'Sin título'}\n`;
-                    allNotes += '-'.repeat(70) + '\n';
-                    allNotes += 'TRANSCRIPCIÓN:\n';
-                    allNotes += recording.notes || 'Sin transcripción';
-                    allNotes += '\n\n' + '='.repeat(70) + '\n\n';
-                });
-            
-            const notesBlob = new Blob([allNotes], { type: 'text/plain;charset=utf-8' });
-            const notesUrl = URL.createObjectURL(notesBlob);
-            
-            const notesLink = document.createElement('a');
-            notesLink.href = notesUrl;
-            notesLink.download = `Backup_${currentCategory}_${new Date().toISOString().split('T')[0]}.txt`;
-            notesLink.click();
-            
-            categoryRecordings.forEach((recording, index) => {
-                setTimeout(() => {
-                    const link = document.createElement('a');
-                    link.href = recording.audioData;
-                    const extension = recording.audioData.includes('audio/mp4') ? '.m4a' : '.webm';
-                    const fileName = `${index + 1}_${recording.patientName || 'paciente'}_${recording.sessionDate || 'fecha'}${extension}`;
-                    link.download = fileName;
-                    link.click();
-                }, index * 500);
-            });
-            
-            showToast(`Descargando ${categoryRecordings.length} archivos...`, 'success');
-        }
-
-        // Eliminar grabación
-        function deleteRecording(id) {
-            const recording = recordings[currentCategory].find(r => r.id === id);
-            if (!recording) return;
-            
-            const card = document.querySelector(`[data-id="${id}"]`);
-            const deleteBtn = card.querySelector('.btn-delete');
-            
-            if (deleteBtn.textContent === '🗑️') {
-                deleteBtn.textContent = '¿Confirmar?';
-                deleteBtn.style.background = '#e53e3e';
-                
-                setTimeout(() => {
-                    if (deleteBtn.textContent === '¿Confirmar?') {
-                        deleteBtn.textContent = '🗑️';
-                        deleteBtn.style.background = '#fc8181';
-                    }
-                }, 3000);
-                return;
-            }
-            
-            recordings[currentCategory] = recordings[currentCategory].filter(r => r.id !== id);
-            saveToLocalStorage();
-            updateCategoryCounts();
-            renderRecordings();
-            showToast('Grabación eliminada', 'success');
-        }
-
-        // Guardar en localStorage
-        function saveToLocalStorage() {
-            try {
-                localStorage.setItem('psychologyRecordings', JSON.stringify(recordings));
-                console.log('Datos guardados en localStorage');
-            } catch (e) {
-                if (e.name === 'QuotaExceededError') {
-                    showToast('Almacenamiento lleno. Descarga backup y elimina grabaciones antiguas', 'error');
-                } else {
-                    console.error('Error al guardar:', e);
-                }
-            }
-        }
-
-        // Cargar desde localStorage
-        function loadRecordings() {
-            try {
-                const stored = localStorage.getItem('psychologyRecordings');
-                if (stored) {
-                    const loadedData = JSON.parse(stored);
-                    
-                    // Migrar formato antiguo si es necesario
-                    if (Array.isArray(loadedData)) {
-                        recordings = {
-                            anivi: loadedData,
-                            consultorio: [],
-                            recordatorios: []
-                        };
-                    } else {
-                        recordings = loadedData;
-                    }
-                    
-                    console.log('Grabaciones cargadas');
-                }
-            } catch (e) {
-                console.error('Error al cargar grabaciones:', e);
-                recordings = {
-                    anivi: [],
-                    consultorio: [],
-                    recordatorios: []
-                };
-            }
-        }
-
-        // Mostrar toast
+        // ============================================
+        // UTILIDADES
+        // ============================================
+        
         function showToast(message, type = 'success') {
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
             toast.textContent = message;
             document.body.appendChild(toast);
-            
+
             setTimeout(() => {
                 toast.remove();
             }, 3000);
         }
 
-        // Inicializar cuando cargue la página
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', init);
-        } else {
-            init();
-        }
+        // ============================================
+        // INICIALIZACIÓN AL CARGAR
+        // ============================================
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            loadRecordings();
+            updateCategoryCounts();
+            updateCurrentCategoryBadge();
+        });
+
+        console.log('Grabaciones cargadas');
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c46692d23cf9c0b',t:'MTc2OTQ5NzYyMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c469c4665d39c0b',t:'MTc2OTQ5OTcxNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
