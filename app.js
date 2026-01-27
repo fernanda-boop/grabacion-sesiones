@@ -4,6 +4,7 @@ let audioChunks = [];
 let startTime;
 let timerInterval;
 let recordings = [];
+let currentAudioBlob = null;
 
 // Elementos del DOM
 const startBtn = document.getElementById('startBtn');
@@ -22,6 +23,7 @@ const downloadAllBtn = document.getElementById('downloadAllBtn');
 
 // Inicializar la app
 function init() {
+    console.log('Inicializando app...');
     loadRecordings();
     renderRecordings();
     
@@ -30,35 +32,80 @@ function init() {
     saveBtn.addEventListener('click', saveRecording);
     discardBtn.addEventListener('click', discardRecording);
     downloadAllBtn.addEventListener('click', downloadAllRecordings);
+    
+    // Verificar soporte de MediaRecorder
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        showToast('Tu navegador no soporta grabación de audio', 'error');
+        startBtn.disabled = true;
+    }
 }
 
 // Iniciar grabación
 async function startRecording() {
+    console.log('Intentando iniciar grabación...');
+    
     try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        // Solicitar permisos del micrófono
+        const stream = await navigator.mediaDevices.getUserMedia({ 
+            audio: {
+                echoCancellation: true,
+                noiseSuppression: true,
+                sampleRate: 44100
+            } 
+        });
         
-        mediaRecorder = new MediaRecorder(stream);
+        console.log('Permisos de micrófono obtenidos');
+        
+        // Verificar qué tipo de audio soporta el navegador
+        let mimeType = 'audio/webm';
+        if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
+            mimeType = 'audio/webm;codecs=opus';
+        } else if (MediaRecorder.isTypeSupported('audio/ogg;codecs=opus')) {
+            mimeType = 'audio/ogg;codecs=opus';
+        } else if (MediaRecorder.isTypeSupported('audio/mp4')) {
+            mimeType = 'audio/mp4';
+        }
+        
+        console.log('Usando formato:', mimeType);
+        
+        mediaRecorder = new MediaRecorder(stream, { mimeType: mimeType });
         audioChunks = [];
         
         mediaRecorder.ondataavailable = (event) => {
-            audioChunks.push(event.data);
+            if (event.data.size > 0) {
+                audioChunks.push(event.data);
+                console.log('Chunk de audio recibido:', event.data.size, 'bytes');
+            }
         };
         
         mediaRecorder.onstop = () => {
-            const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+            console.log('Grabación detenida. Procesando audio...');
+            const audioBlob = new Blob(audioChunks, { type: mimeType });
+            currentAudioBlob = audioBlob;
             const audioUrl = URL.createObjectURL(audioBlob);
             previewPlayer.src = audioUrl;
-            previewPlayer.dataset.blob = audioUrl;
             audioPreview.classList.remove('hidden');
+            
+            console.log('Audio procesado. Tamaño:', audioBlob.size, 'bytes');
             
             // Generar título automático
             const now = new Date();
             sessionTitle.value = `Sesión del ${now.toLocaleDateString('es-ES')} - ${now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}`;
+            
+            // Limpiar el stream
+            stream.getTracks().forEach(track => track.stop());
         };
         
-        mediaRecorder.start();
+        mediaRecorder.onerror = (event) => {
+            console.error('Error en MediaRecorder:', event.error);
+            showToast('Error durante la grabación', 'error');
+        };
+        
+        mediaRecorder.start(1000); // Guardar chunks cada segundo
         startTime = Date.now();
         timerInterval = setInterval(updateTimer, 1000);
+        
+        console.log('Grabación iniciada correctamente');
         
         // Actualizar UI
         startBtn.disabled = true;
@@ -66,18 +113,28 @@ async function startRecording() {
         recordingStatus.innerHTML = '<div class="status-dot recording"></div><span>Grabando...</span>';
         
         showToast('Grabación iniciada', 'success');
+        
     } catch (error) {
-        console.error('Error al acceder al micrófono:', error);
-        showToast('Error: No se pudo acceder al micrófono', 'error');
+        console.error('Error completo:', error);
+        
+        if (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError') {
+            showToast('Permiso denegado. Por favor permite el acceso al micrófono', 'error');
+        } else if (error.name === 'NotFoundError') {
+            showToast('No se encontró ningún micrófono', 'error');
+        } else if (error.name === 'NotReadableError') {
+            showToast('El micrófono está siendo usado por otra aplicación', 'error');
+        } else {
+            showToast('Error: ' + error.message, 'error');
+        }
     }
 }
 
 // Detener grabación
 function stopRecording() {
+    console.log('Deteniendo grabación...');
+    
     if (mediaRecorder && mediaRecorder.state !== 'inactive') {
         mediaRecorder.stop();
-        mediaRecorder.stream.getTracks().forEach(track => track.stop());
-        
         clearInterval(timerInterval);
         
         // Actualizar UI
@@ -100,33 +157,41 @@ function updateTimer() {
 
 // Guardar grabación
 function saveRecording() {
+    console.log('Guardando grabación...');
+    
+    if (!currentAudioBlob) {
+        showToast('No hay audio para guardar', 'error');
+        return;
+    }
+    
     const title = sessionTitle.value.trim() || 'Sin título';
     const notes = sessionNotes.value.trim();
-    const audioUrl = previewPlayer.dataset.blob;
     
-    // Convertir blob URL a base64 para almacenamiento
-    fetch(audioUrl)
-        .then(res => res.blob())
-        .then(blob => {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                const recording = {
-                    id: Date.now(),
-                    title: title,
-                    notes: notes,
-                    date: new Date().toISOString(),
-                    audioData: reader.result
-                };
-                
-                recordings.push(recording);
-                saveToLocalStorage();
-                renderRecordings();
-                discardRecording();
-                
-                showToast('Sesión guardada correctamente', 'success');
-            };
-            reader.readAsDataURL(blob);
-        });
+    const reader = new FileReader();
+    reader.onloadend = () => {
+        const recording = {
+            id: Date.now(),
+            title: title,
+            notes: notes,
+            date: new Date().toISOString(),
+            audioData: reader.result
+        };
+        
+        recordings.push(recording);
+        saveToLocalStorage();
+        renderRecordings();
+        discardRecording();
+        
+        console.log('Grabación guardada con ID:', recording.id);
+        showToast('Sesión guardada correctamente', 'success');
+    };
+    
+    reader.onerror = () => {
+        console.error('Error al leer el audio');
+        showToast('Error al guardar el audio', 'error');
+    };
+    
+    reader.readAsDataURL(currentAudioBlob);
 }
 
 // Descartar grabación
@@ -135,6 +200,7 @@ function discardRecording() {
     previewPlayer.src = '';
     sessionTitle.value = '';
     sessionNotes.value = '';
+    currentAudioBlob = null;
 }
 
 // Renderizar lista de grabaciones
@@ -164,7 +230,7 @@ function renderRecordings() {
                 <div class="recording-item" data-id="${recording.id}">
                     <div class="recording-header">
                         <div class="recording-info">
-                            <h3>${recording.title}</h3>
+                            <h3>${escapeHtml(recording.title)}</h3>
                             <div class="recording-date">${formattedDate}</div>
                         </div>
                         <div class="recording-actions">
@@ -187,13 +253,20 @@ function renderRecordings() {
                     ${recording.notes ? `
                         <div class="recording-notes">
                             <h4>Notas / Transcripción:</h4>
-                            <p>${recording.notes}</p>
+                            <p>${escapeHtml(recording.notes)}</p>
                         </div>
                     ` : ''}
                 </div>
             `;
         })
         .join('');
+}
+
+// Función para escapar HTML y prevenir XSS
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
 }
 
 // Descargar audio individual
@@ -203,7 +276,8 @@ function downloadAudio(id) {
     
     const link = document.createElement('a');
     link.href = recording.audioData;
-    link.download = `${recording.title}.webm`;
+    const extension = recording.audioData.includes('audio/mp4') ? '.m4a' : '.webm';
+    link.download = `${recording.title}${extension}`;
     link.click();
     
     showToast('Descargando audio...', 'success');
@@ -215,7 +289,7 @@ function downloadNotes(id) {
     if (!recording) return;
     
     const content = `${recording.title}\n${'='.repeat(50)}\nFecha: ${new Date(recording.date).toLocaleString('es-ES')}\n\n${recording.notes || 'Sin notas'}`;
-    const blob = new Blob([content], { type: 'text/plain' });
+    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     
     const link = document.createElement('a');
@@ -246,7 +320,7 @@ function downloadAllRecordings() {
         allNotes += '\n\n' + '='.repeat(70) + '\n\n';
     });
     
-    const notesBlob = new Blob([allNotes], { type: 'text/plain' });
+    const notesBlob = new Blob([allNotes], { type: 'text/plain;charset=utf-8' });
     const notesUrl = URL.createObjectURL(notesBlob);
     
     const notesLink = document.createElement('a');
@@ -259,9 +333,10 @@ function downloadAllRecordings() {
         setTimeout(() => {
             const link = document.createElement('a');
             link.href = recording.audioData;
-            link.download = `${index + 1}_${recording.title}.webm`;
+            const extension = recording.audioData.includes('audio/mp4') ? '.m4a' : '.webm';
+            link.download = `${index + 1}_${recording.title}${extension}`;
             link.click();
-        }, index * 500); // Delay entre descargas
+        }, index * 500);
     });
     
     showToast(`Descargando ${recordings.length} audios y transcripciones...`, 'success');
@@ -269,24 +344,56 @@ function downloadAllRecordings() {
 
 // Eliminar grabación
 function deleteRecording(id) {
-    if (confirm('¿Estás seguro de que quieres eliminar esta grabación?')) {
-        recordings = recordings.filter(r => r.id !== id);
-        saveToLocalStorage();
-        renderRecordings();
-        showToast('Grabación eliminada', 'success');
+    const recording = recordings.find(r => r.id === id);
+    if (!recording) return;
+    
+    const card = document.querySelector(`[data-id="${id}"]`);
+    const deleteBtn = card.querySelector('.btn-delete');
+    
+    if (deleteBtn.textContent === '🗑️') {
+        deleteBtn.textContent = '¿Confirmar?';
+        deleteBtn.style.background = '#fc8181';
+        
+        setTimeout(() => {
+            if (deleteBtn.textContent === '¿Confirmar?') {
+                deleteBtn.textContent = '🗑️';
+                deleteBtn.style.background = '#fc8181';
+            }
+        }, 3000);
+        return;
     }
+    
+    recordings = recordings.filter(r => r.id !== id);
+    saveToLocalStorage();
+    renderRecordings();
+    showToast('Grabación eliminada', 'success');
 }
 
 // Guardar en localStorage
 function saveToLocalStorage() {
-    localStorage.setItem('psychologyRecordings', JSON.stringify(recordings));
+    try {
+        localStorage.setItem('psychologyRecordings', JSON.stringify(recordings));
+        console.log('Datos guardados en localStorage');
+    } catch (e) {
+        if (e.name === 'QuotaExceededError') {
+            showToast('Almacenamiento lleno. Descarga backup y elimina grabaciones antiguas', 'error');
+        } else {
+            console.error('Error al guardar:', e);
+        }
+    }
 }
 
 // Cargar desde localStorage
 function loadRecordings() {
-    const stored = localStorage.getItem('psychologyRecordings');
-    if (stored) {
-        recordings = JSON.parse(stored);
+    try {
+        const stored = localStorage.getItem('psychologyRecordings');
+        if (stored) {
+            recordings = JSON.parse(stored);
+            console.log('Grabaciones cargadas:', recordings.length);
+        }
+    } catch (e) {
+        console.error('Error al cargar grabaciones:', e);
+        recordings = [];
     }
 }
 
@@ -300,4 +407,11 @@ function showToast(message, type = 'success') {
     setTimeout(() => {
         toast.remove();
     }, 3000);
+}
+
+// Inicializar cuando cargue la página
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+} else {
+    init();
 }
