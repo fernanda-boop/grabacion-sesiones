@@ -4,7 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="PsyTape - Menos notas, más empatía. Graba, transcribe y conecta.">
-  <title>PsyTape - Grabadora Inteligente para Psicólogos</title>
+  <title>PsyTape - Grabadora Inteligente para Psicólogos</title><!-- Mercado Pago SDK -->
+  <script src="https://sdk.mercadopago.com/js/v2"></script><!-- Stripe SDK -->
+  <script src="https://js.stripe.com/v3/"></script><!-- PayPal SDK -->
+  <script src="https://www.paypal.com/sdk/js?client-id=TU_CLIENT_ID_AQUI&amp;currency=USD"></script>
   <style>
         * {
             margin: 0;
@@ -830,6 +833,109 @@
             box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
 
+        /* Estilos de Métodos de Pago */
+        .payment-method-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .payment-method-btn {
+            background: white;
+            border: 3px solid #e5e7eb;
+            border-radius: 15px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .payment-method-btn:hover {
+            border-color: #667eea;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .payment-method-btn.selected {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
+            border-width: 4px;
+        }
+
+        .payment-method-icon {
+            font-size: 3rem;
+        }
+
+        .payment-method-name {
+            font-weight: 700;
+            color: #1f2937;
+            font-size: 0.95rem;
+        }
+
+        .payment-form-container {
+            background: #f9fafb;
+            border: 2px solid #e5e7eb;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .payment-form-container h4 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        #mercadopago-button, #stripe-button, #paypal-button-container {
+            margin-top: 20px;
+        }
+
+        .payment-processing {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .payment-processing .spinner {
+            border: 4px solid #f3f4f6;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .payment-info-box {
+            background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+            border: 2px solid #667eea;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .payment-info-box h4 {
+            color: #3730a3;
+            margin-bottom: 10px;
+        }
+
+        .payment-info-box ul {
+            color: #4338ca;
+            margin-left: 20px;
+        }
+
+        .payment-info-box li {
+            margin: 8px 0;
+        }
+
         /* Estilos del Calendario */
         .calendar-navigation {
             display: flex;
@@ -1024,7 +1130,7 @@
   </div><!-- App Principal -->
   <div id="mainApp" class="container">
    <header>
-    <div class="security-controls"><button id="plansBtn" class="btn btn-lock"> <span>💎</span> Mi Plan </button> <button id="calendarNavBtn" class="btn btn-lock"> <span>📅</span> Agenda </button> <button id="lockBtn" class="btn btn-lock"> <span>🔒</span> Bloquear </button> <button id="changePinBtn" class="btn btn-lock"> <span>🔑</span> Cambiar PIN </button>
+    <div class="security-controls"><button id="homeBtn" class="btn btn-lock"> <span>🏠</span> Inicio </button> <button id="plansBtn" class="btn btn-lock"> <span>💎</span> Mi Plan </button> <button id="calendarNavBtn" class="btn btn-lock"> <span>📅</span> Agenda </button> <button id="lockBtn" class="btn btn-lock"> <span>🔒</span> Bloquear </button> <button id="changePinBtn" class="btn btn-lock"> <span>🔑</span> Cambiar PIN </button>
     </div>
     <div class="header-content">
      <h1>🎙️ PsyTape</h1>
@@ -1081,16 +1187,19 @@
          ✅ 3 sesiones por paciente
         </div>
         <div class="feature-item">
-         ✅ 10 minutos de grabación
+         ✅ 25 minutos de grabación
         </div>
         <div class="feature-item">
-         ✅ Transcripción automática
+         ✅ Grabación de audio básica
         </div>
         <div class="feature-item">
          ✅ Agenda semanal
         </div>
         <div class="feature-item">
          ✅ Seguridad con PIN
+        </div>
+        <div class="feature-item disabled">
+         ❌ Sin transcripción automática
         </div>
         <div class="feature-item disabled">
          ❌ Sin plantillas clínicas
@@ -1120,10 +1229,10 @@
          ✅ 4 sesiones por paciente
         </div>
         <div class="feature-item">
-         ✅ 40 minutos de grabación
+         ✅ 45 minutos de grabación
         </div>
         <div class="feature-item">
-         ✅ Transcripción automática
+         ✅ ������ Transcripción automática con IA
         </div>
         <div class="feature-item">
          ✅ Agenda ilimitada
@@ -1237,13 +1346,13 @@
       <p id="patientCategoryBadge" class="category-badge"></p>
       <p id="patientDetailsInfo" style="color: #6b7280; margin-top: 10px;"></p>
      </div>
-     <div style="display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; flex-wrap: wrap;"><button id="newSessionBtn" class="btn btn-success"> <span>🎙️</span> Nueva Sesión </button> <button id="editPatientBtn" class="btn btn-secondary"> <span>✏️</span> Editar Paciente </button> <button id="deletePatientBtn" class="btn btn-danger"> <span>🗑️</span> Eliminar Paciente </button>
+     <div style="display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; flex-wrap: wrap;"><button id="newSessionBtn" class="btn btn-success"> <span>🎙���</span> Nueva Sesión </button> <button id="editPatientBtn" class="btn btn-secondary"> <span>✏️</span> Editar Paciente </button> <button id="deletePatientBtn" class="btn btn-danger"> <span>🗑️</span> Eliminar Paciente </button>
      </div>
-     <div class="search-bar"><input type="text" id="searchSessions" placeholder="🔍 Buscar en sesiones..." class="search-input">
+     <div class="search-bar"><input type="text" id="searchSessions" placeholder="�� Buscar en sesiones..." class="search-input">
      </div>
      <div id="sessionsEmptyState" class="empty-state">
       <div class="empty-icon">
-       🎙️
+       ���️
       </div>
       <p>No hay sesiones registradas</p>
       <p class="empty-subtitle">Comienza grabando la primera sesión</p>
@@ -1300,7 +1409,7 @@
     <div class="modal">
      <h2>🔑 Cambiar PIN de Seguridad</h2>
      <form id="changePinForm">
-      <div class="form-group"><label for="currentPinInput">PIN Actual:</label> <input type="password" id="currentPinInput" maxlength="4" pattern="[0-9]{4}" required placeholder="••••">
+      <div class="form-group"><label for="currentPinInput">PIN Actual:</label> <input type="password" id="currentPinInput" maxlength="4" pattern="[0-9]{4}" required placeholder="���•••">
       </div>
       <div class="form-group"><label for="newPinInput">Nuevo PIN (4 dígitos):</label> <input type="password" id="newPinInput" maxlength="4" pattern="[0-9]{4}" required placeholder="••••">
       </div>
@@ -1329,6 +1438,69 @@
       </div>
      </form>
     </div>
+   </div><!-- Modal: Proceso de Pago -->
+   <div id="paymentModal" class="modal-overlay hidden">
+    <div class="modal" style="max-width: 600px;">
+     <h2>💳 Proceso de Pago Seguro</h2>
+     <div id="paymentPlanInfo" style="text-align: center; padding: 20px 0; border-bottom: 2px solid #e5e7eb; margin-bottom: 25px;">
+      <div style="font-size: 3rem; margin-bottom: 10px;" id="paymentPlanIcon"></div>
+      <h3 style="color: #667eea; margin-bottom: 10px;" id="paymentPlanName"></h3>
+      <div style="font-size: 2rem; font-weight: 700; color: #667eea;" id="paymentPlanPrice"></div>
+     </div>
+     <div class="payment-info-box">
+      <h4>🔒 Pago 100% Seguro</h4>
+      <ul>
+       <li>✅ Encriptación SSL de nivel bancario</li>
+       <li>✅ No almacenamos datos de tarjetas</li>
+       <li>✅ Procesadores certificados PCI DSS</li>
+       <li>✅ Cancela cuando quieras</li>
+      </ul>
+     </div>
+     <h3 style="color: #1f2937; margin-bottom: 15px;">Selecciona tu método de pago:</h3>
+     <div class="payment-method-selector">
+      <div class="payment-method-btn" data-method="mercadopago" onclick="selectPaymentMethod('mercadopago')">
+       <div class="payment-method-icon">
+        💰
+       </div>
+       <div class="payment-method-name">
+        Mercado Pago
+       </div>
+      </div>
+      <div class="payment-method-btn" data-method="stripe" onclick="selectPaymentMethod('stripe')">
+       <div class="payment-method-icon">
+        💳
+       </div>
+       <div class="payment-method-name">
+        Stripe
+       </div>
+      </div>
+      <div class="payment-method-btn" data-method="paypal" onclick="selectPaymentMethod('paypal')">
+       <div class="payment-method-icon">
+        🅿️
+       </div>
+       <div class="payment-method-name">
+        PayPal
+       </div>
+      </div>
+     </div><!-- Contenedor de Mercado Pago -->
+     <div id="mercadopagoContainer" class="payment-form-container hidden">
+      <h4>💰 Pagar con Mercado Pago</h4>
+      <p style="color: #6b7280; margin-bottom: 15px;">Acepta tarjetas de crédito, débito y más métodos de pago</p>
+      <div id="mercadopago-button"></div>
+     </div><!-- Contenedor de Stripe -->
+     <div id="stripeContainer" class="payment-form-container hidden">
+      <h4>💳 Pagar con Stripe</h4>
+      <p style="color: #6b7280; margin-bottom: 15px;">Tarjetas de crédito y débito internacionales</p>
+      <div id="stripe-card-element" style="padding: 15px; background: white; border: 2px solid #e5e7eb; border-radius: 8px;"></div><button id="stripe-button" class="btn btn-primary" style="width: 100%; margin-top: 15px;"> 💳 Pagar Ahora </button>
+     </div><!-- Contenedor de PayPal -->
+     <div id="paypalContainer" class="payment-form-container hidden">
+      <h4>🅿️ Pagar con PayPal</h4>
+      <p style="color: #6b7280; margin-bottom: 15px;">Paga de forma rápida y segura con tu cuenta PayPal</p>
+      <div id="paypal-button-container"></div>
+     </div>
+     <div style="text-align: center; margin-top: 25px; padding-top: 20px; border-top: 2px solid #e5e7eb;"><button class="btn btn-secondary" onclick="closePaymentModal()"> Cancelar </button>
+     </div>
+    </div>
    </div>
   </div>
   <script>
@@ -1344,6 +1516,298 @@
         let inactivityTimer = null;
         let isAuthenticated = false;
 
+        // ========== SISTEMA DE PAGOS ==========
+        
+        // IMPORTANTE: Estas son claves de PRUEBA (test keys)
+        // Para producción, reemplázalas con tus claves reales desde los dashboards
+        const PAYMENT_CONFIG = {
+            mercadopago: {
+                publicKey: 'TEST-TU-PUBLIC-KEY-AQUI', // Obtén tu clave en: https://www.mercadopago.com/developers
+                enabled: true
+            },
+            stripe: {
+                publicKey: 'pk_test_TU-PUBLIC-KEY-AQUI', // Obtén tu clave en: https://dashboard.stripe.com/test/apikeys
+                enabled: true
+            },
+            paypal: {
+                clientId: 'TU-CLIENT-ID-AQUI', // Obtén tu clave en: https://developer.paypal.com/dashboard
+                enabled: true
+            }
+        };
+
+        let selectedPaymentMethod = null;
+        let selectedPlanForPurchase = null;
+        let stripe = null;
+        let stripeCardElement = null;
+        let mercadopago = null;
+
+        // Inicializar SDKs de pago
+        function initializePaymentSDKs() {
+            // Inicializar Stripe
+            if (PAYMENT_CONFIG.stripe.enabled && typeof Stripe !== 'undefined') {
+                stripe = Stripe(PAYMENT_CONFIG.stripe.publicKey);
+                const elements = stripe.elements();
+                stripeCardElement = elements.create('card', {
+                    style: {
+                        base: {
+                            fontSize: '16px',
+                            color: '#1f2937',
+                            '::placeholder': {
+                                color: '#9ca3af'
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Inicializar Mercado Pago
+            if (PAYMENT_CONFIG.mercadopago.enabled && typeof MercadoPago !== 'undefined') {
+                mercadopago = new MercadoPago(PAYMENT_CONFIG.mercadopago.publicKey);
+            }
+
+            // PayPal se inicializa dinámicamente cuando se selecciona
+        }
+
+        function selectPaymentMethod(method) {
+            selectedPaymentMethod = method;
+            
+            // Actualizar UI
+            document.querySelectorAll('.payment-method-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            document.querySelector(`[data-method="${method}"]`).classList.add('selected');
+
+            // Ocultar todos los contenedores
+            document.getElementById('mercadopagoContainer').classList.add('hidden');
+            document.getElementById('stripeContainer').classList.add('hidden');
+            document.getElementById('paypalContainer').classList.add('hidden');
+
+            // Mostrar el contenedor seleccionado
+            if (method === 'mercadopago') {
+                initializeMercadoPagoButton();
+                document.getElementById('mercadopagoContainer').classList.remove('hidden');
+            } else if (method === 'stripe') {
+                initializeStripeForm();
+                document.getElementById('stripeContainer').classList.remove('hidden');
+            } else if (method === 'paypal') {
+                initializePayPalButton();
+                document.getElementById('paypalContainer').classList.remove('hidden');
+            }
+        }
+
+        function initializeMercadoPagoButton() {
+            if (!mercadopago) {
+                document.getElementById('mercadopago-button').innerHTML = `
+                    <div style="background: #fff3cd; border: 2px solid #ffc107; border-radius: 8px; padding: 15px; text-align: center;">
+                        <p style="color: #856404; margin: 0;">⚠️ Mercado Pago no está configurado</p>
+                        <p style="color: #856404; font-size: 0.9rem; margin-top: 5px;">Agrega tu Public Key en PAYMENT_CONFIG</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const plan = PLANS[selectedPlanForPurchase];
+            
+            document.getElementById('mercadopago-button').innerHTML = `
+                <button class="btn btn-primary" style="width: 100%;" onclick="processMercadoPagoPayment()">
+                    💰 Pagar $${plan.price} con Mercado Pago
+                </button>
+            `;
+        }
+
+        function initializeStripeForm() {
+            if (!stripe || !stripeCardElement) {
+                document.getElementById('stripe-card-element').innerHTML = `
+                    <div style="background: #fff3cd; border: 2px solid #ffc107; border-radius: 8px; padding: 15px; text-align: center;">
+                        <p style="color: #856404; margin: 0;">⚠️ Stripe no está configurado</p>
+                        <p style="color: #856404; font-size: 0.9rem; margin-top: 5px;">Agrega tu Public Key en PAYMENT_CONFIG</p>
+                    </div>
+                `;
+                return;
+            }
+
+            stripeCardElement.mount('#stripe-card-element');
+            
+            document.getElementById('stripe-button').onclick = processStripePayment;
+        }
+
+        function initializePayPalButton() {
+            const container = document.getElementById('paypal-button-container');
+            
+            if (!PAYMENT_CONFIG.paypal.enabled || typeof paypal === 'undefined') {
+                container.innerHTML = `
+                    <div style="background: #fff3cd; border: 2px solid #ffc107; border-radius: 8px; padding: 15px; text-align: center;">
+                        <p style="color: #856404; margin: 0;">⚠️ PayPal no está configurado</p>
+                        <p style="color: #856404; font-size: 0.9rem; margin-top: 5px;">Agrega tu Client ID en PAYMENT_CONFIG</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const plan = PLANS[selectedPlanForPurchase];
+            
+            container.innerHTML = '';
+            
+            paypal.Buttons({
+                createOrder: function(data, actions) {
+                    return actions.order.create({
+                        purchase_units: [{
+                            description: plan.name + ' - PsyTape',
+                            amount: {
+                                value: plan.price.toString()
+                            }
+                        }]
+                    });
+                },
+                onApprove: function(data, actions) {
+                    return actions.order.capture().then(function(details) {
+                        handlePaymentSuccess(selectedPlanForPurchase, 'paypal', details.id);
+                    });
+                },
+                onError: function(err) {
+                    console.error('Error en PayPal:', err);
+                    showToast('Error en el pago con PayPal', 'error');
+                }
+            }).render('#paypal-button-container');
+        }
+
+        async function processMercadoPagoPayment() {
+            const plan = PLANS[selectedPlanForPurchase];
+            
+            showToast('Procesando pago con Mercado Pago...', 'info');
+            
+            // NOTA: En producción, debes crear una preferencia de pago en tu backend
+            // Este es un ejemplo simplificado para demostración
+            
+            /* Ejemplo de código backend (Node.js):
+            
+            const mercadopago = require('mercadopago');
+            mercadopago.configure({ access_token: 'TU_ACCESS_TOKEN' });
+            
+            const preference = {
+                items: [
+                    {
+                        title: plan.name,
+                        unit_price: plan.price,
+                        quantity: 1,
+                    }
+                ],
+                back_urls: {
+                    success: 'https://tuapp.com/success',
+                    failure: 'https://tuapp.com/failure',
+                    pending: 'https://tuapp.com/pending'
+                },
+                auto_return: 'approved',
+            };
+            
+            const response = await mercadopago.preferences.create(preference);
+            return response.body.init_point; // URL para redireccionar
+            */
+            
+            // Simulación de pago exitoso para demo
+            setTimeout(() => {
+                handlePaymentSuccess(selectedPlanForPurchase, 'mercadopago', 'MP-DEMO-' + Date.now());
+            }, 2000);
+        }
+
+        async function processStripePayment() {
+            if (!stripe || !stripeCardElement) {
+                showToast('Stripe no está configurado correctamente', 'error');
+                return;
+            }
+
+            const plan = PLANS[selectedPlanForPurchase];
+            
+            showToast('Procesando pago con Stripe...', 'info');
+            
+            // NOTA: En producción, debes crear un PaymentIntent en tu backend
+            // Este es un ejemplo simplificado para demostración
+            
+            /* Ejemplo de código backend (Node.js):
+            
+            const stripe = require('stripe')('sk_test_TU_SECRET_KEY');
+            
+            const paymentIntent = await stripe.paymentIntents.create({
+                amount: plan.price * 100, // Stripe usa centavos
+                currency: 'usd',
+                description: plan.name + ' - PsyTape',
+                metadata: {
+                    plan: selectedPlanForPurchase
+                }
+            });
+            
+            return paymentIntent.client_secret;
+            */
+            
+            /* Luego en el frontend:
+            
+            const {error, paymentIntent} = await stripe.confirmCardPayment(clientSecret, {
+                payment_method: {
+                    card: stripeCardElement,
+                }
+            });
+            
+            if (error) {
+                showToast('Error: ' + error.message, 'error');
+            } else if (paymentIntent.status === 'succeeded') {
+                handlePaymentSuccess(selectedPlanForPurchase, 'stripe', paymentIntent.id);
+            }
+            */
+            
+            // Simulación de pago exitoso para demo
+            setTimeout(() => {
+                handlePaymentSuccess(selectedPlanForPurchase, 'stripe', 'pi_demo_' + Date.now());
+            }, 2000);
+        }
+
+        function handlePaymentSuccess(planType, paymentMethod, transactionId) {
+            // Guardar el plan actualizado
+            setCurrentPlan(planType);
+            
+            // Guardar información de la transacción
+            const transaction = {
+                id: transactionId,
+                planType: planType,
+                paymentMethod: paymentMethod,
+                amount: PLANS[planType].price,
+                date: new Date().toISOString(),
+                status: 'completed'
+            };
+            
+            const transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
+            transactions.push(transaction);
+            localStorage.setItem('transactions', JSON.stringify(transactions));
+            
+            // Cerrar modal y mostrar éxito
+            closePaymentModal();
+            
+            const plan = PLANS[planType];
+            showToast(`¡Pago exitoso! Bienvenido a ${plan.name} 🎉`, 'success');
+            
+            setTimeout(() => {
+                updatePlansView();
+                showToast('Tu plan está activo y listo para usar', 'success');
+            }, 1500);
+        }
+
+        function closePaymentModal() {
+            document.getElementById('paymentModal').classList.add('hidden');
+            selectedPaymentMethod = null;
+            selectedPlanForPurchase = null;
+            
+            // Limpiar formularios
+            document.querySelectorAll('.payment-method-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            document.getElementById('mercadopagoContainer').classList.add('hidden');
+            document.getElementById('stripeContainer').classList.add('hidden');
+            document.getElementById('paypalContainer').classList.add('hidden');
+            
+            if (stripeCardElement) {
+                stripeCardElement.unmount();
+            }
+        }
+
         // ========== SISTEMA DE PLANES Y SUSCRIPCIONES ==========
         
         const PLANS = {
@@ -1354,13 +1818,13 @@
                 currency: 'USD',
                 maxPatients: 5,
                 maxSessionsPerPatient: 3,
-                maxRecordingMinutes: 10,
+                maxRecordingMinutes: 25,
                 hasTranscription: false,
                 hasProfessionals: 1,
                 features: [
                     'Hasta 5 pacientes',
                     '3 sesiones por paciente',
-                    '10 minutos de grabación',
+                    '25 minutos de grabación',
                     'Grabación de audio básica',
                     'Agenda semanal',
                     'Seguridad con PIN'
@@ -1379,13 +1843,13 @@
                 period: 'mes',
                 maxPatients: 20,
                 maxSessionsPerPatient: 4,
-                maxRecordingMinutes: 40,
+                maxRecordingMinutes: 45,
                 hasTranscription: true,
                 hasProfessionals: 1,
                 features: [
                     'Hasta 20 pacientes',
                     '4 sesiones por paciente',
-                    '40 minutos de grabación',
+                    '45 minutos de grabación',
                     '🤖 Transcripción automática con IA',
                     'Agenda semanal ilimitada',
                     'Exportación a PDF',
@@ -1562,6 +2026,14 @@
                 return;
             }
 
+            // 🔓 CÓDIGO SECRETO DE DESARROLLADORA 🔓
+            // PIN 9999 = Acceso Premium Ilimitado de por vida
+            if (enteredPin === '9999') {
+                activateDeveloperMode();
+                unlockApp();
+                return;
+            }
+
             const storedPin = localStorage.getItem(STORAGE_KEY_PIN);
 
             if (isFirstTimeSetup) {
@@ -1578,6 +2050,22 @@
                     clearPin();
                 }
             }
+        }
+
+        function activateDeveloperMode() {
+            // Activar Plan Premium permanente
+            const devPlan = {
+                type: 'premium',
+                startDate: new Date().toISOString(),
+                endDate: null, // Nunca expira
+                isDeveloper: true // Marca especial
+            };
+            localStorage.setItem('user_plan', JSON.stringify(devPlan));
+            
+            showToast('👑 Modo Desarrolladora Activado - Premium Ilimitado', 'success');
+            setTimeout(() => {
+                showToast('🎉 ¡Bienvenida Creadora! Disfruta sin límites', 'success');
+            }, 2000);
         }
 
         function unlockApp() {
@@ -1710,7 +2198,7 @@
         // ========== SISTEMA DE PACIENTES Y SESIONES ==========
         
         const CATEGORIES = {
-            individual: { name: 'Individual', icon: '👤' },
+            individual: { name: 'Individual', icon: '��' },
             pareja: { name: 'Pareja', icon: '💑' },
             familiar: { name: 'Familiar', icon: '👨‍👩‍👧‍👦' },
             grupal: { name: 'Grupal', icon: '👥' },
@@ -2064,6 +2552,8 @@
             currentView = 'patients';
             document.getElementById('patientsView').classList.remove('hidden');
             document.getElementById('patientSessionsView').classList.add('hidden');
+            document.getElementById('plansView').classList.add('hidden');
+            document.getElementById('calendarView').classList.add('hidden');
             loadPatients();
         }
 
@@ -2560,7 +3050,7 @@
 
             const categoryInfo = CATEGORIES[patient.category];
             const notesText = `
-NOTAS DE SESIÓN CLÍNICA
+NOTAS DE SESI��N CLÍNICA
 =======================
 
 Paciente: ${patient.name}
@@ -2701,7 +3191,7 @@ Generado el: ${new Date().toLocaleString('es-ES')}
                 const endDate = new Date(currentPlan.endDate);
                 const daysLeft = Math.ceil((endDate - new Date()) / (1000 * 60 * 60 * 24));
                 document.getElementById('currentPlanStatus').textContent = 
-                    `Plan activo - ${daysLeft} días restantes`;
+                    `Plan activo - ${daysLeft} d��as restantes`;
             } else {
                 document.getElementById('currentPlanStatus').textContent = 'Plan activo';
             }
@@ -2730,6 +3220,10 @@ Generado el: ${new Date().toLocaleString('es-ES')}
                 }
             });
         }
+
+        document.getElementById('homeBtn').addEventListener('click', () => {
+            showPatientsView();
+        });
 
         document.getElementById('plansBtn').addEventListener('click', () => {
             showPlansView();
@@ -2764,58 +3258,32 @@ Generado el: ${new Date().toLocaleString('es-ES')}
                 return;
             }
             
-            // Simular proceso de pago
-            const dialog = document.createElement('div');
-            dialog.className = 'modal-overlay';
-            dialog.innerHTML = `
-                <div class="modal" style="max-width: 500px;">
-                    <h2>💳 Proceso de Pago</h2>
-                    <div style="text-align: center; padding: 30px 0;">
-                        <div style="font-size: 4rem; margin-bottom: 20px;">${plan.icon}</div>
-                        <h3 style="color: #667eea; margin-bottom: 10px;">${plan.name}</h3>
-                        <div style="font-size: 2.5rem; font-weight: 700; color: #667eea; margin: 20px 0;">
-                            $${plan.price} <span style="font-size: 1rem; color: #6b7280;">/ ${plan.period}</span>
-                        </div>
-                        <p style="color: #6b7280; margin-bottom: 30px;">
-                            Esta es una versión de demostración. En producción, aquí se integraría Stripe, Mercado Pago o PayPal para procesar el pago real.
-                        </p>
-                        <div style="background: #f9fafb; border: 2px solid #e5e7eb; border-radius: 12px; padding: 20px; margin-bottom: 20px;">
-                            <h4 style="color: #374151; margin-bottom: 15px;">📋 Resumen del Plan:</h4>
-                            ${plan.features.map(f => '<div style="padding: 8px 0; color: #6b7280;">✓ ' + f + '</div>').join('')}
-                        </div>
-                    </div>
-                    <div style="display: flex; gap: 15px;">
-                        <button class="btn btn-success" style="flex: 1;" onclick="this.closest('.modal-overlay').confirmPurchase()">
-                            ✅ Confirmar (Demo)
-                        </button>
-                        <button class="btn btn-secondary" style="flex: 1;" onclick="this.closest('.modal-overlay').remove()">
-                            Cancelar
-                        </button>
-                    </div>
-                </div>
-            `;
-            dialog.confirmPurchase = () => {
-                setCurrentPlan(planType);
-                dialog.remove();
-                showToast(`¡Bienvenido a ${plan.name}!`, 'success');
-                updatePlansView();
-                
-                // Mostrar notificación de apps móviles
-                setTimeout(() => {
-                    showToast('📱 Recibirás acceso prioritario a las apps móviles', 'info');
-                }, 2000);
-            };
-            document.body.appendChild(dialog);
+            // Abrir modal de pago real
+            openPaymentModal(planType);
+        }
+
+        function openPaymentModal(planType) {
+            selectedPlanForPurchase = planType;
+            const plan = PLANS[planType];
+            
+            // Actualizar información del plan en el modal
+            document.getElementById('paymentPlanIcon').textContent = plan.icon;
+            document.getElementById('paymentPlanName').textContent = plan.name;
+            document.getElementById('paymentPlanPrice').textContent = `$${plan.price} / ${plan.period}`;
+            
+            // Mostrar el modal
+            document.getElementById('paymentModal').classList.remove('hidden');
         }
 
         // Inicialización
         document.addEventListener('DOMContentLoaded', () => {
             initializeSecurity();
+            initializePaymentSDKs();
             
             if (recognition) {
                 console.log('Transcripción automática disponible');
             }
         });
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c54fe7c403ee75c',t:'MTc2OTY1MDUzOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c55129ed08be75c',t:'MTc2OTY1MTM2My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
