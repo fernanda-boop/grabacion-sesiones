@@ -4,11 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="PsyTape - Menos notas, más empatía. Graba, transcribe y conecta.">
-  <title>PsyTape - Grabadora Inteligente para Psicólogos</title><!-- Mercado Pago SDK -->
-  <script src="https://sdk.mercadopago.com/js/v2"></script><!-- Stripe SDK -->
-  <script src="https://js.stripe.com/v3/"></script><!-- PayPal SDK -->
-  <script src="https://www.paypal.com/sdk/js?client-id=TU_CLIENT_ID_AQUI&amp;currency=USD"></script>
+  <title>PsyTape - Grabadora Inteligente para Psicólogos</title><!-- Data SDK -->
+  <script src="/_sdk/data_sdk.js"></script><!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&amp;family=Bebas+Neue&amp;display=swap" rel="stylesheet">
   <style>
+        @font-face {
+            font-family: 'ITC Bauhaus';
+            src: local('ITC Bauhaus'), local('Bauhaus');
+            font-weight: normal;
+            font-style: normal;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -16,30 +22,435 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #cf4c23;
             height: 100%;
-            padding: 20px;
             color: #333;
             box-sizing: border-box;
         }
 
         html, body {
             height: 100%;
+            width: 100%;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
+        .app-container {
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
         }
 
-        /* Pantalla de Login */
-        #loginScreen {
+        /* ========== LOADING OVERLAY ========== */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(207, 76, 35, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .loading-overlay.hidden {
+            display: none;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(255, 255, 247, 0.3);
+            border-top-color: #e4d936;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: #fffff7;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        /* ========== PANTALLA DE BIENVENIDA ========== */
+        #welcomeScreen {
             display: flex;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
             padding: 20px;
+            background: #cf4c23;
+        }
+
+        .welcome-card {
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+            animation: fadeIn 0.6s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .app-logo {
+            font-family: 'ITC Bauhaus', 'Bebas Neue', 'Impact', 'Arial Black', sans-serif;
+            font-size: 90px;
+            color: #e4d936;
+            margin-bottom: 25px;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+            font-weight: 400;
+            letter-spacing: 4px;
+        }
+
+        .logo-icons {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .logo-icon {
+            font-size: 50px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .logo-icon:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .logo-icon:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .welcome-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .btn-welcome {
+            background: #fffff7;
+            color: #000000;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 30px;
+            font-weight: 600;
+            padding: 20px 60px;
+            border: none;
+            border-radius: 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            min-width: 300px;
+        }
+
+        .btn-welcome:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(0,0,0,0.4);
+            background: #e4d936;
+        }
+
+        .btn-welcome:active {
+            transform: translateY(0);
+        }
+
+        .btn-welcome:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* ========== PANTALLAS DE AUTH ========== */
+        #authScreen {
+            display: none;
+            min-height: 100vh;
+            padding: 40px 20px;
+            background: #cf4c23;
+        }
+
+        #authScreen.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .auth-card {
+            background: rgba(255, 255, 247, 0.05);
+            border: 2px solid rgba(255, 255, 247, 0.2);
+            padding: 50px 40px;
+            max-width: 500px;
+            width: 100%;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .auth-card h2 {
+            font-family: 'Bebas Neue', 'Impact', sans-serif;
+            font-size: 55px;
+            color: #e4d936;
+            margin-bottom: 40px;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            letter-spacing: 3px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #fffff7;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 15px;
+            background: #fffff7;
+            border: 2px solid #fffff7;
+            border-radius: 0;
+            font-size: 16px;
+            color: #000000;
+            font-family: 'Space Grotesk', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #e4d936;
+            box-shadow: 0 0 0 3px rgba(228, 217, 54, 0.3);
+        }
+
+        .verification-hint {
+            background: rgba(228, 217, 54, 0.2);
+            border: 2px solid #e4d936;
+            color: #fffff7;
+            padding: 15px;
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .btn-auth {
+            width: 100%;
+            background: #fffff7;
+            color: #000000;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 24px;
+            font-weight: 600;
+            padding: 18px;
+            border: none;
+            border-radius: 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .btn-auth:hover:not(:disabled) {
+            background: #e4d936;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+        }
+
+        .btn-auth:active {
+            transform: translateY(0);
+        }
+
+        .btn-auth:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-auth.secondary {
+            background: transparent;
+            border: 2px solid #fffff7;
+            color: #fffff7;
+            margin-top: 15px;
+        }
+
+        .btn-auth.secondary:hover {
+            background: rgba(255, 255, 247, 0.1);
+            border-color: #e4d936;
+            color: #e4d936;
+        }
+
+        .error-message {
+            background: rgba(220, 38, 38, 0.2);
+            border: 2px solid #dc2626;
+            color: #fffff7;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .success-message {
+            background: rgba(16, 185, 129, 0.2);
+            border: 2px solid #10b981;
+            color: #fffff7;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* ========== PANTALLA DE PIN ========== */
+        #pinSetupScreen {
+            display: none;
+            min-height: 100vh;
+            padding: 20px;
+            background: #cf4c23;
+        }
+
+        #pinSetupScreen.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pin-card {
+            background: rgba(255, 255, 247, 0.05);
+            border: 2px solid rgba(255, 255, 247, 0.2);
+            padding: 50px 40px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .pin-card h2 {
+            font-family: 'Bebas Neue', 'Impact', sans-serif;
+            font-size: 50px;
+            color: #e4d936;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            letter-spacing: 3px;
+        }
+
+        .pin-subtitle {
+            color: #fffff7;
+            font-size: 18px;
+            margin-bottom: 40px;
+        }
+
+        .pin-input-container {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .pin-digit {
+            width: 70px;
+            height: 80px;
+            border: 3px solid #fffff7;
+            border-radius: 0;
+            background: rgba(255, 255, 247, 0.1);
+            font-size: 2.5rem;
+            text-align: center;
+            font-weight: 700;
+            color: #e4d936;
+            transition: all 0.3s ease;
+        }
+
+        .pin-digit:focus {
+            outline: none;
+            border-color: #e4d936;
+            box-shadow: 0 0 0 4px rgba(228, 217, 54, 0.3);
+            background: rgba(255, 255, 247, 0.2);
+        }
+
+        .pin-digit.filled {
+            background: #e4d936;
+            color: #000000;
+            border-color: #e4d936;
+        }
+
+        .numpad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .numpad-btn {
+            height: 70px;
+            border: none;
+            border-radius: 0;
+            font-size: 2rem;
+            font-weight: 700;
+            background: #fffff7;
+            color: #000000;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+        }
+
+        .numpad-btn:hover {
+            background: #e4d936;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+        }
+
+        .numpad-btn:active {
+            transform: translateY(0);
+        }
+
+        .numpad-btn.clear {
+            background: #dc2626;
+            color: white;
+        }
+
+        .numpad-btn.clear:hover {
+            background: #b91c1c;
+        }
+
+        /* ========== PANTALLA DE LOGIN EXISTENTE ========== */
+        #loginScreen {
+            display: none;
+            min-height: 100vh;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        #loginScreen.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .login-card {
@@ -51,11 +462,6 @@
             width: 100%;
             text-align: center;
             animation: fadeIn 0.5s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
         }
 
         .lock-icon {
@@ -81,165 +487,21 @@
             font-size: 1rem;
         }
 
-        .pin-input-container {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin-bottom: 30px;
-        }
-
-        .pin-digit {
-            width: 60px;
-            height: 70px;
-            border: 3px solid #e5e7eb;
-            border-radius: 15px;
-            font-size: 2rem;
-            text-align: center;
-            font-weight: 700;
-            color: #667eea;
-            transition: all 0.3s ease;
-        }
-
-        .pin-digit:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
-            transform: scale(1.05);
-        }
-
-        .pin-digit.filled {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-color: #667eea;
-        }
-
-        .numpad {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        .numpad-btn {
-            height: 65px;
-            border: none;
-            border-radius: 15px;
-            font-size: 1.8rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #f5f7fa 0%, #e5e7eb 100%);
-            color: #374151;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-        }
-
-        .numpad-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
-        }
-
-        .numpad-btn:active {
-            transform: translateY(0);
-        }
-
-        .numpad-btn.clear {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-            color: white;
-        }
-
-        .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-
-        .btn-primary:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-success {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
-        }
-
-        .btn-success:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
-        }
-
-        .btn-danger {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-            color: white;
-        }
-
-        .btn-danger:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
-        }
-
-        .btn-secondary {
-            background: #f3f4f6;
-            color: #374151;
-        }
-
-        .btn-secondary:hover:not(:disabled) {
-            background: #e5e7eb;
-        }
-
-        .error-message {
-            background: #fee2e2;
-            color: #dc2626;
-            padding: 12px 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            font-weight: 600;
-            animation: shake 0.5s ease;
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
-        }
-
-        .success-message {
-            background: #d1fae5;
-            color: #059669;
-            padding: 12px 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            font-weight: 600;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        /* App Principal */
+        /* ========== APP PRINCIPAL ========== */
         #mainApp {
             display: none;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
         }
 
         #mainApp.active {
             display: block;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
         }
 
         header {
@@ -274,6 +536,24 @@
             flex-wrap: wrap;
         }
 
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
         .btn-lock {
             background: rgba(255, 255, 255, 0.2);
             color: white;
@@ -285,6 +565,31 @@
         .btn-lock:hover {
             background: rgba(255, 255, 255, 0.3);
             transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
         }
 
         .card {
@@ -299,329 +604,6 @@
             margin-bottom: 20px;
             color: #667eea;
             font-size: 1.5rem;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #374151;
-        }
-
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: border-color 0.3s ease;
-            font-family: inherit;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        .form-group textarea {
-            min-height: 100px;
-            resize: vertical;
-        }
-
-        .search-bar {
-            position: relative;
-            margin-bottom: 20px;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 15px 45px 15px 15px;
-            border: 2px solid #e5e7eb;
-            border-radius: 12px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .search-input:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .patients-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .patient-card {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            border: 2px solid transparent;
-            border-radius: 15px;
-            padding: 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .patient-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
-            border-color: #667eea;
-        }
-
-        .patient-icon {
-            font-size: 3rem;
-            text-align: center;
-            margin-bottom: 10px;
-        }
-
-        .patient-name {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: #1f2937;
-            margin-bottom: 8px;
-            text-align: center;
-        }
-
-        .patient-info {
-            font-size: 0.9rem;
-            color: #6b7280;
-            text-align: center;
-            margin-bottom: 5px;
-        }
-
-        .patient-sessions {
-            background: rgba(102, 126, 234, 0.2);
-            padding: 8px;
-            border-radius: 8px;
-            text-align: center;
-            font-weight: 600;
-            color: #667eea;
-            margin-top: 12px;
-        }
-
-        .patient-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .patient-actions .btn {
-            flex: 1;
-            justify-content: center;
-            font-size: 0.9rem;
-            padding: 8px 12px;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: #9ca3af;
-        }
-
-        .empty-state.hidden {
-            display: none;
-        }
-
-        .empty-icon {
-            font-size: 4rem;
-            margin-bottom: 20px;
-        }
-
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            padding: 20px;
-        }
-
-        .modal-overlay.hidden {
-            display: none;
-        }
-
-        .modal {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            max-width: 600px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .modal h2 {
-            color: #667eea;
-            margin-bottom: 20px;
-        }
-
-        .modal-actions {
-            display: flex;
-            gap: 15px;
-            margin-top: 25px;
-        }
-
-        .modal-actions .btn {
-            flex: 1;
-            justify-content: center;
-        }
-
-        .category-badge {
-            display: inline-block;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 0.85rem;
-            margin-bottom: 8px;
-        }
-
-        .recording-status {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin: 20px 0;
-        }
-
-        .status-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #10b981;
-        }
-
-        .status-dot.recording {
-            background: #ef4444;
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
-        }
-
-        .timer {
-            font-size: 3rem;
-            font-weight: 700;
-            color: #667eea;
-            text-align: center;
-            margin: 20px 0;
-            font-family: 'Courier New', monospace;
-        }
-
-        #liveTranscriptionContainer {
-            background: #f9fafb;
-            border: 2px solid #e5e7eb;
-            border-radius: 12px;
-            padding: 20px;
-            margin: 20px 0;
-        }
-
-        #liveTranscriptionContainer h4 {
-            color: #667eea;
-            margin-bottom: 15px;
-        }
-
-        #liveTranscription {
-            max-height: 200px;
-            overflow-y: auto;
-            padding: 15px;
-            background: white;
-            border-radius: 8px;
-            line-height: 1.8;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-        }
-
-        .sessions-list {
-            margin-top: 20px;
-        }
-
-        .session-item {
-            background: #f9fafb;
-            border: 2px solid #e5e7eb;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 15px;
-            transition: all 0.3s ease;
-        }
-
-        .session-item:hover {
-            border-color: #667eea;
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
-        }
-
-        .session-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .session-date {
-            color: #6b7280;
-            font-size: 0.9rem;
-        }
-
-        .session-actions {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .session-actions .btn {
-            font-size: 0.85rem;
-            padding: 8px 16px;
-        }
-
-        .session-audio {
-            margin: 15px 0;
-        }
-
-        .session-audio audio {
-            width: 100%;
-        }
-
-        .session-notes {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 15px;
-        }
-
-        .session-notes h4 {
-            color: #667eea;
-            margin-bottom: 10px;
-            font-size: 0.95rem;
-        }
-
-        .session-notes p {
-            color: #374151;
-            line-height: 1.8;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-        }
-
-        .back-button {
-            margin-bottom: 20px;
         }
 
         .toast {
@@ -661,1308 +643,361 @@
             }
         }
 
-        .search-highlight {
-            background: #fef08a;
-            padding: 2px 4px;
-            border-radius: 3px;
-            font-weight: 600;
-        }
-
-        /* Estilos de Planes */
-        .plan-card {
-            background: white;
-            border: 3px solid #e5e7eb;
-            border-radius: 20px;
-            padding: 30px;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .plan-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.3);
-            border-color: #667eea;
-        }
-
-        .plan-card.recommended {
-            border-color: #667eea;
-            border-width: 4px;
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
-        }
-
-        .plan-card.premium {
-            border-color: #f59e0b;
-            border-width: 4px;
-            box-shadow: 0 10px 30px rgba(245, 158, 11, 0.2);
-        }
-
-        .recommended-badge {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 6px 15px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 700;
-        }
-
-        .premium-badge {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-            color: white;
-            padding: 6px 15px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 700;
-        }
-
-        .plan-header {
-            text-align: center;
-            margin-bottom: 25px;
-            padding-bottom: 25px;
-            border-bottom: 2px solid #f3f4f6;
-        }
-
-        .plan-icon {
-            font-size: 4rem;
-            margin-bottom: 15px;
-        }
-
-        .plan-name {
-            font-size: 1.5rem;
-            color: #1f2937;
-            margin-bottom: 15px;
-        }
-
-        .plan-price {
-            margin-top: 10px;
-        }
-
-        .price-amount {
-            font-size: 3rem;
-            font-weight: 700;
-            color: #667eea;
-        }
-
-        .price-period {
-            font-size: 1rem;
-            color: #6b7280;
-        }
-
-        .plan-features {
-            margin-bottom: 20px;
-        }
-
-        .feature-item {
-            padding: 12px 0;
-            border-bottom: 1px solid #f3f4f6;
-            color: #374151;
-            font-size: 0.95rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .feature-item.disabled {
-            color: #9ca3af;
-            opacity: 0.6;
-        }
-
-        .feature-item:last-child {
-            border-bottom: none;
-        }
-
-        .plan-btn {
-            transition: all 0.3s ease;
-        }
-
-        .plan-btn:hover:not(:disabled) {
-            transform: translateY(-2px);
-        }
-
-        .limit-warning {
-            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-            border: 2px solid #f59e0b;
-            border-radius: 12px;
-            padding: 15px 20px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .limit-warning-icon {
-            font-size: 2rem;
-        }
-
-        .limit-warning-content {
-            flex: 1;
-        }
-
-        .limit-warning-title {
-            font-weight: 700;
-            color: #92400e;
-            margin-bottom: 5px;
-        }
-
-        .limit-warning-text {
-            color: #78350f;
-            font-size: 0.9rem;
-        }
-
-        .upgrade-link {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.9rem;
-            white-space: nowrap;
-            transition: all 0.3s ease;
-            display: inline-block;
-        }
-
-        .upgrade-link:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        /* Estilos de Métodos de Pago */
-        .payment-method-selector {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin: 25px 0;
-        }
-
-        .payment-method-btn {
-            background: white;
-            border: 3px solid #e5e7eb;
-            border-radius: 15px;
-            padding: 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .payment-method-btn:hover {
-            border-color: #667eea;
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
-        }
-
-        .payment-method-btn.selected {
-            border-color: #667eea;
-            background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
-            border-width: 4px;
-        }
-
-        .payment-method-icon {
-            font-size: 3rem;
-        }
-
-        .payment-method-name {
-            font-weight: 700;
-            color: #1f2937;
-            font-size: 0.95rem;
-        }
-
-        .payment-form-container {
-            background: #f9fafb;
-            border: 2px solid #e5e7eb;
-            border-radius: 15px;
-            padding: 25px;
-            margin: 20px 0;
-        }
-
-        .payment-form-container h4 {
-            color: #667eea;
-            margin-bottom: 15px;
-        }
-
-        #mercadopago-button, #stripe-button, #paypal-button-container {
-            margin-top: 20px;
-        }
-
-        .payment-processing {
-            text-align: center;
-            padding: 40px;
-        }
-
-        .payment-processing .spinner {
-            border: 4px solid #f3f4f6;
-            border-top: 4px solid #667eea;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .payment-info-box {
-            background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
-            border: 2px solid #667eea;
-            border-radius: 12px;
-            padding: 20px;
-            margin: 20px 0;
-        }
-
-        .payment-info-box h4 {
-            color: #3730a3;
-            margin-bottom: 10px;
-        }
-
-        .payment-info-box ul {
-            color: #4338ca;
-            margin-left: 20px;
-        }
-
-        .payment-info-box li {
-            margin: 8px 0;
-        }
-
-        /* Estilos del Calendario */
-        .calendar-navigation {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
-        .week-calendar {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .day-column {
-            background: #f9fafb;
-            border: 2px solid #e5e7eb;
-            border-radius: 12px;
-            padding: 15px;
-            min-height: 400px;
-            transition: all 0.3s ease;
-        }
-
-        .day-column:hover {
-            border-color: #667eea;
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
-        }
-
-        .day-column.today {
-            background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
-            border-color: #667eea;
-            border-width: 3px;
-        }
-
-        .day-header {
-            text-align: center;
-            padding-bottom: 10px;
-            margin-bottom: 15px;
-            border-bottom: 2px solid #e5e7eb;
-        }
-
-        .day-name {
-            font-weight: 700;
-            color: #667eea;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            margin-bottom: 5px;
-        }
-
-        .day-date {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #1f2937;
-        }
-
-        .appointment-slot {
-            background: white;
-            border: 2px solid #e5e7eb;
-            border-radius: 10px;
-            padding: 12px;
-            margin-bottom: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .appointment-slot:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
-            border-color: #667eea;
-        }
-
-        .appointment-slot.past {
-            opacity: 0.6;
-            background: #f3f4f6;
-        }
-
-        .appointment-time {
-            font-weight: 700;
-            color: #667eea;
-            font-size: 0.85rem;
-            margin-bottom: 5px;
-        }
-
-        .appointment-patient {
-            font-weight: 600;
-            color: #1f2937;
-            margin-bottom: 5px;
-            font-size: 0.9rem;
-        }
-
-        .appointment-category {
-            display: inline-block;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 2px 8px;
-            border-radius: 8px;
-            font-size: 0.75rem;
-            margin-top: 5px;
-        }
-
-        .appointment-actions {
-            display: flex;
-            gap: 5px;
-            margin-top: 10px;
-        }
-
-        .appointment-actions .btn {
-            flex: 1;
-            padding: 6px 10px;
-            font-size: 0.8rem;
-        }
-
-        @media (max-width: 1200px) {
-            .week-calendar {
-                grid-template-columns: repeat(4, 1fr);
-            }
-        }
-
         @media (max-width: 768px) {
-            .login-card {
-                padding: 40px 25px;
+            .app-logo {
+                font-size: 55px;
+            }
+
+            .btn-welcome {
+                font-size: 24px;
+                padding: 15px 40px;
+                min-width: 250px;
+            }
+
+            .auth-card h2 {
+                font-size: 35px;
             }
 
             .pin-digit {
-                width: 50px;
-                height: 60px;
-                font-size: 1.5rem;
-            }
-
-            .pin-input-container {
-                gap: 10px;
+                width: 60px;
+                height: 70px;
+                font-size: 2rem;
             }
 
             header h1 {
                 font-size: 1.8rem;
             }
-
-            .patients-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .timer {
-                font-size: 2.5rem;
-            }
-
-            .modal {
-                padding: 20px;
-            }
-
-            .security-controls {
-                width: 100%;
-                justify-content: center;
-            }
-
-            .week-calendar {
-                grid-template-columns: 1fr;
-            }
-
-            .calendar-navigation {
-                flex-direction: column;
-            }
-
-            .day-column {
-                min-height: 300px;
-            }
         }
     </style>
   <style>@view-transition { navigation: auto; }</style>
-  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
   <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
   <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
  </head>
- <body><!-- Pantalla de Login -->
-  <div id="loginScreen">
-   <div class="login-card">
-    <div class="lock-icon">
-     🎙️
-    </div>
-    <h1>PsyTape</h1>
-    <p class="login-subtitle" id="loginSubtitle">Seguro como una caja fuerte, inteligente como un asistente.</p>
-    <div id="errorMessage" class="error-message hidden"></div>
-    <div id="successMessage" class="success-message hidden"></div>
-    <div class="pin-input-container"><label for="pin1" class="hidden">Dígito 1 del PIN</label> <input type="password" maxlength="1" class="pin-digit" id="pin1" readonly aria-label="Dígito 1 del PIN"> <label for="pin2" class="hidden">Dígito 2 del PIN</label> <input type="password" maxlength="1" class="pin-digit" id="pin2" readonly aria-label="Dígito 2 del PIN"> <label for="pin3" class="hidden">Dígito 3 del PIN</label> <input type="password" maxlength="1" class="pin-digit" id="pin3" readonly aria-label="Dígito 3 del PIN"> <label for="pin4" class="hidden">Dígito 4 del PIN</label> <input type="password" maxlength="1" class="pin-digit" id="pin4" readonly aria-label="Dígito 4 del PIN">
-    </div>
-    <div class="numpad"><button class="numpad-btn" onclick="enterDigit('1')">1</button> <button class="numpad-btn" onclick="enterDigit('2')">2</button> <button class="numpad-btn" onclick="enterDigit('3')">3</button> <button class="numpad-btn" onclick="enterDigit('4')">4</button> <button class="numpad-btn" onclick="enterDigit('5')">5</button> <button class="numpad-btn" onclick="enterDigit('6')">6</button> <button class="numpad-btn" onclick="enterDigit('7')">7</button> <button class="numpad-btn" onclick="enterDigit('8')">8</button> <button class="numpad-btn" onclick="enterDigit('9')">9</button> <button class="numpad-btn clear" onclick="clearPin()">✕</button> <button class="numpad-btn" onclick="enterDigit('0')">0</button> <button class="numpad-btn" onclick="deleteDigit()">⌫</button>
-    </div><button id="loginBtn" class="btn btn-primary" style="width: 100%;" onclick="verifyPin()"> <span>🔓</span> Ingresar </button>
+ <body><!-- Loading Overlay -->
+  <div id="loadingOverlay" class="loading-overlay">
+   <div class="spinner"></div>
+   <div class="loading-text">
+    Cargando PsyTape...
    </div>
-  </div><!-- App Principal -->
-  <div id="mainApp" class="container">
-   <header>
-    <div class="security-controls"><button id="homeBtn" class="btn btn-lock"> <span>🏠</span> Inicio </button> <button id="plansBtn" class="btn btn-lock"> <span>💎</span> Mi Plan </button> <button id="calendarNavBtn" class="btn btn-lock"> <span>📅</span> Agenda </button> <button id="lockBtn" class="btn btn-lock"> <span>🔒</span> Bloquear </button> <button id="changePinBtn" class="btn btn-lock"> <span>🔑</span> Cambiar PIN </button>
-    </div>
-    <div class="header-content">
-     <h1>🎙️ PsyTape</h1>
-     <p class="subtitle">Menos notas, más empatía. Graba, transcribe y conecta.</p>
-    </div>
-    <div style="width: 200px;"></div>
-   </header><!-- Vista de Agenda/Calendario -->
-   <div id="calendarView" class="hidden">
-    <div class="card">
-     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 20px;">
-      <h2 style="margin: 0;">📅 Mi Agenda Semanal</h2><button id="addAppointmentBtn" class="btn btn-primary"> <span>➕</span> Nueva Cita </button>
-     </div>
-     <div class="calendar-navigation"><button class="btn btn-secondary" id="prevWeekBtn"> <span>←</span> Semana Anterior </button>
-      <h3 id="currentWeekDisplay" style="color: #667eea; margin: 0;"></h3><button class="btn btn-secondary" id="nextWeekBtn"> Semana Siguiente <span>→</span> </button>
-     </div>
-     <div class="week-calendar" id="weekCalendar"></div>
-     <div id="appointmentsEmptyState" class="empty-state">
-      <div class="empty-icon">
-       📅
+  </div>
+  <div class="app-container"><!-- ========== PANTALLA DE BIENVENIDA ========== -->
+   <div id="welcomeScreen">
+    <div class="welcome-card">
+     <h1 class="app-logo">PsyTape</h1>
+     <div class="logo-icons">
+      <div class="logo-icon">
+       🎙️
       </div>
-      <p>No tienes citas programadas</p>
-      <p class="empty-subtitle">Comienza agregando tu primera cita</p>
+      <div class="logo-icon">
+       📝
+      </div>
+     </div>
+     <div class="welcome-buttons"><button class="btn-welcome" id="loginBtn" onclick="showLoginForm()">Login</button> <button class="btn-welcome" id="registrationBtn" onclick="showRegistrationForm()">Registration</button>
      </div>
     </div>
-   </div><!-- Vista de Planes y Suscripciones -->
-   <div id="plansView" class="hidden">
-    <div class="card">
-     <div style="text-align: center; margin-bottom: 30px;">
-      <h2 style="margin: 0 0 10px 0; font-size: 2rem;">💎 Planes y Suscripciones</h2>
-      <p style="color: #6b7280; font-size: 1.1rem;">Elige el plan perfecto para tu práctica profesional</p>
-     </div>
-     <div id="currentPlanBanner" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 15px; margin-bottom: 30px; text-align: center;">
-      <div style="font-size: 3rem; margin-bottom: 10px;" id="currentPlanIcon">
-       🆓
+   </div><!-- ========== PANTALLA DE REGISTRO ========== -->
+   <div id="authScreen">
+    <div class="auth-card">
+     <h2 id="authTitle">Registration</h2>
+     <div id="authErrorMessage" class="error-message hidden"></div>
+     <div id="authSuccessMessage" class="success-message hidden"></div><!-- Formulario de Registro -->
+     <form id="registrationForm" class="hidden">
+      <div class="form-group"><label for="regName">Nombre Completo</label> <input type="text" id="regName" required placeholder="Juan Pérez García">
       </div>
-      <h3 style="margin: 0 0 10px 0; font-size: 1.5rem;" id="currentPlanName">Plan Gratuito</h3>
-      <p id="currentPlanStatus" style="opacity: 0.9; margin: 0;">Plan activo</p>
-     </div>
-     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-bottom: 30px;"><!-- Plan Gratuito -->
-      <div class="plan-card" data-plan="free">
-       <div class="plan-header">
-        <div class="plan-icon">
-         🆓
-        </div>
-        <h3 class="plan-name">Plan Gratuito</h3>
-        <div class="plan-price"><span class="price-amount">$0</span> <span class="price-period">/ siempre</span>
-        </div>
-       </div>
-       <div class="plan-features">
-        <div class="feature-item">
-         ✅ Hasta 5 pacientes
-        </div>
-        <div class="feature-item">
-         ✅ 3 sesiones por paciente
-        </div>
-        <div class="feature-item">
-         ✅ 25 minutos de grabación
-        </div>
-        <div class="feature-item">
-         ✅ Grabación de audio básica
-        </div>
-        <div class="feature-item">
-         ✅ Agenda semanal
-        </div>
-        <div class="feature-item">
-         ✅ Seguridad con PIN
-        </div>
-        <div class="feature-item disabled">
-         ❌ Sin transcripción automática
-        </div>
-        <div class="feature-item disabled">
-         ❌ Sin plantillas clínicas
-        </div>
-        <div class="feature-item disabled">
-         ❌ Sin exportación avanzada
-        </div>
-       </div><button class="btn btn-secondary plan-btn" style="width: 100%; margin-top: 20px;" data-plan="free"> Plan Actual </button>
-      </div><!-- Plan Flexible -->
-      <div class="plan-card recommended" data-plan="flexible">
-       <div class="recommended-badge">
-        ⭐ Recomendado
-       </div>
-       <div class="plan-header">
-        <div class="plan-icon">
-         ⚡
-        </div>
-        <h3 class="plan-name">Plan Flexible</h3>
-        <div class="plan-price"><span class="price-amount">$19.99</span> <span class="price-period">/ mes</span>
-        </div>
-       </div>
-       <div class="plan-features">
-        <div class="feature-item">
-         ✅ Hasta 20 pacientes
-        </div>
-        <div class="feature-item">
-         ✅ 4 sesiones por paciente
-        </div>
-        <div class="feature-item">
-         ✅ 45 minutos de grabación
-        </div>
-        <div class="feature-item">
-         ✅ ������ Transcripción automática con IA
-        </div>
-        <div class="feature-item">
-         ✅ Agenda ilimitada
-        </div>
-        <div class="feature-item">
-         ✅ Exportación a PDF
-        </div>
-        <div class="feature-item">
-         ✅ Soporte por email
-        </div>
-        <div class="feature-item disabled">
-         ❌ Sin plantillas clínicas
-        </div>
-       </div><button class="btn btn-primary plan-btn" style="width: 100%; margin-top: 20px;" data-plan="flexible"> Actualizar a Flexible </button>
-      </div><!-- Plan Premium -->
-      <div class="plan-card premium" data-plan="premium">
-       <div class="premium-badge">
-        👑 Premium
-       </div>
-       <div class="plan-header">
-        <div class="plan-icon">
-         👑
-        </div>
-        <h3 class="plan-name">Plan Premium</h3>
-        <div class="plan-price"><span class="price-amount">$49.99</span> <span class="price-period">/ mes</span>
-        </div>
-       </div>
-       <div class="plan-features">
-        <div class="feature-item">
-         ✨ Pacientes ilimitados
-        </div>
-        <div class="feature-item">
-         ✨ Sesiones ilimitadas
-        </div>
-        <div class="feature-item">
-         ✨ Grabación ilimitada
-        </div>
-        <div class="feature-item">
-         🏥 Plantillas de historias clínicas
-        </div>
-        <div class="feature-item">
-         📋 Plantillas de evaluación
-        </div>
-        <div class="feature-item">
-         📊 Reportes y estadísticas
-        </div>
-        <div class="feature-item">
-         ☁️ Respaldo en la nube
-        </div>
-        <div class="feature-item">
-         🎨 Personalización avanzada
-        </div>
-        <div class="feature-item">
-         ⚡ Soporte prioritario 24/7
-        </div>
-       </div><button class="btn btn-success plan-btn" style="width: 100%; margin-top: 20px;" data-plan="premium"> Actualizar a Premium </button>
+      <div class="form-group"><label for="regEmail">Email</label> <input type="email" id="regEmail" required placeholder="tu@email.com">
       </div>
-     </div>
-     <div style="background: #f9fafb; border: 2px solid #e5e7eb; border-radius: 15px; padding: 25px; text-align: center;">
-      <h3 style="color: #667eea; margin-bottom: 15px;">💳 Métodos de Pago Disponibles</h3>
-      <p style="color: #6b7280; margin-bottom: 20px;">Procesamos pagos de forma segura a través de:</p>
-      <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; align-items: center;">
-       <div style="background: white; padding: 15px 25px; border-radius: 10px; font-weight: 600; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-        💳 Stripe
-       </div>
-       <div style="background: white; padding: 15px 25px; border-radius: 10px; font-weight: 600; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-        💰 Mercado Pago
-       </div>
-       <div style="background: white; padding: 15px 25px; border-radius: 10px; font-weight: 600; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-        🅿️ PayPal
-       </div>
+      <div class="form-group"><label for="regPassword">Contraseña</label> <input type="password" id="regPassword" required placeholder="Mínimo 6 caracteres">
       </div>
-      <p style="color: #9ca3af; font-size: 0.9rem; margin-top: 20px;">🔒 Tus datos de pago están protegidos con encriptación de nivel bancario</p>
-     </div>
-     <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-radius: 15px; padding: 25px; margin-top: 30px;">
-      <h3 style="color: #92400e; margin-bottom: 15px; text-align: center;">📱 Próximamente: Apps Móviles</h3>
-      <p style="color: #78350f; text-align: center; margin-bottom: 20px;">Estamos trabajando en las versiones para Android e iOS. ¡Suscríbete ahora y obtén acceso prioritario!</p>
-      <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
-       <div style="background: white; padding: 12px 20px; border-radius: 10px; font-weight: 600; display: flex; align-items: center; gap: 8px;"><span style="font-size: 1.5rem;">📱</span> App Store (iOS)
-       </div>
-       <div style="background: white; padding: 12px 20px; border-radius: 10px; font-weight: 600; display: flex; align-items: center; gap: 8px;"><span style="font-size: 1.5rem;">🤖</span> Google Play (Android)
-       </div>
+      <div class="form-group"><label for="regCountry">País</label> <select id="regCountry" required> <option value="">Selecciona tu país</option> <option value="Argentina">Argentina</option> <option value="Bolivia">Bolivia</option> <option value="Chile">Chile</option> <option value="Colombia">Colombia</option> <option value="Costa Rica">Costa Rica</option> <option value="Cuba">Cuba</option> <option value="Ecuador">Ecuador</option> <option value="El Salvador">El Salvador</option> <option value="España">España</option> <option value="Guatemala">Guatemala</option> <option value="Honduras">Honduras</option> <option value="México">México</option> <option value="Nicaragua">Nicaragua</option> <option value="Panamá">Panamá</option> <option value="Paraguay">Paraguay</option> <option value="Perú">Perú</option> <option value="Puerto Rico">Puerto Rico</option> <option value="República Dominicana">República Dominicana</option> <option value="Uruguay">Uruguay</option> <option value="Venezuela">Venezuela</option> <option value="Otro">Otro</option> </select>
       </div>
-     </div>
-    </div>
-   </div><!-- Vista de Pacientes -->
-   <div id="patientsView">
-    <div class="card">
-     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 20px;">
-      <h2 style="margin: 0;">👥 Mis Pacientes</h2><button id="addPatientBtn" class="btn btn-primary"> <span>➕</span> Agregar Paciente </button>
-     </div>
-     <div class="search-bar"><input type="text" id="searchPatients" placeholder="🔍 Buscar paciente..." class="search-input">
-     </div>
-     <div id="patientsEmptyState" class="empty-state">
-      <div class="empty-icon">
-       👤
+      <div class="verification-hint">
+       Por favor escribe: <strong>PSYTAPE2024</strong>
       </div>
-      <p>No tienes pacientes registrados</p>
-      <p class="empty-subtitle">Comienza agregando tu primer paciente</p>
-     </div>
-     <div id="patientsGrid" class="patients-grid"></div>
-    </div>
-   </div><!-- Vista de Sesiones de un Paciente -->
-   <div id="patientSessionsView" class="hidden">
-    <div class="card"><button id="backToPatients" class="btn btn-secondary back-button"> <span>←</span> Volver a Pacientes </button>
-     <div id="patientHeader" style="text-align: center; margin-bottom: 30px;">
-      <div class="patient-icon" id="patientIconLarge">
-       👤
+      <div class="form-group"><label for="regVerification">Código de Verificación</label> <input type="text" id="regVerification" required placeholder="PSYTAPE2024">
+      </div><button type="submit" class="btn-auth" id="registerSubmitBtn">Registrarse</button> <button type="button" class="btn-auth secondary" onclick="showWelcome()">Volver</button>
+     </form><!-- Formulario de Login -->
+     <form id="loginForm" class="hidden">
+      <div class="form-group"><label for="loginEmail">Email</label> <input type="email" id="loginEmail" required placeholder="tu@email.com">
       </div>
-      <h2 id="patientNameTitle" style="margin: 10px 0; color: #1f2937;"></h2>
-      <p id="patientCategoryBadge" class="category-badge"></p>
-      <p id="patientDetailsInfo" style="color: #6b7280; margin-top: 10px;"></p>
-     </div>
-     <div style="display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; flex-wrap: wrap;"><button id="newSessionBtn" class="btn btn-success"> <span>🎙���</span> Nueva Sesión </button> <button id="editPatientBtn" class="btn btn-secondary"> <span>✏️</span> Editar Paciente </button> <button id="deletePatientBtn" class="btn btn-danger"> <span>🗑️</span> Eliminar Paciente </button>
-     </div>
-     <div class="search-bar"><input type="text" id="searchSessions" placeholder="�� Buscar en sesiones..." class="search-input">
-     </div>
-     <div id="sessionsEmptyState" class="empty-state">
-      <div class="empty-icon">
-       ���️
-      </div>
-      <p>No hay sesiones registradas</p>
-      <p class="empty-subtitle">Comienza grabando la primera sesión</p>
-     </div>
-     <div id="sessionsList" class="sessions-list"></div>
-    </div>
-   </div><!-- Modal: Agregar/Editar Paciente -->
-   <div id="patientModal" class="modal-overlay hidden">
-    <div class="modal">
-     <h2 id="patientModalTitle">Agregar Paciente</h2>
-     <form id="patientForm">
-      <div class="form-group"><label for="patientNameInput">Nombre Completo:</label> <input type="text" id="patientNameInput" required placeholder="Ej: Juan Pérez García">
-      </div>
-      <div class="form-group"><label for="patientCategoryInput">Categoría:</label> <select id="patientCategoryInput" required> <option value="">Selecciona una categoría</option> <option value="individual">👤 Individual</option> <option value="pareja">💑 Pareja</option> <option value="familiar">👨‍👩‍👧‍👦 Familiar</option> <option value="grupal">👥 Grupal</option> <option value="evaluacion">📊 Evaluación</option> </select>
-      </div>
-      <div class="form-group"><label for="patientEmailInput">Email (opcional):</label> <input type="email" id="patientEmailInput" placeholder="paciente@email.com">
-      </div>
-      <div class="form-group"><label for="patientPhoneInput">Teléfono (opcional):</label> <input type="tel" id="patientPhoneInput" placeholder="(555) 123-4567">
-      </div>
-      <div class="form-group"><label for="patientNotesInput">Notas Iniciales (opcional):</label> <textarea id="patientNotesInput" placeholder="Motivo de consulta, antecedentes relevantes..."></textarea>
-      </div>
-      <div class="modal-actions"><button type="submit" class="btn btn-primary"> <span>💾</span> Guardar </button> <button type="button" id="cancelPatientModal" class="btn btn-secondary"> Cancelar </button>
-      </div>
+      <div class="form-group"><label for="loginPassword">Contraseña</label> <input type="password" id="loginPassword" required placeholder="Tu contraseña">
+      </div><button type="submit" class="btn-auth" id="loginSubmitBtn">Ingresar</button> <button type="button" class="btn-auth secondary" onclick="showWelcome()">Volver</button>
      </form>
     </div>
-   </div><!-- Modal: Nueva Sesión / Grabación -->
-   <div id="sessionModal" class="modal-overlay hidden">
-    <div class="modal">
-     <h2>🎙️ Nueva Sesión</h2>
-     <div class="recording-status"><span class="status-dot" id="sessionStatusDot"></span> <span id="sessionStatusText">Listo para grabar</span>
+   </div><!-- ========== PANTALLA DE CONFIGURACIÓN DE PIN ========== -->
+   <div id="pinSetupScreen">
+    <div class="pin-card">
+     <h2>Crear PIN de Seguridad</h2>
+     <p class="pin-subtitle">Crea un PIN de 4 dígitos para proteger tu información</p>
+     <div id="pinErrorMessage" class="error-message hidden"></div>
+     <div id="pinSuccessMessage" class="success-message hidden"></div>
+     <div class="pin-input-container"><input type="password" maxlength="1" class="pin-digit" id="pinDigit1" readonly> <input type="password" maxlength="1" class="pin-digit" id="pinDigit2" readonly> <input type="password" maxlength="1" class="pin-digit" id="pinDigit3" readonly> <input type="password" maxlength="1" class="pin-digit" id="pinDigit4" readonly>
      </div>
-     <div class="timer" id="sessionTimer">
-      00:00:00
-     </div>
-     <div style="display: flex; gap: 15px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap;"><button id="startRecordingBtn" class="btn btn-success"> <span>⏺️</span> Iniciar Grabación </button> <button id="stopRecordingBtn" class="btn btn-danger" disabled> <span>⏹️</span> Detener </button>
-     </div>
-     <div id="liveTranscriptionContainer" style="display: none;">
-      <h4>📝 Transcripción en vivo:</h4>
-      <div id="liveTranscription"></div>
-     </div>
-     <div id="sessionPreview" style="display: none;">
-      <h3 style="color: #667eea; margin-bottom: 15px;">Vista Previa</h3>
-      <audio id="sessionAudioPlayback" controls style="width: 100%; margin-bottom: 20px;"></audio>
-      <div class="form-group"><label for="sessionNotesInput">Notas de la Sesión:</label> <textarea id="sessionNotesInput" placeholder="Observaciones, diagnóstico, plan de tratamiento..."></textarea>
-      </div>
-      <div class="modal-actions"><button id="saveSessionBtn" class="btn btn-success"> <span>💾</span> Guardar Sesión </button> <button id="discardSessionBtn" class="btn btn-secondary"> <span>🗑️</span> Descartar </button>
-      </div>
-     </div>
-     <div style="text-align: center; margin-top: 20px;"><button id="cancelSessionModal" class="btn btn-secondary"> Cancelar </button>
-     </div>
+     <div class="numpad"><button class="numpad-btn" onclick="enterPinDigit('1')">1</button> <button class="numpad-btn" onclick="enterPinDigit('2')">2</button> <button class="numpad-btn" onclick="enterPinDigit('3')">3</button> <button class="numpad-btn" onclick="enterPinDigit('4')">4</button> <button class="numpad-btn" onclick="enterPinDigit('5')">5</button> <button class="numpad-btn" onclick="enterPinDigit('6')">6</button> <button class="numpad-btn" onclick="enterPinDigit('7')">7</button> <button class="numpad-btn" onclick="enterPinDigit('8')">8</button> <button class="numpad-btn" onclick="enterPinDigit('9')">9</button> <button class="numpad-btn clear" onclick="clearPinDigits()">✕</button> <button class="numpad-btn" onclick="enterPinDigit('0')">0</button> <button class="numpad-btn" onclick="deletePinDigit()">⌫</button>
+     </div><button class="btn-auth" id="savePinBtn" onclick="savePinAndContinue()">Guardar PIN</button>
     </div>
-   </div><!-- Modal: Cambiar PIN -->
-   <div id="changePinModal" class="modal-overlay hidden">
-    <div class="modal">
-     <h2>🔑 Cambiar PIN de Seguridad</h2>
-     <form id="changePinForm">
-      <div class="form-group"><label for="currentPinInput">PIN Actual:</label> <input type="password" id="currentPinInput" maxlength="4" pattern="[0-9]{4}" required placeholder="���•••">
-      </div>
-      <div class="form-group"><label for="newPinInput">Nuevo PIN (4 dígitos):</label> <input type="password" id="newPinInput" maxlength="4" pattern="[0-9]{4}" required placeholder="••••">
-      </div>
-      <div class="form-group"><label for="confirmPinInput">Confirmar Nuevo PIN:</label> <input type="password" id="confirmPinInput" maxlength="4" pattern="[0-9]{4}" required placeholder="••••">
-      </div>
-      <div class="modal-actions"><button type="submit" class="btn btn-primary"> <span>💾</span> Cambiar PIN </button> <button type="button" id="cancelChangePinModal" class="btn btn-secondary"> Cancelar </button>
-      </div>
-     </form>
+   </div><!-- ========== PANTALLA DE LOGIN CON PIN (Returning Users) ========== -->
+   <div id="loginScreen">
+    <div class="login-card">
+     <div class="lock-icon">
+      🎙️
+     </div>
+     <h1>PsyTape</h1>
+     <p class="login-subtitle">Ingresa tu PIN para continuar</p>
+     <div id="loginPinError" class="error-message hidden"></div>
+     <div class="pin-input-container"><input type="password" maxlength="1" class="pin-digit" id="loginPin1" readonly style="border-color: #667eea; background: #f3f4f6;"> <input type="password" maxlength="1" class="pin-digit" id="loginPin2" readonly style="border-color: #667eea; background: #f3f4f6;"> <input type="password" maxlength="1" class="pin-digit" id="loginPin3" readonly style="border-color: #667eea; background: #f3f4f6;"> <input type="password" maxlength="1" class="pin-digit" id="loginPin4" readonly style="border-color: #667eea; background: #f3f4f6;">
+     </div>
+     <div class="numpad"><button class="numpad-btn" onclick="enterLoginPin('1')" style="background: #667eea; color: white;">1</button> <button class="numpad-btn" onclick="enterLoginPin('2')" style="background: #667eea; color: white;">2</button> <button class="numpad-btn" onclick="enterLoginPin('3')" style="background: #667eea; color: white;">3</button> <button class="numpad-btn" onclick="enterLoginPin('4')" style="background: #667eea; color: white;">4</button> <button class="numpad-btn" onclick="enterLoginPin('5')" style="background: #667eea; color: white;">5</button> <button class="numpad-btn" onclick="enterLoginPin('6')" style="background: #667eea; color: white;">6</button> <button class="numpad-btn" onclick="enterLoginPin('7')" style="background: #667eea; color: white;">7</button> <button class="numpad-btn" onclick="enterLoginPin('8')" style="background: #667eea; color: white;">8</button> <button class="numpad-btn" onclick="enterLoginPin('9')" style="background: #667eea; color: white;">9</button> <button class="numpad-btn clear" onclick="clearLoginPin()">✕</button> <button class="numpad-btn" onclick="enterLoginPin('0')" style="background: #667eea; color: white;">0</button> <button class="numpad-btn" onclick="deleteLoginPin()" style="background: #667eea; color: white;">⌫</button>
+     </div><button class="btn-auth" onclick="verifyLoginPin()" style="background: #667eea; color: white; margin-top: 20px;">🔓 Ingresar</button>
     </div>
-   </div><!-- Modal: Nueva Cita -->
-   <div id="appointmentModal" class="modal-overlay hidden">
-    <div class="modal">
-     <h2 id="appointmentModalTitle">📅 Nueva Cita</h2>
-     <form id="appointmentForm">
-      <div class="form-group"><label for="appointmentPatientSelect">Paciente:</label> <select id="appointmentPatientSelect" required> <option value="">Selecciona un paciente</option> </select>
+   </div><!-- ========== APP PRINCIPAL ========== -->
+   <div id="mainApp">
+    <div class="container">
+     <header>
+      <div class="security-controls"><button class="btn btn-lock" onclick="showMainView()"> <span>🏠</span> Inicio </button> <button class="btn btn-lock" onclick="lockApp()"> <span>🔒</span> Bloquear </button>
       </div>
-      <div class="form-group"><label for="appointmentDateInput">Fecha:</label> <input type="date" id="appointmentDateInput" required>
+      <div class="header-content">
+       <h1>🎙️ PsyTape</h1>
+       <p class="subtitle">Menos notas, más empatía. Graba, transcribe y conecta.</p>
       </div>
-      <div class="form-group"><label for="appointmentTimeInput">Hora:</label> <input type="time" id="appointmentTimeInput" required>
-      </div>
-      <div class="form-group"><label for="appointmentDurationInput">Duración (minutos):</label> <select id="appointmentDurationInput" required> <option value="30">30 minutos</option> <option value="45">45 minutos</option> <option value="60" selected>60 minutos</option> <option value="90">90 minutos</option> <option value="120">120 minutos</option> </select>
-      </div>
-      <div class="form-group"><label for="appointmentNotesInput">Notas (opcional):</label> <textarea id="appointmentNotesInput" placeholder="Motivo de consulta, recordatorios..."></textarea>
-      </div>
-      <div class="modal-actions"><button type="submit" class="btn btn-primary"> <span>💾</span> Guardar Cita </button> <button type="button" id="cancelAppointmentModal" class="btn btn-secondary"> Cancelar </button>
-      </div>
-     </form>
-    </div>
-   </div><!-- Modal: Proceso de Pago -->
-   <div id="paymentModal" class="modal-overlay hidden">
-    <div class="modal" style="max-width: 600px;">
-     <h2>💳 Proceso de Pago Seguro</h2>
-     <div id="paymentPlanInfo" style="text-align: center; padding: 20px 0; border-bottom: 2px solid #e5e7eb; margin-bottom: 25px;">
-      <div style="font-size: 3rem; margin-bottom: 10px;" id="paymentPlanIcon"></div>
-      <h3 style="color: #667eea; margin-bottom: 10px;" id="paymentPlanName"></h3>
-      <div style="font-size: 2rem; font-weight: 700; color: #667eea;" id="paymentPlanPrice"></div>
-     </div>
-     <div class="payment-info-box">
-      <h4>🔒 Pago 100% Seguro</h4>
-      <ul>
-       <li>✅ Encriptación SSL de nivel bancario</li>
-       <li>✅ No almacenamos datos de tarjetas</li>
-       <li>✅ Procesadores certificados PCI DSS</li>
-       <li>✅ Cancela cuando quieras</li>
-      </ul>
-     </div>
-     <h3 style="color: #1f2937; margin-bottom: 15px;">Selecciona tu método de pago:</h3>
-     <div class="payment-method-selector">
-      <div class="payment-method-btn" data-method="mercadopago" onclick="selectPaymentMethod('mercadopago')">
-       <div class="payment-method-icon">
-        💰
-       </div>
-       <div class="payment-method-name">
-        Mercado Pago
-       </div>
-      </div>
-      <div class="payment-method-btn" data-method="stripe" onclick="selectPaymentMethod('stripe')">
-       <div class="payment-method-icon">
-        💳
-       </div>
-       <div class="payment-method-name">
-        Stripe
-       </div>
-      </div>
-      <div class="payment-method-btn" data-method="paypal" onclick="selectPaymentMethod('paypal')">
-       <div class="payment-method-icon">
-        🅿️
-       </div>
-       <div class="payment-method-name">
-        PayPal
-       </div>
-      </div>
-     </div><!-- Contenedor de Mercado Pago -->
-     <div id="mercadopagoContainer" class="payment-form-container hidden">
-      <h4>💰 Pagar con Mercado Pago</h4>
-      <p style="color: #6b7280; margin-bottom: 15px;">Acepta tarjetas de crédito, débito y más métodos de pago</p>
-      <div id="mercadopago-button"></div>
-     </div><!-- Contenedor de Stripe -->
-     <div id="stripeContainer" class="payment-form-container hidden">
-      <h4>💳 Pagar con Stripe</h4>
-      <p style="color: #6b7280; margin-bottom: 15px;">Tarjetas de crédito y débito internacionales</p>
-      <div id="stripe-card-element" style="padding: 15px; background: white; border: 2px solid #e5e7eb; border-radius: 8px;"></div><button id="stripe-button" class="btn btn-primary" style="width: 100%; margin-top: 15px;"> 💳 Pagar Ahora </button>
-     </div><!-- Contenedor de PayPal -->
-     <div id="paypalContainer" class="payment-form-container hidden">
-      <h4>🅿️ Pagar con PayPal</h4>
-      <p style="color: #6b7280; margin-bottom: 15px;">Paga de forma rápida y segura con tu cuenta PayPal</p>
-      <div id="paypal-button-container"></div>
-     </div>
-     <div style="text-align: center; margin-top: 25px; padding-top: 20px; border-top: 2px solid #e5e7eb;"><button class="btn btn-secondary" onclick="closePaymentModal()"> Cancelar </button>
+      <div style="width: 200px;"></div>
+     </header>
+     <div class="card">
+      <h2>¡Bienvenido a PsyTape!</h2>
+      <p style="color: #6b7280; margin-bottom: 20px;">Tu asistente inteligente para la gestión de sesiones terapéuticas está listo para usar.</p>
+      <p style="color: #374151; font-size: 1.1rem; line-height: 1.8;">🎯 <strong>Comienza por:</strong><br><br>
+        1️⃣ Agregar tus pacientes<br>
+        2️⃣ Grabar sesiones con transcripción automática<br>
+        3️⃣ Organizar tu agenda semanal<br>
+        4️⃣ Gestionar notas clínicas de forma segura</p>
      </div>
     </div>
    </div>
   </div>
   <script>
-        // ========== SISTEMA DE SEGURIDAD ==========
-        
-        const STORAGE_KEY_PIN = 'app_security_pin';
-        const STORAGE_KEY_DATA = 'app_encrypted_data';
-        const DEFAULT_PIN = '1234';
-        const INACTIVITY_TIMEOUT = 5 * 60 * 1000; // 5 minutos
+        // ========== ESTADO GLOBAL ==========
+        let allUsers = [];
+        let currentUser = null;
+        let tempUserData = null;
+        let isDataSdkReady = false;
 
-        let currentPin = '';
-        let isFirstTimeSetup = false;
-        let inactivityTimer = null;
-        let isAuthenticated = false;
-
-        // ========== SISTEMA DE PAGOS ==========
-        
-        // IMPORTANTE: Estas son claves de PRUEBA (test keys)
-        // Para producción, reemplázalas con tus claves reales desde los dashboards
-        const PAYMENT_CONFIG = {
-            mercadopago: {
-                publicKey: 'TEST-TU-PUBLIC-KEY-AQUI', // Obtén tu clave en: https://www.mercadopago.com/developers
-                enabled: true
-            },
-            stripe: {
-                publicKey: 'pk_test_TU-PUBLIC-KEY-AQUI', // Obtén tu clave en: https://dashboard.stripe.com/test/apikeys
-                enabled: true
-            },
-            paypal: {
-                clientId: 'TU-CLIENT-ID-AQUI', // Obtén tu clave en: https://developer.paypal.com/dashboard
-                enabled: true
+        // ========== DATA SDK HANDLER ==========
+        const dataHandler = {
+            onDataChanged(data) {
+                allUsers = data;
+                console.log('Usuarios sincronizados:', allUsers.length);
             }
         };
 
-        let selectedPaymentMethod = null;
-        let selectedPlanForPurchase = null;
-        let stripe = null;
-        let stripeCardElement = null;
-        let mercadopago = null;
-
-        // Inicializar SDKs de pago
-        function initializePaymentSDKs() {
-            // Inicializar Stripe
-            if (PAYMENT_CONFIG.stripe.enabled && typeof Stripe !== 'undefined') {
-                stripe = Stripe(PAYMENT_CONFIG.stripe.publicKey);
-                const elements = stripe.elements();
-                stripeCardElement = elements.create('card', {
-                    style: {
-                        base: {
-                            fontSize: '16px',
-                            color: '#1f2937',
-                            '::placeholder': {
-                                color: '#9ca3af'
-                            }
-                        }
-                    }
-                });
-            }
-
-            // Inicializar Mercado Pago
-            if (PAYMENT_CONFIG.mercadopago.enabled && typeof MercadoPago !== 'undefined') {
-                mercadopago = new MercadoPago(PAYMENT_CONFIG.mercadopago.publicKey);
-            }
-
-            // PayPal se inicializa dinámicamente cuando se selecciona
-        }
-
-        function selectPaymentMethod(method) {
-            selectedPaymentMethod = method;
-            
-            // Actualizar UI
-            document.querySelectorAll('.payment-method-btn').forEach(btn => {
-                btn.classList.remove('selected');
-            });
-            document.querySelector(`[data-method="${method}"]`).classList.add('selected');
-
-            // Ocultar todos los contenedores
-            document.getElementById('mercadopagoContainer').classList.add('hidden');
-            document.getElementById('stripeContainer').classList.add('hidden');
-            document.getElementById('paypalContainer').classList.add('hidden');
-
-            // Mostrar el contenedor seleccionado
-            if (method === 'mercadopago') {
-                initializeMercadoPagoButton();
-                document.getElementById('mercadopagoContainer').classList.remove('hidden');
-            } else if (method === 'stripe') {
-                initializeStripeForm();
-                document.getElementById('stripeContainer').classList.remove('hidden');
-            } else if (method === 'paypal') {
-                initializePayPalButton();
-                document.getElementById('paypalContainer').classList.remove('hidden');
-            }
-        }
-
-        function initializeMercadoPagoButton() {
-            if (!mercadopago) {
-                document.getElementById('mercadopago-button').innerHTML = `
-                    <div style="background: #fff3cd; border: 2px solid #ffc107; border-radius: 8px; padding: 15px; text-align: center;">
-                        <p style="color: #856404; margin: 0;">⚠️ Mercado Pago no está configurado</p>
-                        <p style="color: #856404; font-size: 0.9rem; margin-top: 5px;">Agrega tu Public Key en PAYMENT_CONFIG</p>
-                    </div>
-                `;
-                return;
-            }
-
-            const plan = PLANS[selectedPlanForPurchase];
-            
-            document.getElementById('mercadopago-button').innerHTML = `
-                <button class="btn btn-primary" style="width: 100%;" onclick="processMercadoPagoPayment()">
-                    💰 Pagar $${plan.price} con Mercado Pago
-                </button>
-            `;
-        }
-
-        function initializeStripeForm() {
-            if (!stripe || !stripeCardElement) {
-                document.getElementById('stripe-card-element').innerHTML = `
-                    <div style="background: #fff3cd; border: 2px solid #ffc107; border-radius: 8px; padding: 15px; text-align: center;">
-                        <p style="color: #856404; margin: 0;">⚠️ Stripe no está configurado</p>
-                        <p style="color: #856404; font-size: 0.9rem; margin-top: 5px;">Agrega tu Public Key en PAYMENT_CONFIG</p>
-                    </div>
-                `;
-                return;
-            }
-
-            stripeCardElement.mount('#stripe-card-element');
-            
-            document.getElementById('stripe-button').onclick = processStripePayment;
-        }
-
-        function initializePayPalButton() {
-            const container = document.getElementById('paypal-button-container');
-            
-            if (!PAYMENT_CONFIG.paypal.enabled || typeof paypal === 'undefined') {
-                container.innerHTML = `
-                    <div style="background: #fff3cd; border: 2px solid #ffc107; border-radius: 8px; padding: 15px; text-align: center;">
-                        <p style="color: #856404; margin: 0;">⚠️ PayPal no está configurado</p>
-                        <p style="color: #856404; font-size: 0.9rem; margin-top: 5px;">Agrega tu Client ID en PAYMENT_CONFIG</p>
-                    </div>
-                `;
-                return;
-            }
-
-            const plan = PLANS[selectedPlanForPurchase];
-            
-            container.innerHTML = '';
-            
-            paypal.Buttons({
-                createOrder: function(data, actions) {
-                    return actions.order.create({
-                        purchase_units: [{
-                            description: plan.name + ' - PsyTape',
-                            amount: {
-                                value: plan.price.toString()
-                            }
-                        }]
-                    });
-                },
-                onApprove: function(data, actions) {
-                    return actions.order.capture().then(function(details) {
-                        handlePaymentSuccess(selectedPlanForPurchase, 'paypal', details.id);
-                    });
-                },
-                onError: function(err) {
-                    console.error('Error en PayPal:', err);
-                    showToast('Error en el pago con PayPal', 'error');
-                }
-            }).render('#paypal-button-container');
-        }
-
-        async function processMercadoPagoPayment() {
-            const plan = PLANS[selectedPlanForPurchase];
-            
-            showToast('Procesando pago con Mercado Pago...', 'info');
-            
-            // NOTA: En producción, debes crear una preferencia de pago en tu backend
-            // Este es un ejemplo simplificado para demostración
-            
-            /* Ejemplo de código backend (Node.js):
-            
-            const mercadopago = require('mercadopago');
-            mercadopago.configure({ access_token: 'TU_ACCESS_TOKEN' });
-            
-            const preference = {
-                items: [
-                    {
-                        title: plan.name,
-                        unit_price: plan.price,
-                        quantity: 1,
-                    }
-                ],
-                back_urls: {
-                    success: 'https://tuapp.com/success',
-                    failure: 'https://tuapp.com/failure',
-                    pending: 'https://tuapp.com/pending'
-                },
-                auto_return: 'approved',
-            };
-            
-            const response = await mercadopago.preferences.create(preference);
-            return response.body.init_point; // URL para redireccionar
-            */
-            
-            // Simulación de pago exitoso para demo
-            setTimeout(() => {
-                handlePaymentSuccess(selectedPlanForPurchase, 'mercadopago', 'MP-DEMO-' + Date.now());
-            }, 2000);
-        }
-
-        async function processStripePayment() {
-            if (!stripe || !stripeCardElement) {
-                showToast('Stripe no está configurado correctamente', 'error');
-                return;
-            }
-
-            const plan = PLANS[selectedPlanForPurchase];
-            
-            showToast('Procesando pago con Stripe...', 'info');
-            
-            // NOTA: En producción, debes crear un PaymentIntent en tu backend
-            // Este es un ejemplo simplificado para demostración
-            
-            /* Ejemplo de código backend (Node.js):
-            
-            const stripe = require('stripe')('sk_test_TU_SECRET_KEY');
-            
-            const paymentIntent = await stripe.paymentIntents.create({
-                amount: plan.price * 100, // Stripe usa centavos
-                currency: 'usd',
-                description: plan.name + ' - PsyTape',
-                metadata: {
-                    plan: selectedPlanForPurchase
-                }
-            });
-            
-            return paymentIntent.client_secret;
-            */
-            
-            /* Luego en el frontend:
-            
-            const {error, paymentIntent} = await stripe.confirmCardPayment(clientSecret, {
-                payment_method: {
-                    card: stripeCardElement,
-                }
-            });
-            
-            if (error) {
-                showToast('Error: ' + error.message, 'error');
-            } else if (paymentIntent.status === 'succeeded') {
-                handlePaymentSuccess(selectedPlanForPurchase, 'stripe', paymentIntent.id);
-            }
-            */
-            
-            // Simulación de pago exitoso para demo
-            setTimeout(() => {
-                handlePaymentSuccess(selectedPlanForPurchase, 'stripe', 'pi_demo_' + Date.now());
-            }, 2000);
-        }
-
-        function handlePaymentSuccess(planType, paymentMethod, transactionId) {
-            // Guardar el plan actualizado
-            setCurrentPlan(planType);
-            
-            // Guardar información de la transacción
-            const transaction = {
-                id: transactionId,
-                planType: planType,
-                paymentMethod: paymentMethod,
-                amount: PLANS[planType].price,
-                date: new Date().toISOString(),
-                status: 'completed'
-            };
-            
-            const transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
-            transactions.push(transaction);
-            localStorage.setItem('transactions', JSON.stringify(transactions));
-            
-            // Cerrar modal y mostrar éxito
-            closePaymentModal();
-            
-            const plan = PLANS[planType];
-            showToast(`¡Pago exitoso! Bienvenido a ${plan.name} 🎉`, 'success');
-            
-            setTimeout(() => {
-                updatePlansView();
-                showToast('Tu plan está activo y listo para usar', 'success');
-            }, 1500);
-        }
-
-        function closePaymentModal() {
-            document.getElementById('paymentModal').classList.add('hidden');
-            selectedPaymentMethod = null;
-            selectedPlanForPurchase = null;
-            
-            // Limpiar formularios
-            document.querySelectorAll('.payment-method-btn').forEach(btn => {
-                btn.classList.remove('selected');
-            });
-            document.getElementById('mercadopagoContainer').classList.add('hidden');
-            document.getElementById('stripeContainer').classList.add('hidden');
-            document.getElementById('paypalContainer').classList.add('hidden');
-            
-            if (stripeCardElement) {
-                stripeCardElement.unmount();
-            }
-        }
-
-        // ========== SISTEMA DE PLANES Y SUSCRIPCIONES ==========
-        
-        const PLANS = {
-            free: {
-                name: 'Plan Gratuito',
-                icon: '🆓',
-                price: 0,
-                currency: 'USD',
-                maxPatients: 5,
-                maxSessionsPerPatient: 3,
-                maxRecordingMinutes: 25,
-                hasTranscription: false,
-                hasProfessionals: 1,
-                features: [
-                    'Hasta 5 pacientes',
-                    '3 sesiones por paciente',
-                    '25 minutos de grabación',
-                    'Grabación de audio básica',
-                    'Agenda semanal',
-                    'Seguridad con PIN'
-                ],
-                limitations: [
-                    'Sin transcripción automática',
-                    'Sin plantillas clínicas',
-                    'Sin exportación avanzada'
-                ]
-            },
-            flexible: {
-                name: 'Plan Flexible',
-                icon: '⚡',
-                price: 19.99,
-                currency: 'USD',
-                period: 'mes',
-                maxPatients: 20,
-                maxSessionsPerPatient: 4,
-                maxRecordingMinutes: 45,
-                hasTranscription: true,
-                hasProfessionals: 1,
-                features: [
-                    'Hasta 20 pacientes',
-                    '4 sesiones por paciente',
-                    '45 minutos de grabación',
-                    '🤖 Transcripción automática con IA',
-                    'Agenda semanal ilimitada',
-                    'Exportación a PDF',
-                    'Soporte por email'
-                ],
-                limitations: [
-                    'Sin plantillas clínicas avanzadas',
-                    'Un solo profesional'
-                ]
-            },
-            premium: {
-                name: 'Plan Premium',
-                icon: '👑',
-                price: 49.99,
-                currency: 'USD',
-                period: 'mes',
-                maxPatients: -1, // -1 = ilimitado
-                maxSessionsPerPatient: -1,
-                maxRecordingMinutes: -1,
-                hasTranscription: true,
-                hasProfessionals: 3,
-                features: [
-                    '✨ Pacientes ilimitados',
-                    '✨ Sesiones ilimitadas',
-                    '✨ Grabación ilimitada',
-                    '🤖 Transcripción automática con IA',
-                    '👥 Hasta 3 profesionales/consultorios',
-                    '🏥 Plantillas de historias clínicas',
-                    '📋 Plantillas de evaluación',
-                    '📊 Reportes y estadísticas',
-                    '☁️ Respaldo en la nube',
-                    '🎨 Personalización avanzada',
-                    '⚡ Soporte prioritario 24/7'
-                ],
-                limitations: []
-            }
-        };
-
-        function getCurrentPlan() {
-            const planData = localStorage.getItem('user_plan');
-            if (!planData) {
-                return {
-                    type: 'free',
-                    startDate: new Date().toISOString(),
-                    endDate: null
-                };
-            }
-            return JSON.parse(planData);
-        }
-
-        function setCurrentPlan(planType) {
-            const planData = {
-                type: planType,
-                startDate: new Date().toISOString(),
-                endDate: planType !== 'free' ? getEndDate(30) : null
-            };
-            localStorage.setItem('user_plan', JSON.stringify(planData));
-        }
-
-        function getEndDate(days) {
-            const date = new Date();
-            date.setDate(date.getDate() + days);
-            return date.toISOString();
-        }
-
-        function checkPlanLimits() {
-            const currentPlan = getCurrentPlan();
-            const plan = PLANS[currentPlan.type];
-            const patients = getPatients();
-            
-            return {
-                canAddPatient: plan.maxPatients === -1 || patients.length < plan.maxPatients,
-                canAddSession: (patientId) => {
-                    if (plan.maxSessionsPerPatient === -1) return true;
-                    const sessions = getSessions(patientId);
-                    return sessions.length < plan.maxSessionsPerPatient;
-                },
-                maxRecordingMinutes: plan.maxRecordingMinutes,
-                currentPatients: patients.length,
-                maxPatients: plan.maxPatients,
-                planName: plan.name
-            };
-        }
-
-        // Función simple de ofuscación (no es encriptación real, pero añade una capa)
-        function obfuscateData(data) {
-            return btoa(encodeURIComponent(JSON.stringify(data)));
-        }
-
-        function deobfuscateData(data) {
+        // ========== INICIALIZACIÓN ==========
+        async function initApp() {
             try {
-                return JSON.parse(decodeURIComponent(atob(data)));
-            } catch (e) {
-                return null;
+                showLoading();
+                
+                // Inicializar Data SDK
+                if (window.dataSdk) {
+                    const initResult = await window.dataSdk.init(dataHandler);
+                    if (initResult.isOk) {
+                        isDataSdkReady = true;
+                        console.log('Data SDK inicializado correctamente');
+                    } else {
+                        console.error('Error al inicializar Data SDK:', initResult.error);
+                        showToast('Error de conexión. Verifica tu internet.', 'error');
+                    }
+                }
+
+                // Verificar si hay sesión activa
+                const currentEmail = localStorage.getItem('psytape_current_email');
+                const currentPin = localStorage.getItem('psytape_current_pin');
+
+                if (currentEmail && currentPin) {
+                    // Usuario con sesión activa - ir a pantalla de PIN
+                    hideLoading();
+                    showLoginPinScreen();
+                } else {
+                    // Usuario nuevo - mostrar bienvenida
+                    hideLoading();
+                    showWelcome();
+                }
+            } catch (error) {
+                console.error('Error en inicialización:', error);
+                hideLoading();
+                showToast('Error al iniciar la app', 'error');
+                showWelcome();
             }
         }
 
-        function initializeSecurity() {
-            const storedPin = localStorage.getItem(STORAGE_KEY_PIN);
+        // ========== LOADING ==========
+        function showLoading() {
+            document.getElementById('loadingOverlay').classList.remove('hidden');
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingOverlay').classList.add('hidden');
+        }
+
+        // ========== NAVEGACIÓN ENTRE PANTALLAS ==========
+        function showWelcome() {
+            hideAllScreens();
+            document.getElementById('welcomeScreen').style.display = 'flex';
+        }
+
+        function showRegistrationForm() {
+            hideAllScreens();
+            document.getElementById('authScreen').classList.add('active');
+            document.getElementById('authTitle').textContent = 'Registration';
+            document.getElementById('registrationForm').classList.remove('hidden');
+            document.getElementById('loginForm').classList.add('hidden');
+            clearAuthMessages();
+        }
+
+        function showLoginForm() {
+            hideAllScreens();
+            document.getElementById('authScreen').classList.add('active');
+            document.getElementById('authTitle').textContent = 'Login';
+            document.getElementById('loginForm').classList.remove('hidden');
+            document.getElementById('registrationForm').classList.add('hidden');
+            clearAuthMessages();
+        }
+
+        function showPinSetup() {
+            hideAllScreens();
+            document.getElementById('pinSetupScreen').classList.add('active');
+            clearPinDigits();
+            clearPinMessages();
+        }
+
+        function showLoginPinScreen() {
+            hideAllScreens();
+            document.getElementById('loginScreen').classList.add('active');
+            clearLoginPin();
+        }
+
+        function showMainApp() {
+            hideAllScreens();
+            document.getElementById('mainApp').classList.add('active');
+        }
+
+        function showMainView() {
+            showToast('Vista principal cargada', 'success');
+        }
+
+        function hideAllScreens() {
+            document.getElementById('welcomeScreen').style.display = 'none';
+            document.getElementById('authScreen').classList.remove('active');
+            document.getElementById('pinSetupScreen').classList.remove('active');
+            document.getElementById('loginScreen').classList.remove('active');
+            document.getElementById('mainApp').classList.remove('active');
+        }
+
+        // ========== REGISTRO ==========
+        document.getElementById('registrationForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
             
-            if (!storedPin) {
-                isFirstTimeSetup = true;
-                document.getElementById('loginSubtitle').textContent = '🔐 Crea tu PIN de 4 dígitos para comenzar';
-                showToast('¡Bienvenido a PsyTape! Configura tu PIN', 'info');
+            if (!isDataSdkReady) {
+                showAuthError('Sistema de sincronización no disponible. Verifica tu conexión.');
+                return;
             }
-        }
 
-        function enterDigit(digit) {
+            const submitBtn = document.getElementById('registerSubmitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Registrando...';
+            
+            const name = document.getElementById('regName').value.trim();
+            const email = document.getElementById('regEmail').value.trim().toLowerCase();
+            const password = document.getElementById('regPassword').value;
+            const country = document.getElementById('regCountry').value;
+            const verification = document.getElementById('regVerification').value.trim().toUpperCase();
+
+            // Validaciones
+            if (password.length < 6) {
+                showAuthError('La contraseña debe tener al menos 6 caracteres');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Registrarse';
+                return;
+            }
+
+            if (verification !== 'PSYTAPE2024') {
+                showAuthError('Código de verificación incorrecto');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Registrarse';
+                return;
+            }
+
+            // Verificar si el email ya existe
+            const existingUser = allUsers.find(u => u.email === email);
+            if (existingUser) {
+                showAuthError('Este email ya está registrado');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Registrarse';
+                return;
+            }
+
+            // Guardar datos temporales
+            tempUserData = {
+                user_id: Date.now().toString(),
+                name,
+                email,
+                password,
+                country,
+                pin: '', // Se asignará después
+                createdAt: new Date().toISOString()
+            };
+
+            showAuthSuccess('Registro exitoso. Ahora crea tu PIN de seguridad');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Registrarse';
+            
+            setTimeout(() => {
+                showPinSetup();
+            }, 1500);
+        });
+
+        // ========== LOGIN ==========
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (!isDataSdkReady) {
+                showAuthError('Sistema de sincronización no disponible. Verifica tu conexión.');
+                return;
+            }
+
+            const submitBtn = document.getElementById('loginSubmitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Verificando...';
+            
+            const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+            const password = document.getElementById('loginPassword').value;
+
+            const user = allUsers.find(u => u.email === email && u.password === password);
+
+            if (!user) {
+                showAuthError('Email o contraseña incorrectos');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Ingresar';
+                return;
+            }
+
+            // Guardar sesión local
+            currentUser = user;
+            localStorage.setItem('psytape_current_email', user.email);
+            localStorage.setItem('psytape_current_pin', user.pin);
+
+            showAuthSuccess('Login exitoso. Redirigiendo...');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Ingresar';
+            
+            setTimeout(() => {
+                showLoginPinScreen();
+            }, 1000);
+        });
+
+        // ========== PIN SETUP ==========
+        function enterPinDigit(digit) {
             const pins = [
-                document.getElementById('pin1'),
-                document.getElementById('pin2'),
-                document.getElementById('pin3'),
-                document.getElementById('pin4')
+                document.getElementById('pinDigit1'),
+                document.getElementById('pinDigit2'),
+                document.getElementById('pinDigit3'),
+                document.getElementById('pinDigit4')
             ];
 
             for (let i = 0; i < pins.length; i++) {
@@ -1972,16 +1007,15 @@
                     break;
                 }
             }
-
-            hideMessages();
+            clearPinMessages();
         }
 
-        function deleteDigit() {
+        function deletePinDigit() {
             const pins = [
-                document.getElementById('pin4'),
-                document.getElementById('pin3'),
-                document.getElementById('pin2'),
-                document.getElementById('pin1')
+                document.getElementById('pinDigit4'),
+                document.getElementById('pinDigit3'),
+                document.getElementById('pinDigit2'),
+                document.getElementById('pinDigit1')
             ];
 
             for (let i = 0; i < pins.length; i++) {
@@ -1991,1144 +1025,215 @@
                     break;
                 }
             }
-
-            hideMessages();
+            clearPinMessages();
         }
 
-        function clearPin() {
+        function clearPinDigits() {
             const pins = [
-                document.getElementById('pin1'),
-                document.getElementById('pin2'),
-                document.getElementById('pin3'),
-                document.getElementById('pin4')
+                document.getElementById('pinDigit1'),
+                document.getElementById('pinDigit2'),
+                document.getElementById('pinDigit3'),
+                document.getElementById('pinDigit4')
             ];
 
             pins.forEach(pin => {
                 pin.value = '';
                 pin.classList.remove('filled');
             });
-
-            hideMessages();
+            clearPinMessages();
         }
 
-        function getCurrentPinValue() {
-            return document.getElementById('pin1').value +
-                   document.getElementById('pin2').value +
-                   document.getElementById('pin3').value +
-                   document.getElementById('pin4').value;
+        function getCurrentPin() {
+            return document.getElementById('pinDigit1').value +
+                   document.getElementById('pinDigit2').value +
+                   document.getElementById('pinDigit3').value +
+                   document.getElementById('pinDigit4').value;
         }
 
-        function verifyPin() {
-            const enteredPin = getCurrentPinValue();
+        async function savePinAndContinue() {
+            const pin = getCurrentPin();
 
-            if (enteredPin.length !== 4) {
-                showErrorMessage('Por favor ingresa los 4 dígitos');
+            if (pin.length !== 4) {
+                showPinError('Por favor ingresa 4 dígitos');
                 return;
             }
 
-            // 🔓 CÓDIGO SECRETO DE DESARROLLADORA 🔓
-            // PIN 9999 = Acceso Premium Ilimitado de por vida
-            if (enteredPin === '9999') {
-                activateDeveloperMode();
-                unlockApp();
+            if (!isDataSdkReady || !tempUserData) {
+                showPinError('Error: datos no disponibles');
                 return;
             }
 
-            const storedPin = localStorage.getItem(STORAGE_KEY_PIN);
+            const saveBtn = document.getElementById('savePinBtn');
+            saveBtn.disabled = true;
+            saveBtn.textContent = 'Guardando...';
 
-            if (isFirstTimeSetup) {
-                localStorage.setItem(STORAGE_KEY_PIN, enteredPin);
-                showSuccessMessage('PIN creado exitosamente');
-                setTimeout(() => {
-                    unlockApp();
-                }, 1000);
-            } else {
-                if (enteredPin === storedPin) {
-                    unlockApp();
+            try {
+                // Asignar PIN al usuario temporal
+                tempUserData.pin = pin;
+
+                // Guardar en Canva Sheet
+                const createResult = await window.dataSdk.create(tempUserData);
+
+                if (createResult.isOk) {
+                    // Guardar sesión local
+                    currentUser = tempUserData;
+                    localStorage.setItem('psytape_current_email', tempUserData.email);
+                    localStorage.setItem('psytape_current_pin', pin);
+                    
+                    tempUserData = null;
+
+                    showPinSuccess('PIN creado exitosamente');
+                    setTimeout(() => {
+                        showMainApp();
+                        showToast('¡Bienvenido a PsyTape! 🎉', 'success');
+                    }, 1000);
                 } else {
-                    showErrorMessage('PIN incorrecto');
-                    clearPin();
+                    showPinError('Error al guardar. Intenta nuevamente.');
+                    saveBtn.disabled = false;
+                    saveBtn.textContent = 'Guardar PIN';
+                }
+            } catch (error) {
+                console.error('Error al guardar PIN:', error);
+                showPinError('Error de conexión. Verifica tu internet.');
+                saveBtn.disabled = false;
+                saveBtn.textContent = 'Guardar PIN';
+            }
+        }
+
+        // ========== LOGIN CON PIN ==========
+        function enterLoginPin(digit) {
+            const pins = [
+                document.getElementById('loginPin1'),
+                document.getElementById('loginPin2'),
+                document.getElementById('loginPin3'),
+                document.getElementById('loginPin4')
+            ];
+
+            for (let i = 0; i < pins.length; i++) {
+                if (!pins[i].value) {
+                    pins[i].value = digit;
+                    pins[i].classList.add('filled');
+                    break;
                 }
             }
+            hideLoginPinError();
         }
 
-        function activateDeveloperMode() {
-            // Activar Plan Premium permanente
-            const devPlan = {
-                type: 'premium',
-                startDate: new Date().toISOString(),
-                endDate: null, // Nunca expira
-                isDeveloper: true // Marca especial
-            };
-            localStorage.setItem('user_plan', JSON.stringify(devPlan));
-            
-            showToast('👑 Modo Desarrolladora Activado - Premium Ilimitado', 'success');
-            setTimeout(() => {
-                showToast('🎉 ¡Bienvenida Creadora! Disfruta sin límites', 'success');
-            }, 2000);
-        }
+        function deleteLoginPin() {
+            const pins = [
+                document.getElementById('loginPin4'),
+                document.getElementById('loginPin3'),
+                document.getElementById('loginPin2'),
+                document.getElementById('loginPin1')
+            ];
 
-        function unlockApp() {
-            isAuthenticated = true;
-            document.getElementById('loginScreen').style.display = 'none';
-            document.getElementById('mainApp').classList.add('active');
-            clearPin();
-            startInactivityTimer();
-            loadPatients();
-            showToast('Acceso concedido', 'success');
-        }
-
-        function lockApp() {
-            isAuthenticated = false;
-            document.getElementById('mainApp').classList.remove('active');
-            document.getElementById('loginScreen').style.display = 'flex';
-            clearPin();
-            stopInactivityTimer();
-            
-            // Detener cualquier grabación activa
-            if (mediaRecorder && mediaRecorder.state === 'recording') {
-                stopRecording();
+            for (let i = 0; i < pins.length; i++) {
+                if (pins[i].value) {
+                    pins[i].value = '';
+                    pins[i].classList.remove('filled');
+                    break;
+                }
             }
-            
+            hideLoginPinError();
+        }
+
+        function clearLoginPin() {
+            const pins = [
+                document.getElementById('loginPin1'),
+                document.getElementById('loginPin2'),
+                document.getElementById('loginPin3'),
+                document.getElementById('loginPin4')
+            ];
+
+            pins.forEach(pin => {
+                pin.value = '';
+                pin.classList.remove('filled');
+            });
+            hideLoginPinError();
+        }
+
+        function getLoginPin() {
+            return document.getElementById('loginPin1').value +
+                   document.getElementById('loginPin2').value +
+                   document.getElementById('loginPin3').value +
+                   document.getElementById('loginPin4').value;
+        }
+
+        function verifyLoginPin() {
+            const enteredPin = getLoginPin();
+            const storedEmail = localStorage.getItem('psytape_current_email');
+            const storedPin = localStorage.getItem('psytape_current_pin');
+
+            if (enteredPin.length !== 4) {
+                showLoginPinError('Por favor ingresa 4 dígitos');
+                return;
+            }
+
+            if (enteredPin === storedPin) {
+                // Buscar usuario actual en datos sincronizados
+                currentUser = allUsers.find(u => u.email === storedEmail);
+                showMainApp();
+                showToast('Acceso concedido 🎉', 'success');
+            } else {
+                showLoginPinError('PIN incorrecto');
+                clearLoginPin();
+            }
+        }
+
+        // ========== CERRAR SESIÓN ==========
+        function lockApp() {
+            showLoginPinScreen();
             showToast('Aplicación bloqueada', 'info');
         }
 
-        function startInactivityTimer() {
-            stopInactivityTimer();
-            inactivityTimer = setTimeout(() => {
-                lockApp();
-                showToast('Sesión bloqueada por inactividad', 'info');
-            }, INACTIVITY_TIMEOUT);
-        }
-
-        function stopInactivityTimer() {
-            if (inactivityTimer) {
-                clearTimeout(inactivityTimer);
-                inactivityTimer = null;
-            }
-        }
-
-        function resetInactivityTimer() {
-            if (isAuthenticated) {
-                startInactivityTimer();
-            }
-        }
-
-        // Resetear timer con actividad del usuario
-        document.addEventListener('mousemove', resetInactivityTimer);
-        document.addEventListener('keypress', resetInactivityTimer);
-        document.addEventListener('click', resetInactivityTimer);
-        document.addEventListener('touchstart', resetInactivityTimer);
-
-        document.getElementById('lockBtn').addEventListener('click', () => {
-            lockApp();
-        });
-
-        document.getElementById('changePinBtn').addEventListener('click', () => {
-            document.getElementById('changePinModal').classList.remove('hidden');
-        });
-
-        document.getElementById('cancelChangePinModal').addEventListener('click', () => {
-            document.getElementById('changePinModal').classList.add('hidden');
-            document.getElementById('changePinForm').reset();
-        });
-
-        document.getElementById('changePinForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            const currentPinInput = document.getElementById('currentPinInput').value;
-            const newPinInput = document.getElementById('newPinInput').value;
-            const confirmPinInput = document.getElementById('confirmPinInput').value;
-            
-            const storedPin = localStorage.getItem(STORAGE_KEY_PIN);
-            
-            if (currentPinInput !== storedPin) {
-                showToast('PIN actual incorrecto', 'error');
-                return;
-            }
-            
-            if (newPinInput.length !== 4 || !/^\d{4}$/.test(newPinInput)) {
-                showToast('El nuevo PIN debe tener 4 dígitos', 'error');
-                return;
-            }
-            
-            if (newPinInput !== confirmPinInput) {
-                showToast('Los PIN no coinciden', 'error');
-                return;
-            }
-            
-            localStorage.setItem(STORAGE_KEY_PIN, newPinInput);
-            document.getElementById('changePinModal').classList.add('hidden');
-            document.getElementById('changePinForm').reset();
-            showToast('PIN actualizado exitosamente', 'success');
-        });
-
-        function showErrorMessage(message) {
-            const errorDiv = document.getElementById('errorMessage');
+        // ========== MENSAJES Y NOTIFICACIONES ==========
+        function showAuthError(message) {
+            const errorDiv = document.getElementById('authErrorMessage');
             errorDiv.textContent = message;
             errorDiv.classList.remove('hidden');
-            
-            setTimeout(() => {
-                errorDiv.classList.add('hidden');
-            }, 3000);
+            setTimeout(() => errorDiv.classList.add('hidden'), 4000);
         }
 
-        function showSuccessMessage(message) {
-            const successDiv = document.getElementById('successMessage');
+        function showAuthSuccess(message) {
+            const successDiv = document.getElementById('authSuccessMessage');
             successDiv.textContent = message;
             successDiv.classList.remove('hidden');
-            
-            setTimeout(() => {
-                successDiv.classList.add('hidden');
-            }, 2000);
+            setTimeout(() => successDiv.classList.add('hidden'), 4000);
         }
 
-        function hideMessages() {
-            document.getElementById('errorMessage').classList.add('hidden');
-            document.getElementById('successMessage').classList.add('hidden');
+        function clearAuthMessages() {
+            document.getElementById('authErrorMessage').classList.add('hidden');
+            document.getElementById('authSuccessMessage').classList.add('hidden');
         }
 
-        // Permitir Enter para enviar PIN
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && !isAuthenticated) {
-                verifyPin();
-            }
-        });
-
-        // ========== SISTEMA DE PACIENTES Y SESIONES ==========
-        
-        const CATEGORIES = {
-            individual: { name: 'Individual', icon: '��' },
-            pareja: { name: 'Pareja', icon: '💑' },
-            familiar: { name: 'Familiar', icon: '👨‍👩‍👧‍👦' },
-            grupal: { name: 'Grupal', icon: '👥' },
-            evaluacion: { name: 'Evaluación', icon: '📊' }
-        };
-
-        let currentView = 'patients';
-        let currentPatientId = null;
-        let editingPatientId = null;
-        let editingAppointmentId = null;
-        let currentWeekStart = null;
-        
-        let mediaRecorder;
-        let audioChunks = [];
-        let recordingStartTime;
-        let timerInterval;
-        let currentAudioBlob;
-        let recognition;
-        let isRecognitionActive = false;
-        let liveTranscript = '';
-
-        // ========== SISTEMA DE CALENDARIO ==========
-
-        function getAppointments() {
-            const data = localStorage.getItem('appointments');
-            return data ? JSON.parse(data) : [];
+        function showPinError(message) {
+            const errorDiv = document.getElementById('pinErrorMessage');
+            errorDiv.textContent = message;
+            errorDiv.classList.remove('hidden');
+            setTimeout(() => errorDiv.classList.add('hidden'), 3000);
         }
 
-        function saveAppointments(appointments) {
-            localStorage.setItem('appointments', JSON.stringify(appointments));
+        function showPinSuccess(message) {
+            const successDiv = document.getElementById('pinSuccessMessage');
+            successDiv.textContent = message;
+            successDiv.classList.remove('hidden');
+            setTimeout(() => successDiv.classList.add('hidden'), 3000);
         }
 
-        function getWeekStart(date) {
-            const d = new Date(date);
-            const day = d.getDay();
-            const diff = d.getDate() - day + (day === 0 ? -6 : 1);
-            return new Date(d.setDate(diff));
+        function clearPinMessages() {
+            document.getElementById('pinErrorMessage').classList.add('hidden');
+            document.getElementById('pinSuccessMessage').classList.add('hidden');
         }
 
-        function formatWeekRange(startDate) {
-            const endDate = new Date(startDate);
-            endDate.setDate(endDate.getDate() + 6);
-            
-            const startStr = startDate.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
-            const endStr = endDate.toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' });
-            
-            return `${startStr} - ${endStr}`;
+        function showLoginPinError(message) {
+            const errorDiv = document.getElementById('loginPinError');
+            errorDiv.textContent = message;
+            errorDiv.classList.remove('hidden');
+            setTimeout(() => errorDiv.classList.add('hidden'), 3000);
         }
 
-        function showCalendarView() {
-            currentView = 'calendar';
-            document.getElementById('calendarView').classList.remove('hidden');
-            document.getElementById('patientsView').classList.add('hidden');
-            document.getElementById('patientSessionsView').classList.add('hidden');
-            
-            if (!currentWeekStart) {
-                currentWeekStart = getWeekStart(new Date());
-            }
-            
-            loadCalendar();
-        }
-
-        function loadCalendar() {
-            const weekStart = currentWeekStart;
-            document.getElementById('currentWeekDisplay').textContent = formatWeekRange(weekStart);
-            
-            const appointments = getAppointments();
-            const patients = getPatients();
-            const weekCalendar = document.getElementById('weekCalendar');
-            const emptyState = document.getElementById('appointmentsEmptyState');
-            
-            weekCalendar.innerHTML = '';
-            
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-            
-            const daysOfWeek = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
-            
-            let hasAppointments = false;
-            
-            for (let i = 0; i < 7; i++) {
-                const currentDay = new Date(weekStart);
-                currentDay.setDate(currentDay.getDate() + i);
-                
-                const dayColumn = document.createElement('div');
-                dayColumn.className = 'day-column';
-                
-                if (currentDay.getTime() === today.getTime()) {
-                    dayColumn.classList.add('today');
-                }
-                
-                dayColumn.innerHTML = `
-                    <div class="day-header">
-                        <div class="day-name">${daysOfWeek[i]}</div>
-                        <div class="day-date">${currentDay.getDate()}</div>
-                    </div>
-                `;
-                
-                const dayAppointments = appointments.filter(apt => {
-                    const aptDate = new Date(apt.date);
-                    return aptDate.toDateString() === currentDay.toDateString();
-                }).sort((a, b) => {
-                    return a.time.localeCompare(b.time);
-                });
-                
-                if (dayAppointments.length > 0) {
-                    hasAppointments = true;
-                }
-                
-                dayAppointments.forEach(apt => {
-                    const patient = patients.find(p => p.id === apt.patientId);
-                    if (!patient) return;
-                    
-                    const categoryInfo = CATEGORIES[patient.category];
-                    const aptDateTime = new Date(apt.date + 'T' + apt.time);
-                    const isPast = aptDateTime < new Date();
-                    
-                    const slot = document.createElement('div');
-                    slot.className = 'appointment-slot';
-                    if (isPast) slot.classList.add('past');
-                    
-                    slot.innerHTML = `
-                        <div class="appointment-time">⏰ ${apt.time} (${apt.duration}min)</div>
-                        <div class="appointment-patient">${categoryInfo.icon} ${patient.name}</div>
-                        ${apt.notes ? '<div style="font-size: 0.8rem; color: #6b7280; margin-top: 5px;">📝 ' + apt.notes + '</div>' : ''}
-                        <div class="appointment-actions">
-                            <button class="btn btn-secondary" onclick="editAppointment(${apt.id})">✏️</button>
-                            <button class="btn btn-danger" onclick="deleteAppointment(${apt.id})">🗑️</button>
-                        </div>
-                    `;
-                    
-                    dayColumn.appendChild(slot);
-                });
-                
-                weekCalendar.appendChild(dayColumn);
-            }
-            
-            if (hasAppointments) {
-                emptyState.classList.add('hidden');
-            } else {
-                emptyState.classList.remove('hidden');
-            }
-        }
-
-        document.getElementById('calendarNavBtn').addEventListener('click', () => {
-            showCalendarView();
-        });
-
-        document.getElementById('prevWeekBtn').addEventListener('click', () => {
-            currentWeekStart.setDate(currentWeekStart.getDate() - 7);
-            loadCalendar();
-        });
-
-        document.getElementById('nextWeekBtn').addEventListener('click', () => {
-            currentWeekStart.setDate(currentWeekStart.getDate() + 7);
-            loadCalendar();
-        });
-
-        document.getElementById('addAppointmentBtn').addEventListener('click', () => {
-            const patients = getPatients();
-            
-            if (patients.length === 0) {
-                showToast('Primero debes agregar pacientes', 'error');
-                return;
-            }
-            
-            editingAppointmentId = null;
-            document.getElementById('appointmentModalTitle').textContent = '📅 Nueva Cita';
-            document.getElementById('appointmentForm').reset();
-            
-            const select = document.getElementById('appointmentPatientSelect');
-            select.innerHTML = '<option value="">Selecciona un paciente</option>';
-            patients.forEach(p => {
-                const categoryInfo = CATEGORIES[p.category];
-                const option = document.createElement('option');
-                option.value = p.id;
-                option.textContent = `${categoryInfo.icon} ${p.name}`;
-                select.appendChild(option);
-            });
-            
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('appointmentDateInput').value = today;
-            document.getElementById('appointmentTimeInput').value = '09:00';
-            
-            document.getElementById('appointmentModal').classList.remove('hidden');
-        });
-
-        document.getElementById('cancelAppointmentModal').addEventListener('click', () => {
-            document.getElementById('appointmentModal').classList.add('hidden');
-        });
-
-        document.getElementById('appointmentForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            const patientId = parseInt(document.getElementById('appointmentPatientSelect').value);
-            const date = document.getElementById('appointmentDateInput').value;
-            const time = document.getElementById('appointmentTimeInput').value;
-            const duration = parseInt(document.getElementById('appointmentDurationInput').value);
-            const notes = document.getElementById('appointmentNotesInput').value.trim();
-            
-            if (!patientId || !date || !time) {
-                showToast('Por favor completa todos los campos requeridos', 'error');
-                return;
-            }
-            
-            const appointments = getAppointments();
-            
-            if (editingAppointmentId) {
-                const aptIndex = appointments.findIndex(a => a.id === editingAppointmentId);
-                if (aptIndex !== -1) {
-                    appointments[aptIndex] = {
-                        ...appointments[aptIndex],
-                        patientId,
-                        date,
-                        time,
-                        duration,
-                        notes,
-                        updatedAt: new Date().toISOString()
-                    };
-                    showToast('Cita actualizada', 'success');
-                }
-            } else {
-                const newAppointment = {
-                    id: Date.now(),
-                    patientId,
-                    date,
-                    time,
-                    duration,
-                    notes,
-                    createdAt: new Date().toISOString(),
-                    updatedAt: new Date().toISOString()
-                };
-                appointments.push(newAppointment);
-                showToast('Cita agendada exitosamente', 'success');
-            }
-            
-            saveAppointments(appointments);
-            document.getElementById('appointmentModal').classList.add('hidden');
-            loadCalendar();
-        });
-
-        function editAppointment(appointmentId) {
-            const appointments = getAppointments();
-            const appointment = appointments.find(a => a.id === appointmentId);
-            
-            if (!appointment) return;
-            
-            editingAppointmentId = appointment.id;
-            document.getElementById('appointmentModalTitle').textContent = '✏️ Editar Cita';
-            
-            const patients = getPatients();
-            const select = document.getElementById('appointmentPatientSelect');
-            select.innerHTML = '<option value="">Selecciona un paciente</option>';
-            patients.forEach(p => {
-                const categoryInfo = CATEGORIES[p.category];
-                const option = document.createElement('option');
-                option.value = p.id;
-                option.textContent = `${categoryInfo.icon} ${p.name}`;
-                select.appendChild(option);
-            });
-            
-            document.getElementById('appointmentPatientSelect').value = appointment.patientId;
-            document.getElementById('appointmentDateInput').value = appointment.date;
-            document.getElementById('appointmentTimeInput').value = appointment.time;
-            document.getElementById('appointmentDurationInput').value = appointment.duration;
-            document.getElementById('appointmentNotesInput').value = appointment.notes || '';
-            
-            document.getElementById('appointmentModal').classList.remove('hidden');
-        }
-
-        function deleteAppointment(appointmentId) {
-            showConfirmDialog(
-                '¿Eliminar cita?',
-                'Esta acción no se puede deshacer',
-                () => {
-                    let appointments = getAppointments();
-                    appointments = appointments.filter(a => a.id !== appointmentId);
-                    saveAppointments(appointments);
-                    showToast('Cita eliminada', 'success');
-                    loadCalendar();
-                }
-            );
-        }
-
-        function initializeSpeechRecognition() {
-            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-                recognition = new SpeechRecognition();
-                recognition.continuous = true;
-                recognition.interimResults = true;
-                recognition.lang = 'es-ES';
-
-                recognition.onresult = (event) => {
-                    let interimTranscript = '';
-                    let finalTranscript = '';
-
-                    for (let i = event.resultIndex; i < event.results.length; i++) {
-                        const transcript = event.results[i][0].transcript;
-                        if (event.results[i].isFinal) {
-                            finalTranscript += transcript + ' ';
-                        } else {
-                            interimTranscript += transcript;
-                        }
-                    }
-
-                    if (finalTranscript) {
-                        liveTranscript += finalTranscript;
-                    }
-
-                    document.getElementById('liveTranscription').textContent = liveTranscript + interimTranscript;
-                    document.getElementById('liveTranscription').scrollTop = document.getElementById('liveTranscription').scrollHeight;
-                };
-
-                recognition.onerror = (event) => {
-                    console.error('Error en reconocimiento de voz:', event.error);
-                };
-
-                recognition.onend = () => {
-                    if (isRecognitionActive) {
-                        try {
-                            recognition.start();
-                        } catch (e) {
-                            console.log('Reconocimiento ya iniciado');
-                        }
-                    }
-                };
-            }
-        }
-
-        initializeSpeechRecognition();
-
-        function getPatients() {
-            const data = localStorage.getItem('patients');
-            return data ? JSON.parse(data) : [];
-        }
-
-        function savePatients(patients) {
-            localStorage.setItem('patients', JSON.stringify(patients));
-        }
-
-        function getSessions(patientId) {
-            const data = localStorage.getItem('sessions_' + patientId);
-            return data ? JSON.parse(data) : [];
-        }
-
-        function saveSessions(patientId, sessions) {
-            localStorage.setItem('sessions_' + patientId, JSON.stringify(sessions));
-        }
-
-        function showPatientsView() {
-            currentView = 'patients';
-            document.getElementById('patientsView').classList.remove('hidden');
-            document.getElementById('patientSessionsView').classList.add('hidden');
-            document.getElementById('plansView').classList.add('hidden');
-            document.getElementById('calendarView').classList.add('hidden');
-            loadPatients();
-        }
-
-        function showPatientSessionsView(patientId) {
-            currentView = 'sessions';
-            currentPatientId = patientId;
-            document.getElementById('patientsView').classList.add('hidden');
-            document.getElementById('patientSessionsView').classList.remove('hidden');
-            loadPatientSessions(patientId);
-        }
-
-        document.getElementById('addPatientBtn').addEventListener('click', () => {
-            const limits = checkPlanLimits();
-            
-            if (!limits.canAddPatient) {
-                showLimitWarning(
-                    '⚠️ Límite de Pacientes Alcanzado',
-                    `Has alcanzado el límite de ${limits.maxPatients} pacientes en tu ${limits.planName}. Actualiza tu plan para agregar más pacientes.`
-                );
-                return;
-            }
-            
-            editingPatientId = null;
-            document.getElementById('patientModalTitle').textContent = 'Agregar Paciente';
-            document.getElementById('patientForm').reset();
-            document.getElementById('patientModal').classList.remove('hidden');
-        });
-
-        document.getElementById('cancelPatientModal').addEventListener('click', () => {
-            document.getElementById('patientModal').classList.add('hidden');
-        });
-
-        document.getElementById('patientForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            const name = document.getElementById('patientNameInput').value.trim();
-            const category = document.getElementById('patientCategoryInput').value;
-            const email = document.getElementById('patientEmailInput').value.trim();
-            const phone = document.getElementById('patientPhoneInput').value.trim();
-            const notes = document.getElementById('patientNotesInput').value.trim();
-
-            if (!name || !category) {
-                showToast('Por favor completa los campos requeridos', 'error');
-                return;
-            }
-
-            const patients = getPatients();
-
-            if (editingPatientId) {
-                const patientIndex = patients.findIndex(p => p.id === editingPatientId);
-                if (patientIndex !== -1) {
-                    patients[patientIndex] = {
-                        ...patients[patientIndex],
-                        name,
-                        category,
-                        email,
-                        phone,
-                        notes,
-                        updatedAt: new Date().toISOString()
-                    };
-                    showToast('Paciente actualizado', 'success');
-                }
-            } else {
-                const newPatient = {
-                    id: Date.now(),
-                    name,
-                    category,
-                    email,
-                    phone,
-                    notes,
-                    createdAt: new Date().toISOString(),
-                    updatedAt: new Date().toISOString()
-                };
-                patients.push(newPatient);
-                showToast('Paciente agregado exitosamente', 'success');
-            }
-
-            savePatients(patients);
-            document.getElementById('patientModal').classList.add('hidden');
-            loadPatients();
-        });
-
-        document.getElementById('searchPatients').addEventListener('input', (e) => {
-            loadPatients(e.target.value.toLowerCase().trim());
-        });
-
-        function loadPatients(searchTerm = '') {
-            const patients = getPatients();
-            const patientsGrid = document.getElementById('patientsGrid');
-            const emptyState = document.getElementById('patientsEmptyState');
-
-            let filteredPatients = patients;
-
-            if (searchTerm) {
-                filteredPatients = patients.filter(p => {
-                    return p.name.toLowerCase().includes(searchTerm) ||
-                           (p.email && p.email.toLowerCase().includes(searchTerm)) ||
-                           (p.phone && p.phone.includes(searchTerm));
-                });
-            }
-
-            if (filteredPatients.length === 0) {
-                emptyState.classList.remove('hidden');
-                patientsGrid.innerHTML = '';
-                return;
-            }
-
-            emptyState.classList.add('hidden');
-            patientsGrid.innerHTML = '';
-
-            filteredPatients.sort((a, b) => a.name.localeCompare(b.name));
-
-            filteredPatients.forEach(patient => {
-                const sessions = getSessions(patient.id);
-                const categoryInfo = CATEGORIES[patient.category];
-
-                const card = document.createElement('div');
-                card.className = 'patient-card';
-                card.innerHTML = `
-                    <div class="patient-icon">${categoryInfo.icon}</div>
-                    <div class="patient-name">${highlightText(patient.name, searchTerm)}</div>
-                    <div class="patient-info">${categoryInfo.name}</div>
-                    ${patient.email ? '<div class="patient-info">📧 ' + highlightText(patient.email, searchTerm) + '</div>' : ''}
-                    ${patient.phone ? '<div class="patient-info">�� ' + highlightText(patient.phone, searchTerm) + '</div>' : ''}
-                    <div class="patient-sessions">${sessions.length} sesión(es)</div>
-                    <div class="patient-actions">
-                        <button class="btn btn-primary" onclick="viewPatient(${patient.id})">
-                            Ver Sesiones
-                        </button>
-                    </div>
-                `;
-                patientsGrid.appendChild(card);
-            });
-        }
-
-        function viewPatient(patientId) {
-            showPatientSessionsView(patientId);
-        }
-
-        document.getElementById('backToPatients').addEventListener('click', () => {
-            showPatientsView();
-        });
-
-        document.getElementById('newSessionBtn').addEventListener('click', () => {
-            const limits = checkPlanLimits();
-            
-            if (!limits.canAddSession(currentPatientId)) {
-                const plan = PLANS[getCurrentPlan().type];
-                showLimitWarning(
-                    '⚠️ Límite de Sesiones Alcanzado',
-                    `Has alcanzado el límite de ${plan.maxSessionsPerPatient} sesiones por paciente en tu ${limits.planName}. Actualiza tu plan para grabar más sesiones.`
-                );
-                return;
-            }
-            
-            document.getElementById('sessionModal').classList.remove('hidden');
-            document.getElementById('sessionPreview').style.display = 'none';
-            document.getElementById('startRecordingBtn').disabled = false;
-            document.getElementById('stopRecordingBtn').disabled = true;
-        });
-
-        document.getElementById('editPatientBtn').addEventListener('click', () => {
-            const patients = getPatients();
-            const patient = patients.find(p => p.id === currentPatientId);
-            
-            if (!patient) return;
-
-            editingPatientId = patient.id;
-            document.getElementById('patientModalTitle').textContent = 'Editar Paciente';
-            document.getElementById('patientNameInput').value = patient.name;
-            document.getElementById('patientCategoryInput').value = patient.category;
-            document.getElementById('patientEmailInput').value = patient.email || '';
-            document.getElementById('patientPhoneInput').value = patient.phone || '';
-            document.getElementById('patientNotesInput').value = patient.notes || '';
-            document.getElementById('patientModal').classList.remove('hidden');
-        });
-
-        document.getElementById('deletePatientBtn').addEventListener('click', () => {
-            showConfirmDialog(
-                '¿Eliminar paciente?',
-                'Se eliminarán todas las sesiones asociadas. Esta acción no se puede deshacer.',
-                () => {
-                    const patients = getPatients();
-                    const filteredPatients = patients.filter(p => p.id !== currentPatientId);
-                    savePatients(filteredPatients);
-                    localStorage.removeItem('sessions_' + currentPatientId);
-                    showToast('Paciente eliminado', 'success');
-                    showPatientsView();
-                }
-            );
-        });
-
-        function loadPatientSessions(patientId) {
-            const patients = getPatients();
-            const patient = patients.find(p => p.id === patientId);
-            
-            if (!patient) {
-                showPatientsView();
-                return;
-            }
-
-            const categoryInfo = CATEGORIES[patient.category];
-            document.getElementById('patientIconLarge').textContent = categoryInfo.icon;
-            document.getElementById('patientNameTitle').textContent = patient.name;
-            document.getElementById('patientCategoryBadge').textContent = categoryInfo.icon + ' ' + categoryInfo.name;
-            
-            let details = '';
-            if (patient.email) details += '📧 ' + patient.email + ' | ';
-            if (patient.phone) details += '📱 ' + patient.phone;
-            document.getElementById('patientDetailsInfo').textContent = details;
-
-            loadSessions();
-        }
-
-        document.getElementById('searchSessions').addEventListener('input', (e) => {
-            loadSessions(e.target.value.toLowerCase().trim());
-        });
-
-        function loadSessions(searchTerm = '') {
-            const sessions = getSessions(currentPatientId);
-            const sessionsList = document.getElementById('sessionsList');
-            const emptyState = document.getElementById('sessionsEmptyState');
-
-            let filteredSessions = sessions;
-
-            if (searchTerm) {
-                filteredSessions = sessions.filter(s => {
-                    return (s.notes && s.notes.toLowerCase().includes(searchTerm)) ||
-                           new Date(s.date).toLocaleDateString('es-ES').includes(searchTerm);
-                });
-            }
-
-            if (filteredSessions.length === 0) {
-                emptyState.classList.remove('hidden');
-                sessionsList.innerHTML = '';
-                return;
-            }
-
-            emptyState.classList.add('hidden');
-            sessionsList.innerHTML = '';
-
-            filteredSessions.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-            filteredSessions.forEach((session, index) => {
-                const date = new Date(session.date);
-                const formattedDate = date.toLocaleDateString('es-ES', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                });
-
-                const sessionItem = document.createElement('div');
-                sessionItem.className = 'session-item';
-                sessionItem.innerHTML = `
-                    <div class="session-header">
-                        <div>
-                            <h3 style="color: #667eea; margin-bottom: 5px;">Sesión #${sessions.length - index}</h3>
-                            <div class="session-date">${formattedDate}</div>
-                            <div class="session-date">Duración: ${formatDuration(session.duration)}</div>
-                        </div>
-                        <div class="session-actions">
-                            <button class="btn btn-success" onclick="downloadSessionAudio(${currentPatientId}, ${session.id})">
-                                <span>🎵</span> Audio
-                            </button>
-                            <button class="btn btn-primary" onclick="downloadSessionNotes(${currentPatientId}, ${session.id})">
-                                <span>📄</span> Notas
-                            </button>
-                            <button class="btn btn-danger" onclick="deleteSession(${currentPatientId}, ${session.id})">
-                                <span>🗑️</span>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="session-audio">
-                        <audio controls src="${session.audio}"></audio>
-                    </div>
-                    ${session.notes ? '<div class="session-notes"><h4>📝 Notas:</h4><p>' + highlightText(session.notes, searchTerm) + '</p></div>' : ''}
-                `;
-                sessionsList.appendChild(sessionItem);
-            });
-        }
-
-        document.getElementById('startRecordingBtn').addEventListener('click', startRecording);
-        document.getElementById('stopRecordingBtn').addEventListener('click', stopRecording);
-
-        async function startRecording() {
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                mediaRecorder = new MediaRecorder(stream);
-                audioChunks = [];
-                liveTranscript = '';
-                document.getElementById('liveTranscription').textContent = '';
-
-                mediaRecorder.ondataavailable = (event) => {
-                    audioChunks.push(event.data);
-                };
-
-                mediaRecorder.onstop = () => {
-                    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-                    currentAudioBlob = audioBlob;
-                    const audioUrl = URL.createObjectURL(audioBlob);
-                    document.getElementById('sessionAudioPlayback').src = audioUrl;
-                    document.getElementById('sessionPreview').style.display = 'block';
-                    
-                    stream.getTracks().forEach(track => track.stop());
-
-                    if (liveTranscript.trim()) {
-                        document.getElementById('sessionNotesInput').value = liveTranscript.trim();
-                    }
-                };
-
-                mediaRecorder.start();
-                recordingStartTime = Date.now();
-                startTimer();
-
-                document.getElementById('startRecordingBtn').disabled = true;
-                document.getElementById('stopRecordingBtn').disabled = false;
-                document.getElementById('sessionStatusText').textContent = 'Grabando...';
-                document.getElementById('sessionStatusDot').classList.add('recording');
-
-                if (recognition) {
-                    const currentPlan = getCurrentPlan();
-                    const plan = PLANS[currentPlan.type];
-                    
-                    if (plan.hasTranscription) {
-                        isRecognitionActive = true;
-                        try {
-                            recognition.start();
-                            document.getElementById('liveTranscriptionContainer').style.display = 'block';
-                        } catch (e) {
-                            console.log('Error iniciando reconocimiento:', e);
-                        }
-                    } else {
-                        document.getElementById('liveTranscriptionContainer').innerHTML = `
-                            <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-radius: 12px;">
-                                <div style="font-size: 2rem; margin-bottom: 10px;">🔒</div>
-                                <h4 style="color: #92400e; margin-bottom: 10px;">Transcripción Automática No Disponible</h4>
-                                <p style="color: #78350f; font-size: 0.9rem; margin-bottom: 15px;">
-                                    La transcripción automática con IA está disponible en los planes Flexible y Premium.
-                                </p>
-                                <button class="upgrade-link" onclick="document.getElementById('sessionModal').classList.add('hidden'); showPlansView();">
-                                    ⚡ Actualizar Plan
-                                </button>
-                            </div>
-                        `;
-                        document.getElementById('liveTranscriptionContainer').style.display = 'block';
-                    }
-                }
-
-                showToast('Grabación iniciada', 'success');
-            } catch (error) {
-                console.error('Error al acceder al micrófono:', error);
-                showToast('Error: No se pudo acceder al micrófono', 'error');
-            }
-        }
-
-        function stopRecording() {
-            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
-                mediaRecorder.stop();
-                stopTimer();
-
-                document.getElementById('startRecordingBtn').disabled = false;
-                document.getElementById('stopRecordingBtn').disabled = true;
-                document.getElementById('sessionStatusText').textContent = 'Grabación finalizada';
-                document.getElementById('sessionStatusDot').classList.remove('recording');
-
-                if (recognition && isRecognitionActive) {
-                    isRecognitionActive = false;
-                    recognition.stop();
-                    document.getElementById('liveTranscriptionContainer').style.display = 'none';
-                }
-
-                showToast('Grabación finalizada', 'success');
-            }
-        }
-
-        function startTimer() {
-            const limits = checkPlanLimits();
-            const maxMinutes = limits.maxRecordingMinutes;
-            
-            timerInterval = setInterval(() => {
-                const elapsed = Date.now() - recordingStartTime;
-                const hours = Math.floor(elapsed / 3600000);
-                const minutes = Math.floor((elapsed % 3600000) / 60000);
-                const seconds = Math.floor((elapsed % 60000) / 1000);
-                
-                document.getElementById('sessionTimer').textContent = 
-                    pad(hours) + ':' + pad(minutes) + ':' + pad(seconds);
-                
-                // Verificar límite de grabación
-                if (maxMinutes !== -1 && minutes >= maxMinutes) {
-                    stopRecording();
-                    showToast(`Límite de ${maxMinutes} minutos alcanzado`, 'info');
-                }
-            }, 1000);
-        }
-
-        function stopTimer() {
-            clearInterval(timerInterval);
-            document.getElementById('sessionTimer').textContent = '00:00:00';
-        }
-
-        function pad(num) {
-            return num.toString().padStart(2, '0');
-        }
-
-        document.getElementById('saveSessionBtn').addEventListener('click', () => {
-            const notes = document.getElementById('sessionNotesInput').value.trim();
-
-            if (!currentAudioBlob) {
-                showToast('No hay audio para guardar', 'error');
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                const base64Audio = reader.result;
-                const session = {
-                    id: Date.now(),
-                    date: new Date().toISOString(),
-                    notes: notes,
-                    audio: base64Audio,
-                    duration: document.getElementById('sessionAudioPlayback').duration || 0
-                };
-
-                const sessions = getSessions(currentPatientId);
-                sessions.push(session);
-                saveSessions(currentPatientId, sessions);
-
-                showToast('Sesión guardada exitosamente', 'success');
-                resetSessionModal();
-                loadSessions();
-            };
-
-            reader.readAsDataURL(currentAudioBlob);
-        });
-
-        document.getElementById('discardSessionBtn').addEventListener('click', () => {
-            showConfirmDialog(
-                '¿Descartar grabación?',
-                'Esta acción no se puede deshacer',
-                () => {
-                    resetSessionModal();
-                    showToast('Grabación descartada', 'success');
-                }
-            );
-        });
-
-        document.getElementById('cancelSessionModal').addEventListener('click', () => {
-            if (mediaRecorder && mediaRecorder.state === 'recording') {
-                showToast('Detén la grabación antes de cerrar', 'error');
-                return;
-            }
-            resetSessionModal();
-        });
-
-        function resetSessionModal() {
-            document.getElementById('sessionModal').classList.add('hidden');
-            document.getElementById('sessionPreview').style.display = 'none';
-            document.getElementById('sessionNotesInput').value = '';
-            currentAudioBlob = null;
-            document.getElementById('sessionAudioPlayback').src = '';
-            liveTranscript = '';
-            document.getElementById('liveTranscription').textContent = '';
-            document.getElementById('liveTranscriptionContainer').style.display = 'none';
-            stopTimer();
-        }
-
-        function downloadSessionAudio(patientId, sessionId) {
-            const sessions = getSessions(patientId);
-            const session = sessions.find(s => s.id === sessionId);
-            const patients = getPatients();
-            const patient = patients.find(p => p.id === patientId);
-            
-            if (!session || !patient) return;
-
-            const link = document.createElement('a');
-            link.href = session.audio;
-            link.download = 'Audio_' + patient.name.replace(/\s+/g, '_') + '_' + 
-                           new Date(session.date).toLocaleDateString('es-ES').replace(/\//g, '-') + '.wav';
-            link.click();
-
-            showToast('Descargando audio...', 'success');
-        }
-
-        function downloadSessionNotes(patientId, sessionId) {
-            const sessions = getSessions(patientId);
-            const session = sessions.find(s => s.id === sessionId);
-            const patients = getPatients();
-            const patient = patients.find(p => p.id === patientId);
-            
-            if (!session || !patient) return;
-
-            const categoryInfo = CATEGORIES[patient.category];
-            const notesText = `
-NOTAS DE SESI��N CLÍNICA
-=======================
-
-Paciente: ${patient.name}
-Categoría: ${categoryInfo.icon} ${categoryInfo.name}
-Fecha de Sesión: ${new Date(session.date).toLocaleString('es-ES')}
-Duración: ${formatDuration(session.duration)}
-
-${patient.email ? 'Email: ' + patient.email : ''}
-${patient.phone ? 'Teléfono: ' + patient.phone : ''}
-
-NOTAS:
-${session.notes || 'Sin notas'}
-
----
-Generado el: ${new Date().toLocaleString('es-ES')}
-            `;
-
-            const blob = new Blob([notesText], { type: 'text/plain;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = 'Notas_' + patient.name.replace(/\s+/g, '_') + '_' + 
-                           new Date(session.date).toLocaleDateString('es-ES').replace(/\//g, '-') + '.txt';
-            link.click();
-            URL.revokeObjectURL(url);
-
-            showToast('Descargando notas...', 'success');
-        }
-
-        function deleteSession(patientId, sessionId) {
-            showConfirmDialog(
-                '¿Eliminar sesión?',
-                'Se eliminará el audio y las notas de esta sesión',
-                () => {
-                    let sessions = getSessions(patientId);
-                    sessions = sessions.filter(s => s.id !== sessionId);
-                    saveSessions(patientId, sessions);
-                    showToast('Sesión eliminada', 'success');
-                    loadSessions();
-                }
-            );
-        }
-
-        function formatDuration(seconds) {
-            if (!seconds || isNaN(seconds)) return '00:00';
-            const mins = Math.floor(seconds / 60);
-            const secs = Math.floor(seconds % 60);
-            return pad(mins) + ':' + pad(secs);
-        }
-
-        function highlightText(text, searchTerm) {
-            if (!searchTerm) return text;
-            const regex = new RegExp('(' + searchTerm + ')', 'gi');
-            return text.replace(regex, '<span class="search-highlight">$1</span>');
-        }
-
-        function showConfirmDialog(title, message, onConfirm) {
-            const dialog = document.createElement('div');
-            dialog.className = 'modal-overlay';
-            dialog.innerHTML = `
-                <div class="modal" style="max-width: 400px;">
-                    <h2>${title}</h2>
-                    <p style="color: #6b7280; margin: 20px 0;">${message}</p>
-                    <div style="display: flex; gap: 15px;">
-                        <button class="btn btn-danger" style="flex: 1;" onclick="this.closest('.modal-overlay').confirmAction()">
-                            Sí, continuar
-                        </button>
-                        <button class="btn btn-secondary" style="flex: 1;" onclick="this.closest('.modal-overlay').remove()">
-                            Cancelar
-                        </button>
-                    </div>
-                </div>
-            `;
-            dialog.confirmAction = () => {
-                onConfirm();
-                dialog.remove();
-            };
-            document.body.appendChild(dialog);
+        function hideLoginPinError() {
+            document.getElementById('loginPinError').classList.add('hidden');
         }
 
         function showToast(message, type = 'success') {
@@ -3142,148 +1247,21 @@ Generado el: ${new Date().toLocaleString('es-ES')}
             }, 3000);
         }
 
-        function showLimitWarning(title, message) {
-            const dialog = document.createElement('div');
-            dialog.className = 'modal-overlay';
-            dialog.innerHTML = `
-                <div class="modal" style="max-width: 500px;">
-                    <div class="limit-warning" style="margin: 0; border: none;">
-                        <div class="limit-warning-icon">⚠️</div>
-                        <div class="limit-warning-content">
-                            <div class="limit-warning-title">${title}</div>
-                            <div class="limit-warning-text">${message}</div>
-                        </div>
-                    </div>
-                    <div style="display: flex; gap: 15px; margin-top: 20px;">
-                        <button class="btn btn-primary" style="flex: 1;" onclick="this.closest('.modal-overlay').showPlans()">
-                            💎 Ver Planes
-                        </button>
-                        <button class="btn btn-secondary" style="flex: 1;" onclick="this.closest('.modal-overlay').remove()">
-                            Cerrar
-                        </button>
-                    </div>
-                </div>
-            `;
-            dialog.showPlans = () => {
-                dialog.remove();
-                showPlansView();
-            };
-            document.body.appendChild(dialog);
-        }
+        // ========== INICIAR APP ==========
+        initApp();
 
-        function showPlansView() {
-            currentView = 'plans';
-            document.getElementById('plansView').classList.remove('hidden');
-            document.getElementById('patientsView').classList.add('hidden');
-            document.getElementById('patientSessionsView').classList.add('hidden');
-            document.getElementById('calendarView').classList.add('hidden');
-            updatePlansView();
-        }
-
-        function updatePlansView() {
-            const currentPlan = getCurrentPlan();
-            const plan = PLANS[currentPlan.type];
-            
-            document.getElementById('currentPlanIcon').textContent = plan.icon;
-            document.getElementById('currentPlanName').textContent = plan.name;
-            
-            if (currentPlan.endDate && currentPlan.type !== 'free') {
-                const endDate = new Date(currentPlan.endDate);
-                const daysLeft = Math.ceil((endDate - new Date()) / (1000 * 60 * 60 * 24));
-                document.getElementById('currentPlanStatus').textContent = 
-                    `Plan activo - ${daysLeft} d��as restantes`;
-            } else {
-                document.getElementById('currentPlanStatus').textContent = 'Plan activo';
-            }
-            
-            // Actualizar botones de planes
-            document.querySelectorAll('.plan-btn').forEach(btn => {
-                const planType = btn.getAttribute('data-plan');
-                
-                if (planType === currentPlan.type) {
-                    btn.textContent = 'Plan Actual';
-                    btn.className = 'btn btn-secondary plan-btn';
-                    btn.disabled = true;
-                } else {
-                    const targetPlan = PLANS[planType];
-                    if (planType === 'free') {
-                        btn.textContent = 'Cambiar a Gratuito';
-                        btn.className = 'btn btn-secondary plan-btn';
-                    } else if (planType === 'flexible') {
-                        btn.textContent = 'Actualizar a Flexible';
-                        btn.className = 'btn btn-primary plan-btn';
-                    } else if (planType === 'premium') {
-                        btn.textContent = 'Actualizar a Premium';
-                        btn.className = 'btn btn-success plan-btn';
-                    }
-                    btn.disabled = false;
+        // Enter key support
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                if (document.getElementById('authScreen').classList.contains('active')) {
+                    // Form submission handled by form events
+                } else if (document.getElementById('loginScreen').classList.contains('active')) {
+                    verifyLoginPin();
+                } else if (document.getElementById('pinSetupScreen').classList.contains('active')) {
+                    savePinAndContinue();
                 }
-            });
-        }
-
-        document.getElementById('homeBtn').addEventListener('click', () => {
-            showPatientsView();
-        });
-
-        document.getElementById('plansBtn').addEventListener('click', () => {
-            showPlansView();
-        });
-
-        // Event listeners para los botones de planes
-        document.addEventListener('click', (e) => {
-            if (e.target.classList.contains('plan-btn') && !e.target.disabled) {
-                const planType = e.target.getAttribute('data-plan');
-                handlePlanSelection(planType);
-            }
-        });
-
-        function handlePlanSelection(planType) {
-            const plan = PLANS[planType];
-            const currentPlanData = getCurrentPlan();
-            
-            if (planType === currentPlanData.type) {
-                return;
-            }
-            
-            if (planType === 'free') {
-                showConfirmDialog(
-                    '¿Cambiar a Plan Gratuito?',
-                    'Perderás acceso a las funciones premium. Tus datos se mantendrán pero con límites reducidos.',
-                    () => {
-                        setCurrentPlan('free');
-                        showToast('Plan cambiado a Gratuito', 'info');
-                        updatePlansView();
-                    }
-                );
-                return;
-            }
-            
-            // Abrir modal de pago real
-            openPaymentModal(planType);
-        }
-
-        function openPaymentModal(planType) {
-            selectedPlanForPurchase = planType;
-            const plan = PLANS[planType];
-            
-            // Actualizar información del plan en el modal
-            document.getElementById('paymentPlanIcon').textContent = plan.icon;
-            document.getElementById('paymentPlanName').textContent = plan.name;
-            document.getElementById('paymentPlanPrice').textContent = `$${plan.price} / ${plan.period}`;
-            
-            // Mostrar el modal
-            document.getElementById('paymentModal').classList.remove('hidden');
-        }
-
-        // Inicialización
-        document.addEventListener('DOMContentLoaded', () => {
-            initializeSecurity();
-            initializePaymentSDKs();
-            
-            if (recognition) {
-                console.log('Transcripción automática disponible');
             }
         });
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c55129ed08be75c',t:'MTc2OTY1MTM2My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c56063025b7e75c',t:'MTc2OTY2MTM0MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
