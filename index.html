@@ -3,16 +3,14 @@
  <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="PsyTape - Menos notas, más empatía. Graba, transcribe y conecta.">
-  <title>PsyTape - Grabadora Inteligente para Psicólogos</title><!-- Data SDK -->
-  <script src="/_sdk/data_sdk.js"></script><!-- Google Fonts -->
+  <title>PsyTape - Grabadora Inteligente</title><!-- Supabase Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&amp;family=Bebas+Neue&amp;display=swap" rel="stylesheet">
   <style>
+        /* [MISMO CSS QUE ANTES - NO CAMBIÓ] */
         @font-face {
             font-family: 'ITC Bauhaus';
             src: local('ITC Bauhaus'), local('Bauhaus');
-            font-weight: normal;
-            font-style: normal;
         }
 
         * {
@@ -22,7 +20,7 @@
         }
 
         body {
-            font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: 'Space Grotesk', sans-serif;
             background: #cf4c23;
             height: 100%;
             color: #333;
@@ -40,7 +38,6 @@
             overflow-y: auto;
         }
 
-        /* ========== LOADING OVERLAY ========== */
         .loading-overlay {
             position: fixed;
             top: 0;
@@ -79,7 +76,6 @@
             font-weight: 600;
         }
 
-        /* ========== PANTALLA DE BIENVENIDA ========== */
         #welcomeScreen {
             display: flex;
             align-items: center;
@@ -102,7 +98,7 @@
         }
 
         .app-logo {
-            font-family: 'ITC Bauhaus', 'Bebas Neue', 'Impact', 'Arial Black', sans-serif;
+            font-family: 'ITC Bauhaus', 'Bebas Neue', sans-serif;
             font-size: 90px;
             color: #e4d936;
             margin-bottom: 25px;
@@ -173,7 +169,6 @@
             cursor: not-allowed;
         }
 
-        /* ========== PANTALLAS DE AUTH ========== */
         #authScreen {
             display: none;
             min-height: 100vh;
@@ -202,7 +197,7 @@
         }
 
         .auth-card h2 {
-            font-family: 'Bebas Neue', 'Impact', sans-serif;
+            font-family: 'Bebas Neue', sans-serif;
             font-size: 55px;
             color: #e4d936;
             margin-bottom: 40px;
@@ -329,7 +324,6 @@
             display: none !important;
         }
 
-        /* ========== PANTALLA DE PIN ========== */
         #pinSetupScreen {
             display: none;
             min-height: 100vh;
@@ -353,7 +347,7 @@
         }
 
         .pin-card h2 {
-            font-family: 'Bebas Neue', 'Impact', sans-serif;
+            font-family: 'Bebas Neue', sans-serif;
             font-size: 50px;
             color: #e4d936;
             margin-bottom: 20px;
@@ -439,7 +433,6 @@
             background: #b91c1c;
         }
 
-        /* ========== PANTALLA DE LOGIN EXISTENTE ========== */
         #loginScreen {
             display: none;
             min-height: 100vh;
@@ -487,7 +480,6 @@
             font-size: 1rem;
         }
 
-        /* ========== APP PRINCIPAL ========== */
         #mainApp {
             display: none;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -565,31 +557,6 @@
         .btn-lock:hover {
             background: rgba(255, 255, 255, 0.3);
             transform: translateY(-2px);
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-
-        .btn-primary:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-success {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
-        }
-
-        .btn-danger {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-            color: white;
-        }
-
-        .btn-secondary {
-            background: #f3f4f6;
-            color: #374151;
         }
 
         .card {
@@ -670,17 +637,18 @@
         }
     </style>
   <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
   <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
   <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
  </head>
- <body><!-- Loading Overlay -->
+ <body>
   <div id="loadingOverlay" class="loading-overlay">
    <div class="spinner"></div>
    <div class="loading-text">
     Cargando PsyTape...
    </div>
   </div>
-  <div class="app-container"><!-- ========== PANTALLA DE BIENVENIDA ========== -->
+  <div class="app-container">
    <div id="welcomeScreen">
     <div class="welcome-card">
      <h1 class="app-logo">PsyTape</h1>
@@ -689,18 +657,18 @@
        🎙️
       </div>
       <div class="logo-icon">
-       📝
+       🧠
       </div>
      </div>
      <div class="welcome-buttons"><button class="btn-welcome" id="loginBtn" onclick="showLoginForm()">Login</button> <button class="btn-welcome" id="registrationBtn" onclick="showRegistrationForm()">Registration</button>
      </div>
     </div>
-   </div><!-- ========== PANTALLA DE REGISTRO ========== -->
+   </div>
    <div id="authScreen">
     <div class="auth-card">
      <h2 id="authTitle">Registration</h2>
      <div id="authErrorMessage" class="error-message hidden"></div>
-     <div id="authSuccessMessage" class="success-message hidden"></div><!-- Formulario de Registro -->
+     <div id="authSuccessMessage" class="success-message hidden"></div>
      <form id="registrationForm" class="hidden">
       <div class="form-group"><label for="regName">Nombre Completo</label> <input type="text" id="regName" required placeholder="Juan Pérez García">
       </div>
@@ -715,7 +683,7 @@
       </div>
       <div class="form-group"><label for="regVerification">Código de Verificación</label> <input type="text" id="regVerification" required placeholder="PSYTAPE2024">
       </div><button type="submit" class="btn-auth" id="registerSubmitBtn">Registrarse</button> <button type="button" class="btn-auth secondary" onclick="showWelcome()">Volver</button>
-     </form><!-- Formulario de Login -->
+     </form>
      <form id="loginForm" class="hidden">
       <div class="form-group"><label for="loginEmail">Email</label> <input type="email" id="loginEmail" required placeholder="tu@email.com">
       </div>
@@ -723,7 +691,7 @@
       </div><button type="submit" class="btn-auth" id="loginSubmitBtn">Ingresar</button> <button type="button" class="btn-auth secondary" onclick="showWelcome()">Volver</button>
      </form>
     </div>
-   </div><!-- ========== PANTALLA DE CONFIGURACIÓN DE PIN ========== -->
+   </div>
    <div id="pinSetupScreen">
     <div class="pin-card">
      <h2>Crear PIN de Seguridad</h2>
@@ -735,7 +703,7 @@
      <div class="numpad"><button class="numpad-btn" onclick="enterPinDigit('1')">1</button> <button class="numpad-btn" onclick="enterPinDigit('2')">2</button> <button class="numpad-btn" onclick="enterPinDigit('3')">3</button> <button class="numpad-btn" onclick="enterPinDigit('4')">4</button> <button class="numpad-btn" onclick="enterPinDigit('5')">5</button> <button class="numpad-btn" onclick="enterPinDigit('6')">6</button> <button class="numpad-btn" onclick="enterPinDigit('7')">7</button> <button class="numpad-btn" onclick="enterPinDigit('8')">8</button> <button class="numpad-btn" onclick="enterPinDigit('9')">9</button> <button class="numpad-btn clear" onclick="clearPinDigits()">✕</button> <button class="numpad-btn" onclick="enterPinDigit('0')">0</button> <button class="numpad-btn" onclick="deletePinDigit()">⌫</button>
      </div><button class="btn-auth" id="savePinBtn" onclick="savePinAndContinue()">Guardar PIN</button>
     </div>
-   </div><!-- ========== PANTALLA DE LOGIN CON PIN (Returning Users) ========== -->
+   </div>
    <div id="loginScreen">
     <div class="login-card">
      <div class="lock-icon">
@@ -749,11 +717,11 @@
      <div class="numpad"><button class="numpad-btn" onclick="enterLoginPin('1')" style="background: #667eea; color: white;">1</button> <button class="numpad-btn" onclick="enterLoginPin('2')" style="background: #667eea; color: white;">2</button> <button class="numpad-btn" onclick="enterLoginPin('3')" style="background: #667eea; color: white;">3</button> <button class="numpad-btn" onclick="enterLoginPin('4')" style="background: #667eea; color: white;">4</button> <button class="numpad-btn" onclick="enterLoginPin('5')" style="background: #667eea; color: white;">5</button> <button class="numpad-btn" onclick="enterLoginPin('6')" style="background: #667eea; color: white;">6</button> <button class="numpad-btn" onclick="enterLoginPin('7')" style="background: #667eea; color: white;">7</button> <button class="numpad-btn" onclick="enterLoginPin('8')" style="background: #667eea; color: white;">8</button> <button class="numpad-btn" onclick="enterLoginPin('9')" style="background: #667eea; color: white;">9</button> <button class="numpad-btn clear" onclick="clearLoginPin()">✕</button> <button class="numpad-btn" onclick="enterLoginPin('0')" style="background: #667eea; color: white;">0</button> <button class="numpad-btn" onclick="deleteLoginPin()" style="background: #667eea; color: white;">⌫</button>
      </div><button class="btn-auth" onclick="verifyLoginPin()" style="background: #667eea; color: white; margin-top: 20px;">🔓 Ingresar</button>
     </div>
-   </div><!-- ========== APP PRINCIPAL ========== -->
+   </div>
    <div id="mainApp">
     <div class="container">
      <header>
-      <div class="security-controls"><button class="btn btn-lock" onclick="showMainView()"> <span>🏠</span> Inicio </button> <button class="btn btn-lock" onclick="lockApp()"> <span>🔒</span> Bloquear </button>
+      <div class="security-controls"><button class="btn btn-lock" onclick="showMainView()"> <span>���</span> Inicio </button> <button class="btn btn-lock" onclick="lockApp()"> <span>🔒</span> Bloquear </button> <button class="btn btn-lock" onclick="logoutUser()"> <span>🚪</span> Cerrar Sesión </button>
       </div>
       <div class="header-content">
        <h1>🎙️ PsyTape</h1>
@@ -762,8 +730,8 @@
       <div style="width: 200px;"></div>
      </header>
      <div class="card">
-      <h2>¡Bienvenido a PsyTape!</h2>
-      <p style="color: #6b7280; margin-bottom: 20px;">Tu asistente inteligente para la gestión de sesiones terapéuticas está listo para usar.</p>
+      <h2>¡Bienvenido/a <span id="userName"></span>!</h2>
+      <p style="color: #6b7280; margin-bottom: 20px;">Tu asistente inteligente para la gestión de sesiones terap��uticas está listo para usar.</p>
       <p style="color: #374151; font-size: 1.1rem; line-height: 1.8;">🎯 <strong>Comienza por:</strong><br><br>
         1️⃣ Agregar tus pacientes<br>
         2️⃣ Grabar sesiones con transcripción automática<br>
@@ -774,55 +742,48 @@
    </div>
   </div>
   <script>
+        // ========== CONFIGURACIÓN DE SUPABASE ==========
+        const SUPABASE_URL = 'https://ayaxxcawzthhjvxnbokn.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF5YXh4Y2F3enRoaGp2eG5ib2tuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk2NTE0ODcsImV4cCI6MjA4NTIyNzQ4N30.EI1bJyDF4K1Y2fnBfKieNCjhG_WcyXR7yCs_hN2LF5U';
+
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
         // ========== ESTADO GLOBAL ==========
-        let allUsers = [];
         let currentUser = null;
         let tempUserData = null;
-        let isDataSdkReady = false;
-
-        // ========== DATA SDK HANDLER ==========
-        const dataHandler = {
-            onDataChanged(data) {
-                allUsers = data;
-                console.log('Usuarios sincronizados:', allUsers.length);
-            }
-        };
 
         // ========== INICIALIZACIÓN ==========
         async function initApp() {
-            try {
-                showLoading();
+            showLoading();
+            
+            const { data: { session } } = await supabase.auth.getSession();
+            
+            if (session) {
+                currentUser = session.user;
+                const hasPin = localStorage.getItem(`pin_${currentUser.id}`);
                 
-                // Inicializar Data SDK
-                if (window.dataSdk) {
-                    const initResult = await window.dataSdk.init(dataHandler);
-                    if (initResult.isOk) {
-                        isDataSdkReady = true;
-                        console.log('Data SDK inicializado correctamente');
-                    } else {
-                        console.error('Error al inicializar Data SDK:', initResult.error);
-                        showToast('Error de conexión. Verifica tu internet.', 'error');
-                    }
-                }
-
-                // Verificar si hay sesión activa
-                const currentEmail = localStorage.getItem('psytape_current_email');
-                const currentPin = localStorage.getItem('psytape_current_pin');
-
-                if (currentEmail && currentPin) {
-                    // Usuario con sesión activa - ir a pantalla de PIN
-                    hideLoading();
+                if (hasPin) {
                     showLoginPinScreen();
                 } else {
-                    // Usuario nuevo - mostrar bienvenida
-                    hideLoading();
-                    showWelcome();
+                    await loadUserProfile();
+                    showMainApp();
                 }
-            } catch (error) {
-                console.error('Error en inicialización:', error);
-                hideLoading();
-                showToast('Error al iniciar la app', 'error');
+            } else {
                 showWelcome();
+            }
+            
+            hideLoading();
+        }
+
+        async function loadUserProfile() {
+            const { data, error } = await supabase
+                .from('users')
+                .select('*')
+                .eq('user_id', currentUser.id)
+                .single();
+
+            if (data) {
+                document.getElementById('userName').textContent = data.name;
             }
         }
 
@@ -835,7 +796,7 @@
             document.getElementById('loadingOverlay').classList.add('hidden');
         }
 
-        // ========== NAVEGACIÓN ENTRE PANTALLAS ==========
+        // ========== NAVEGACIÓN ==========
         function showWelcome() {
             hideAllScreens();
             document.getElementById('welcomeScreen').style.display = 'flex';
@@ -893,11 +854,6 @@
         document.getElementById('registrationForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            if (!isDataSdkReady) {
-                showAuthError('Sistema de sincronización no disponible. Verifica tu conexión.');
-                return;
-            }
-
             const submitBtn = document.getElementById('registerSubmitBtn');
             submitBtn.disabled = true;
             submitBtn.textContent = 'Registrando...';
@@ -908,7 +864,6 @@
             const country = document.getElementById('regCountry').value;
             const verification = document.getElementById('regVerification').value.trim().toUpperCase();
 
-            // Validaciones
             if (password.length < 6) {
                 showAuthError('La contraseña debe tener al menos 6 caracteres');
                 submitBtn.disabled = false;
@@ -923,25 +878,38 @@
                 return;
             }
 
-            // Verificar si el email ya existe
-            const existingUser = allUsers.find(u => u.email === email);
-            if (existingUser) {
-                showAuthError('Este email ya está registrado');
+            // Registro en Supabase Auth
+            const { data: authData, error: authError } = await supabase.auth.signUp({
+                email: email,
+                password: password,
+            });
+
+            if (authError) {
+                showAuthError(authError.message);
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Registrarse';
                 return;
             }
 
-            // Guardar datos temporales
-            tempUserData = {
-                user_id: Date.now().toString(),
-                name,
-                email,
-                password,
-                country,
-                pin: '', // Se asignará después
-                createdAt: new Date().toISOString()
-            };
+            currentUser = authData.user;
+
+            // Guardar perfil en la tabla users
+            const { error: dbError } = await supabase
+                .from('users')
+                .insert([{
+                    user_id: currentUser.id,
+                    name: name,
+                    email: email,
+                    country: country,
+                    pin: '',  // Se agregará después
+                }]);
+
+            if (dbError) {
+                showAuthError('Error al guardar perfil: ' + dbError.message);
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Registrarse';
+                return;
+            }
 
             showAuthSuccess('Registro exitoso. Ahora crea tu PIN de seguridad');
             submitBtn.disabled = false;
@@ -956,11 +924,6 @@
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            if (!isDataSdkReady) {
-                showAuthError('Sistema de sincronización no disponible. Verifica tu conexión.');
-                return;
-            }
-
             const submitBtn = document.getElementById('loginSubmitBtn');
             submitBtn.disabled = true;
             submitBtn.textContent = 'Verificando...';
@@ -968,19 +931,20 @@
             const email = document.getElementById('loginEmail').value.trim().toLowerCase();
             const password = document.getElementById('loginPassword').value;
 
-            const user = allUsers.find(u => u.email === email && u.password === password);
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email: email,
+                password: password,
+            });
 
-            if (!user) {
+            if (error) {
                 showAuthError('Email o contraseña incorrectos');
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Ingresar';
                 return;
             }
 
-            // Guardar sesión local
-            currentUser = user;
-            localStorage.setItem('psytape_current_email', user.email);
-            localStorage.setItem('psytape_current_pin', user.pin);
+            currentUser = data.user;
+            await loadUserProfile();
 
             showAuthSuccess('Login exitoso. Redirigiendo...');
             submitBtn.disabled = false;
@@ -1058,46 +1022,34 @@
                 return;
             }
 
-            if (!isDataSdkReady || !tempUserData) {
-                showPinError('Error: datos no disponibles');
-                return;
-            }
-
             const saveBtn = document.getElementById('savePinBtn');
             saveBtn.disabled = true;
             saveBtn.textContent = 'Guardando...';
 
-            try {
-                // Asignar PIN al usuario temporal
-                tempUserData.pin = pin;
+            // Actualizar PIN en la base de datos
+            const { error } = await supabase
+                .from('users')
+                .update({ pin: pin })
+                .eq('user_id', currentUser.id);
 
-                // Guardar en Canva Sheet
-                const createResult = await window.dataSdk.create(tempUserData);
-
-                if (createResult.isOk) {
-                    // Guardar sesión local
-                    currentUser = tempUserData;
-                    localStorage.setItem('psytape_current_email', tempUserData.email);
-                    localStorage.setItem('psytape_current_pin', pin);
-                    
-                    tempUserData = null;
-
-                    showPinSuccess('PIN creado exitosamente');
-                    setTimeout(() => {
-                        showMainApp();
-                        showToast('¡Bienvenido a PsyTape! 🎉', 'success');
-                    }, 1000);
-                } else {
-                    showPinError('Error al guardar. Intenta nuevamente.');
-                    saveBtn.disabled = false;
-                    saveBtn.textContent = 'Guardar PIN';
-                }
-            } catch (error) {
-                console.error('Error al guardar PIN:', error);
-                showPinError('Error de conexión. Verifica tu internet.');
+            if (error) {
+                showPinError('Error al guardar PIN');
                 saveBtn.disabled = false;
                 saveBtn.textContent = 'Guardar PIN';
+                return;
             }
+
+            // Guardar PIN localmente (encriptado sería mejor)
+            localStorage.setItem(`pin_${currentUser.id}`, pin);
+
+            showPinSuccess('PIN creado exitosamente');
+            setTimeout(() => {
+                showMainApp();
+                showToast('¡Bienvenido a PsyTape! 🎉', 'success');
+            }, 1000);
+
+            saveBtn.disabled = false;
+            saveBtn.textContent = 'Guardar PIN';
         }
 
         // ========== LOGIN CON PIN ==========
@@ -1159,10 +1111,9 @@
                    document.getElementById('loginPin4').value;
         }
 
-        function verifyLoginPin() {
+        async function verifyLoginPin() {
             const enteredPin = getLoginPin();
-            const storedEmail = localStorage.getItem('psytape_current_email');
-            const storedPin = localStorage.getItem('psytape_current_pin');
+            const storedPin = localStorage.getItem(`pin_${currentUser.id}`);
 
             if (enteredPin.length !== 4) {
                 showLoginPinError('Por favor ingresa 4 dígitos');
@@ -1170,10 +1121,9 @@
             }
 
             if (enteredPin === storedPin) {
-                // Buscar usuario actual en datos sincronizados
-                currentUser = allUsers.find(u => u.email === storedEmail);
+                await loadUserProfile();
                 showMainApp();
-                showToast('Acceso concedido 🎉', 'success');
+                showToast('Acceso concedido 🔓', 'success');
             } else {
                 showLoginPinError('PIN incorrecto');
                 clearLoginPin();
@@ -1186,7 +1136,15 @@
             showToast('Aplicación bloqueada', 'info');
         }
 
-        // ========== MENSAJES Y NOTIFICACIONES ==========
+        async function logoutUser() {
+            await supabase.auth.signOut();
+            currentUser = null;
+            localStorage.clear();
+            showWelcome();
+            showToast('Sesión cerrada correctamente', 'info');
+        }
+
+        // ========== MENSAJES ==========
         function showAuthError(message) {
             const errorDiv = document.getElementById('authErrorMessage');
             errorDiv.textContent = message;
@@ -1248,14 +1206,11 @@
         }
 
         // ========== INICIAR APP ==========
-        initApp();
+        window.addEventListener('load', initApp);
 
-        // Enter key support
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
-                if (document.getElementById('authScreen').classList.contains('active')) {
-                    // Form submission handled by form events
-                } else if (document.getElementById('loginScreen').classList.contains('active')) {
+                if (document.getElementById('loginScreen').classList.contains('active')) {
                     verifyLoginPin();
                 } else if (document.getElementById('pinSetupScreen').classList.contains('active')) {
                     savePinAndContinue();
@@ -1263,5 +1218,5 @@
             }
         });
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c56063025b7e75c',t:'MTc2OTY2MTM0MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c563bc1032ee75c',t:'MTc2OTY2MzUzNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
