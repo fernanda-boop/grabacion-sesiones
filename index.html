@@ -3,8 +3,8 @@
  <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Grabadora profesional de sesiones cl��nicas de psicología con transcripción automática">
-  <title>Grabadora de Sesiones - Psicología</title>
+  <meta name="description" content="PsyTape - Menos notas, más empatía. Graba, transcribe y conecta.">
+  <title>PsyTape - Grabadora Inteligente para Psicólogos</title>
   <style>
         * {
             margin: 0;
@@ -665,6 +665,293 @@
             font-weight: 600;
         }
 
+        /* Estilos de Planes */
+        .plan-card {
+            background: white;
+            border: 3px solid #e5e7eb;
+            border-radius: 20px;
+            padding: 30px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .plan-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.3);
+            border-color: #667eea;
+        }
+
+        .plan-card.recommended {
+            border-color: #667eea;
+            border-width: 4px;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+        }
+
+        .plan-card.premium {
+            border-color: #f59e0b;
+            border-width: 4px;
+            box-shadow: 0 10px 30px rgba(245, 158, 11, 0.2);
+        }
+
+        .recommended-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .premium-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .plan-header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 25px;
+            border-bottom: 2px solid #f3f4f6;
+        }
+
+        .plan-icon {
+            font-size: 4rem;
+            margin-bottom: 15px;
+        }
+
+        .plan-name {
+            font-size: 1.5rem;
+            color: #1f2937;
+            margin-bottom: 15px;
+        }
+
+        .plan-price {
+            margin-top: 10px;
+        }
+
+        .price-amount {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .price-period {
+            font-size: 1rem;
+            color: #6b7280;
+        }
+
+        .plan-features {
+            margin-bottom: 20px;
+        }
+
+        .feature-item {
+            padding: 12px 0;
+            border-bottom: 1px solid #f3f4f6;
+            color: #374151;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .feature-item.disabled {
+            color: #9ca3af;
+            opacity: 0.6;
+        }
+
+        .feature-item:last-child {
+            border-bottom: none;
+        }
+
+        .plan-btn {
+            transition: all 0.3s ease;
+        }
+
+        .plan-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+        }
+
+        .limit-warning {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border: 2px solid #f59e0b;
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .limit-warning-icon {
+            font-size: 2rem;
+        }
+
+        .limit-warning-content {
+            flex: 1;
+        }
+
+        .limit-warning-title {
+            font-weight: 700;
+            color: #92400e;
+            margin-bottom: 5px;
+        }
+
+        .limit-warning-text {
+            color: #78350f;
+            font-size: 0.9rem;
+        }
+
+        .upgrade-link {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .upgrade-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Estilos del Calendario */
+        .calendar-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .week-calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .day-column {
+            background: #f9fafb;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 15px;
+            min-height: 400px;
+            transition: all 0.3s ease;
+        }
+
+        .day-column:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+        }
+
+        .day-column.today {
+            background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
+            border-color: #667eea;
+            border-width: 3px;
+        }
+
+        .day-header {
+            text-align: center;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .day-name {
+            font-weight: 700;
+            color: #667eea;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .day-date {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .appointment-slot {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .appointment-slot:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+            border-color: #667eea;
+        }
+
+        .appointment-slot.past {
+            opacity: 0.6;
+            background: #f3f4f6;
+        }
+
+        .appointment-time {
+            font-weight: 700;
+            color: #667eea;
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+        }
+
+        .appointment-patient {
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+
+        .appointment-category {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            margin-top: 5px;
+        }
+
+        .appointment-actions {
+            display: flex;
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        .appointment-actions .btn {
+            flex: 1;
+            padding: 6px 10px;
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 1200px) {
+            .week-calendar {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
         @media (max-width: 768px) {
             .login-card {
                 padding: 40px 25px;
@@ -700,6 +987,18 @@
                 width: 100%;
                 justify-content: center;
             }
+
+            .week-calendar {
+                grid-template-columns: 1fr;
+            }
+
+            .calendar-navigation {
+                flex-direction: column;
+            }
+
+            .day-column {
+                min-height: 300px;
+            }
         }
     </style>
   <style>@view-transition { navigation: auto; }</style>
@@ -711,10 +1010,10 @@
   <div id="loginScreen">
    <div class="login-card">
     <div class="lock-icon">
-     🔒
+     🎙️
     </div>
-    <h1>Acceso Seguro</h1>
-    <p class="login-subtitle" id="loginSubtitle">Ingresa tu PIN de 4 dígitos</p>
+    <h1>PsyTape</h1>
+    <p class="login-subtitle" id="loginSubtitle">Seguro como una caja fuerte, inteligente como un asistente.</p>
     <div id="errorMessage" class="error-message hidden"></div>
     <div id="successMessage" class="success-message hidden"></div>
     <div class="pin-input-container"><label for="pin1" class="hidden">Dígito 1 del PIN</label> <input type="password" maxlength="1" class="pin-digit" id="pin1" readonly aria-label="Dígito 1 del PIN"> <label for="pin2" class="hidden">Dígito 2 del PIN</label> <input type="password" maxlength="1" class="pin-digit" id="pin2" readonly aria-label="Dígito 2 del PIN"> <label for="pin3" class="hidden">Dígito 3 del PIN</label> <input type="password" maxlength="1" class="pin-digit" id="pin3" readonly aria-label="Dígito 3 del PIN"> <label for="pin4" class="hidden">Dígito 4 del PIN</label> <input type="password" maxlength="1" class="pin-digit" id="pin4" readonly aria-label="Dígito 4 del PIN">
@@ -725,14 +1024,192 @@
   </div><!-- App Principal -->
   <div id="mainApp" class="container">
    <header>
-    <div class="security-controls"><button id="lockBtn" class="btn btn-lock"> <span>🔒</span> Bloquear </button> <button id="changePinBtn" class="btn btn-lock"> <span>🔑</span> Cambiar PIN </button>
+    <div class="security-controls"><button id="plansBtn" class="btn btn-lock"> <span>💎</span> Mi Plan </button> <button id="calendarNavBtn" class="btn btn-lock"> <span>📅</span> Agenda </button> <button id="lockBtn" class="btn btn-lock"> <span>🔒</span> Bloquear </button> <button id="changePinBtn" class="btn btn-lock"> <span>🔑</span> Cambiar PIN </button>
     </div>
     <div class="header-content">
-     <h1>🎙️ Grabadora de Sesiones Clínicas</h1>
-     <p class="subtitle">Gestiona pacientes y sus sesiones de forma segura y profesional</p>
+     <h1>🎙️ PsyTape</h1>
+     <p class="subtitle">Menos notas, más empatía. Graba, transcribe y conecta.</p>
     </div>
     <div style="width: 200px;"></div>
-   </header><!-- Vista de Pacientes -->
+   </header><!-- Vista de Agenda/Calendario -->
+   <div id="calendarView" class="hidden">
+    <div class="card">
+     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 20px;">
+      <h2 style="margin: 0;">📅 Mi Agenda Semanal</h2><button id="addAppointmentBtn" class="btn btn-primary"> <span>➕</span> Nueva Cita </button>
+     </div>
+     <div class="calendar-navigation"><button class="btn btn-secondary" id="prevWeekBtn"> <span>←</span> Semana Anterior </button>
+      <h3 id="currentWeekDisplay" style="color: #667eea; margin: 0;"></h3><button class="btn btn-secondary" id="nextWeekBtn"> Semana Siguiente <span>→</span> </button>
+     </div>
+     <div class="week-calendar" id="weekCalendar"></div>
+     <div id="appointmentsEmptyState" class="empty-state">
+      <div class="empty-icon">
+       📅
+      </div>
+      <p>No tienes citas programadas</p>
+      <p class="empty-subtitle">Comienza agregando tu primera cita</p>
+     </div>
+    </div>
+   </div><!-- Vista de Planes y Suscripciones -->
+   <div id="plansView" class="hidden">
+    <div class="card">
+     <div style="text-align: center; margin-bottom: 30px;">
+      <h2 style="margin: 0 0 10px 0; font-size: 2rem;">💎 Planes y Suscripciones</h2>
+      <p style="color: #6b7280; font-size: 1.1rem;">Elige el plan perfecto para tu práctica profesional</p>
+     </div>
+     <div id="currentPlanBanner" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 15px; margin-bottom: 30px; text-align: center;">
+      <div style="font-size: 3rem; margin-bottom: 10px;" id="currentPlanIcon">
+       🆓
+      </div>
+      <h3 style="margin: 0 0 10px 0; font-size: 1.5rem;" id="currentPlanName">Plan Gratuito</h3>
+      <p id="currentPlanStatus" style="opacity: 0.9; margin: 0;">Plan activo</p>
+     </div>
+     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-bottom: 30px;"><!-- Plan Gratuito -->
+      <div class="plan-card" data-plan="free">
+       <div class="plan-header">
+        <div class="plan-icon">
+         🆓
+        </div>
+        <h3 class="plan-name">Plan Gratuito</h3>
+        <div class="plan-price"><span class="price-amount">$0</span> <span class="price-period">/ siempre</span>
+        </div>
+       </div>
+       <div class="plan-features">
+        <div class="feature-item">
+         ✅ Hasta 5 pacientes
+        </div>
+        <div class="feature-item">
+         ✅ 3 sesiones por paciente
+        </div>
+        <div class="feature-item">
+         ✅ 10 minutos de grabación
+        </div>
+        <div class="feature-item">
+         ✅ Transcripción automática
+        </div>
+        <div class="feature-item">
+         ✅ Agenda semanal
+        </div>
+        <div class="feature-item">
+         ✅ Seguridad con PIN
+        </div>
+        <div class="feature-item disabled">
+         ❌ Sin plantillas clínicas
+        </div>
+        <div class="feature-item disabled">
+         ❌ Sin exportación avanzada
+        </div>
+       </div><button class="btn btn-secondary plan-btn" style="width: 100%; margin-top: 20px;" data-plan="free"> Plan Actual </button>
+      </div><!-- Plan Flexible -->
+      <div class="plan-card recommended" data-plan="flexible">
+       <div class="recommended-badge">
+        ⭐ Recomendado
+       </div>
+       <div class="plan-header">
+        <div class="plan-icon">
+         ⚡
+        </div>
+        <h3 class="plan-name">Plan Flexible</h3>
+        <div class="plan-price"><span class="price-amount">$19.99</span> <span class="price-period">/ mes</span>
+        </div>
+       </div>
+       <div class="plan-features">
+        <div class="feature-item">
+         ✅ Hasta 20 pacientes
+        </div>
+        <div class="feature-item">
+         ✅ 4 sesiones por paciente
+        </div>
+        <div class="feature-item">
+         ✅ 40 minutos de grabación
+        </div>
+        <div class="feature-item">
+         ✅ Transcripción automática
+        </div>
+        <div class="feature-item">
+         ✅ Agenda ilimitada
+        </div>
+        <div class="feature-item">
+         ✅ Exportación a PDF
+        </div>
+        <div class="feature-item">
+         ✅ Soporte por email
+        </div>
+        <div class="feature-item disabled">
+         ❌ Sin plantillas clínicas
+        </div>
+       </div><button class="btn btn-primary plan-btn" style="width: 100%; margin-top: 20px;" data-plan="flexible"> Actualizar a Flexible </button>
+      </div><!-- Plan Premium -->
+      <div class="plan-card premium" data-plan="premium">
+       <div class="premium-badge">
+        👑 Premium
+       </div>
+       <div class="plan-header">
+        <div class="plan-icon">
+         👑
+        </div>
+        <h3 class="plan-name">Plan Premium</h3>
+        <div class="plan-price"><span class="price-amount">$49.99</span> <span class="price-period">/ mes</span>
+        </div>
+       </div>
+       <div class="plan-features">
+        <div class="feature-item">
+         ✨ Pacientes ilimitados
+        </div>
+        <div class="feature-item">
+         ✨ Sesiones ilimitadas
+        </div>
+        <div class="feature-item">
+         ✨ Grabación ilimitada
+        </div>
+        <div class="feature-item">
+         🏥 Plantillas de historias clínicas
+        </div>
+        <div class="feature-item">
+         📋 Plantillas de evaluación
+        </div>
+        <div class="feature-item">
+         📊 Reportes y estadísticas
+        </div>
+        <div class="feature-item">
+         ☁️ Respaldo en la nube
+        </div>
+        <div class="feature-item">
+         🎨 Personalización avanzada
+        </div>
+        <div class="feature-item">
+         ⚡ Soporte prioritario 24/7
+        </div>
+       </div><button class="btn btn-success plan-btn" style="width: 100%; margin-top: 20px;" data-plan="premium"> Actualizar a Premium </button>
+      </div>
+     </div>
+     <div style="background: #f9fafb; border: 2px solid #e5e7eb; border-radius: 15px; padding: 25px; text-align: center;">
+      <h3 style="color: #667eea; margin-bottom: 15px;">💳 Métodos de Pago Disponibles</h3>
+      <p style="color: #6b7280; margin-bottom: 20px;">Procesamos pagos de forma segura a través de:</p>
+      <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; align-items: center;">
+       <div style="background: white; padding: 15px 25px; border-radius: 10px; font-weight: 600; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+        💳 Stripe
+       </div>
+       <div style="background: white; padding: 15px 25px; border-radius: 10px; font-weight: 600; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+        💰 Mercado Pago
+       </div>
+       <div style="background: white; padding: 15px 25px; border-radius: 10px; font-weight: 600; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+        🅿️ PayPal
+       </div>
+      </div>
+      <p style="color: #9ca3af; font-size: 0.9rem; margin-top: 20px;">🔒 Tus datos de pago están protegidos con encriptación de nivel bancario</p>
+     </div>
+     <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-radius: 15px; padding: 25px; margin-top: 30px;">
+      <h3 style="color: #92400e; margin-bottom: 15px; text-align: center;">📱 Próximamente: Apps Móviles</h3>
+      <p style="color: #78350f; text-align: center; margin-bottom: 20px;">Estamos trabajando en las versiones para Android e iOS. ¡Suscríbete ahora y obtén acceso prioritario!</p>
+      <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+       <div style="background: white; padding: 12px 20px; border-radius: 10px; font-weight: 600; display: flex; align-items: center; gap: 8px;"><span style="font-size: 1.5rem;">📱</span> App Store (iOS)
+       </div>
+       <div style="background: white; padding: 12px 20px; border-radius: 10px; font-weight: 600; display: flex; align-items: center; gap: 8px;"><span style="font-size: 1.5rem;">🤖</span> Google Play (Android)
+       </div>
+      </div>
+     </div>
+    </div>
+   </div><!-- Vista de Pacientes -->
    <div id="patientsView">
     <div class="card">
      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 20px;">
@@ -833,6 +1310,25 @@
       </div>
      </form>
     </div>
+   </div><!-- Modal: Nueva Cita -->
+   <div id="appointmentModal" class="modal-overlay hidden">
+    <div class="modal">
+     <h2 id="appointmentModalTitle">📅 Nueva Cita</h2>
+     <form id="appointmentForm">
+      <div class="form-group"><label for="appointmentPatientSelect">Paciente:</label> <select id="appointmentPatientSelect" required> <option value="">Selecciona un paciente</option> </select>
+      </div>
+      <div class="form-group"><label for="appointmentDateInput">Fecha:</label> <input type="date" id="appointmentDateInput" required>
+      </div>
+      <div class="form-group"><label for="appointmentTimeInput">Hora:</label> <input type="time" id="appointmentTimeInput" required>
+      </div>
+      <div class="form-group"><label for="appointmentDurationInput">Duración (minutos):</label> <select id="appointmentDurationInput" required> <option value="30">30 minutos</option> <option value="45">45 minutos</option> <option value="60" selected>60 minutos</option> <option value="90">90 minutos</option> <option value="120">120 minutos</option> </select>
+      </div>
+      <div class="form-group"><label for="appointmentNotesInput">Notas (opcional):</label> <textarea id="appointmentNotesInput" placeholder="Motivo de consulta, recordatorios..."></textarea>
+      </div>
+      <div class="modal-actions"><button type="submit" class="btn btn-primary"> <span>💾</span> Guardar Cita </button> <button type="button" id="cancelAppointmentModal" class="btn btn-secondary"> Cancelar </button>
+      </div>
+     </form>
+    </div>
    </div>
   </div>
   <script>
@@ -847,6 +1343,132 @@
         let isFirstTimeSetup = false;
         let inactivityTimer = null;
         let isAuthenticated = false;
+
+        // ========== SISTEMA DE PLANES Y SUSCRIPCIONES ==========
+        
+        const PLANS = {
+            free: {
+                name: 'Plan Gratuito',
+                icon: '🆓',
+                price: 0,
+                currency: 'USD',
+                maxPatients: 5,
+                maxSessionsPerPatient: 3,
+                maxRecordingMinutes: 10,
+                hasTranscription: false,
+                hasProfessionals: 1,
+                features: [
+                    'Hasta 5 pacientes',
+                    '3 sesiones por paciente',
+                    '10 minutos de grabación',
+                    'Grabación de audio básica',
+                    'Agenda semanal',
+                    'Seguridad con PIN'
+                ],
+                limitations: [
+                    'Sin transcripción automática',
+                    'Sin plantillas clínicas',
+                    'Sin exportación avanzada'
+                ]
+            },
+            flexible: {
+                name: 'Plan Flexible',
+                icon: '⚡',
+                price: 19.99,
+                currency: 'USD',
+                period: 'mes',
+                maxPatients: 20,
+                maxSessionsPerPatient: 4,
+                maxRecordingMinutes: 40,
+                hasTranscription: true,
+                hasProfessionals: 1,
+                features: [
+                    'Hasta 20 pacientes',
+                    '4 sesiones por paciente',
+                    '40 minutos de grabación',
+                    '🤖 Transcripción automática con IA',
+                    'Agenda semanal ilimitada',
+                    'Exportación a PDF',
+                    'Soporte por email'
+                ],
+                limitations: [
+                    'Sin plantillas clínicas avanzadas',
+                    'Un solo profesional'
+                ]
+            },
+            premium: {
+                name: 'Plan Premium',
+                icon: '👑',
+                price: 49.99,
+                currency: 'USD',
+                period: 'mes',
+                maxPatients: -1, // -1 = ilimitado
+                maxSessionsPerPatient: -1,
+                maxRecordingMinutes: -1,
+                hasTranscription: true,
+                hasProfessionals: 3,
+                features: [
+                    '✨ Pacientes ilimitados',
+                    '✨ Sesiones ilimitadas',
+                    '✨ Grabación ilimitada',
+                    '🤖 Transcripción automática con IA',
+                    '👥 Hasta 3 profesionales/consultorios',
+                    '🏥 Plantillas de historias clínicas',
+                    '📋 Plantillas de evaluación',
+                    '📊 Reportes y estadísticas',
+                    '☁️ Respaldo en la nube',
+                    '🎨 Personalización avanzada',
+                    '⚡ Soporte prioritario 24/7'
+                ],
+                limitations: []
+            }
+        };
+
+        function getCurrentPlan() {
+            const planData = localStorage.getItem('user_plan');
+            if (!planData) {
+                return {
+                    type: 'free',
+                    startDate: new Date().toISOString(),
+                    endDate: null
+                };
+            }
+            return JSON.parse(planData);
+        }
+
+        function setCurrentPlan(planType) {
+            const planData = {
+                type: planType,
+                startDate: new Date().toISOString(),
+                endDate: planType !== 'free' ? getEndDate(30) : null
+            };
+            localStorage.setItem('user_plan', JSON.stringify(planData));
+        }
+
+        function getEndDate(days) {
+            const date = new Date();
+            date.setDate(date.getDate() + days);
+            return date.toISOString();
+        }
+
+        function checkPlanLimits() {
+            const currentPlan = getCurrentPlan();
+            const plan = PLANS[currentPlan.type];
+            const patients = getPatients();
+            
+            return {
+                canAddPatient: plan.maxPatients === -1 || patients.length < plan.maxPatients,
+                canAddSession: (patientId) => {
+                    if (plan.maxSessionsPerPatient === -1) return true;
+                    const sessions = getSessions(patientId);
+                    return sessions.length < plan.maxSessionsPerPatient;
+                },
+                maxRecordingMinutes: plan.maxRecordingMinutes,
+                currentPatients: patients.length,
+                maxPatients: plan.maxPatients,
+                planName: plan.name
+            };
+        }
 
         // Función simple de ofuscación (no es encriptación real, pero añade una capa)
         function obfuscateData(data) {
@@ -866,8 +1488,8 @@
             
             if (!storedPin) {
                 isFirstTimeSetup = true;
-                document.getElementById('loginSubtitle').textContent = 'Crea tu PIN de 4 dígitos para proteger tus datos';
-                showToast('Primera vez: Crea tu PIN de seguridad', 'info');
+                document.getElementById('loginSubtitle').textContent = '🔐 Crea tu PIN de 4 dígitos para comenzar';
+                showToast('¡Bienvenido a PsyTape! Configura tu PIN', 'info');
             }
         }
 
@@ -1098,6 +1720,8 @@
         let currentView = 'patients';
         let currentPatientId = null;
         let editingPatientId = null;
+        let editingAppointmentId = null;
+        let currentWeekStart = null;
         
         let mediaRecorder;
         let audioChunks = [];
@@ -1107,6 +1731,269 @@
         let recognition;
         let isRecognitionActive = false;
         let liveTranscript = '';
+
+        // ========== SISTEMA DE CALENDARIO ==========
+
+        function getAppointments() {
+            const data = localStorage.getItem('appointments');
+            return data ? JSON.parse(data) : [];
+        }
+
+        function saveAppointments(appointments) {
+            localStorage.setItem('appointments', JSON.stringify(appointments));
+        }
+
+        function getWeekStart(date) {
+            const d = new Date(date);
+            const day = d.getDay();
+            const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+            return new Date(d.setDate(diff));
+        }
+
+        function formatWeekRange(startDate) {
+            const endDate = new Date(startDate);
+            endDate.setDate(endDate.getDate() + 6);
+            
+            const startStr = startDate.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
+            const endStr = endDate.toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' });
+            
+            return `${startStr} - ${endStr}`;
+        }
+
+        function showCalendarView() {
+            currentView = 'calendar';
+            document.getElementById('calendarView').classList.remove('hidden');
+            document.getElementById('patientsView').classList.add('hidden');
+            document.getElementById('patientSessionsView').classList.add('hidden');
+            
+            if (!currentWeekStart) {
+                currentWeekStart = getWeekStart(new Date());
+            }
+            
+            loadCalendar();
+        }
+
+        function loadCalendar() {
+            const weekStart = currentWeekStart;
+            document.getElementById('currentWeekDisplay').textContent = formatWeekRange(weekStart);
+            
+            const appointments = getAppointments();
+            const patients = getPatients();
+            const weekCalendar = document.getElementById('weekCalendar');
+            const emptyState = document.getElementById('appointmentsEmptyState');
+            
+            weekCalendar.innerHTML = '';
+            
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            const daysOfWeek = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+            
+            let hasAppointments = false;
+            
+            for (let i = 0; i < 7; i++) {
+                const currentDay = new Date(weekStart);
+                currentDay.setDate(currentDay.getDate() + i);
+                
+                const dayColumn = document.createElement('div');
+                dayColumn.className = 'day-column';
+                
+                if (currentDay.getTime() === today.getTime()) {
+                    dayColumn.classList.add('today');
+                }
+                
+                dayColumn.innerHTML = `
+                    <div class="day-header">
+                        <div class="day-name">${daysOfWeek[i]}</div>
+                        <div class="day-date">${currentDay.getDate()}</div>
+                    </div>
+                `;
+                
+                const dayAppointments = appointments.filter(apt => {
+                    const aptDate = new Date(apt.date);
+                    return aptDate.toDateString() === currentDay.toDateString();
+                }).sort((a, b) => {
+                    return a.time.localeCompare(b.time);
+                });
+                
+                if (dayAppointments.length > 0) {
+                    hasAppointments = true;
+                }
+                
+                dayAppointments.forEach(apt => {
+                    const patient = patients.find(p => p.id === apt.patientId);
+                    if (!patient) return;
+                    
+                    const categoryInfo = CATEGORIES[patient.category];
+                    const aptDateTime = new Date(apt.date + 'T' + apt.time);
+                    const isPast = aptDateTime < new Date();
+                    
+                    const slot = document.createElement('div');
+                    slot.className = 'appointment-slot';
+                    if (isPast) slot.classList.add('past');
+                    
+                    slot.innerHTML = `
+                        <div class="appointment-time">⏰ ${apt.time} (${apt.duration}min)</div>
+                        <div class="appointment-patient">${categoryInfo.icon} ${patient.name}</div>
+                        ${apt.notes ? '<div style="font-size: 0.8rem; color: #6b7280; margin-top: 5px;">📝 ' + apt.notes + '</div>' : ''}
+                        <div class="appointment-actions">
+                            <button class="btn btn-secondary" onclick="editAppointment(${apt.id})">✏️</button>
+                            <button class="btn btn-danger" onclick="deleteAppointment(${apt.id})">🗑️</button>
+                        </div>
+                    `;
+                    
+                    dayColumn.appendChild(slot);
+                });
+                
+                weekCalendar.appendChild(dayColumn);
+            }
+            
+            if (hasAppointments) {
+                emptyState.classList.add('hidden');
+            } else {
+                emptyState.classList.remove('hidden');
+            }
+        }
+
+        document.getElementById('calendarNavBtn').addEventListener('click', () => {
+            showCalendarView();
+        });
+
+        document.getElementById('prevWeekBtn').addEventListener('click', () => {
+            currentWeekStart.setDate(currentWeekStart.getDate() - 7);
+            loadCalendar();
+        });
+
+        document.getElementById('nextWeekBtn').addEventListener('click', () => {
+            currentWeekStart.setDate(currentWeekStart.getDate() + 7);
+            loadCalendar();
+        });
+
+        document.getElementById('addAppointmentBtn').addEventListener('click', () => {
+            const patients = getPatients();
+            
+            if (patients.length === 0) {
+                showToast('Primero debes agregar pacientes', 'error');
+                return;
+            }
+            
+            editingAppointmentId = null;
+            document.getElementById('appointmentModalTitle').textContent = '📅 Nueva Cita';
+            document.getElementById('appointmentForm').reset();
+            
+            const select = document.getElementById('appointmentPatientSelect');
+            select.innerHTML = '<option value="">Selecciona un paciente</option>';
+            patients.forEach(p => {
+                const categoryInfo = CATEGORIES[p.category];
+                const option = document.createElement('option');
+                option.value = p.id;
+                option.textContent = `${categoryInfo.icon} ${p.name}`;
+                select.appendChild(option);
+            });
+            
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('appointmentDateInput').value = today;
+            document.getElementById('appointmentTimeInput').value = '09:00';
+            
+            document.getElementById('appointmentModal').classList.remove('hidden');
+        });
+
+        document.getElementById('cancelAppointmentModal').addEventListener('click', () => {
+            document.getElementById('appointmentModal').classList.add('hidden');
+        });
+
+        document.getElementById('appointmentForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const patientId = parseInt(document.getElementById('appointmentPatientSelect').value);
+            const date = document.getElementById('appointmentDateInput').value;
+            const time = document.getElementById('appointmentTimeInput').value;
+            const duration = parseInt(document.getElementById('appointmentDurationInput').value);
+            const notes = document.getElementById('appointmentNotesInput').value.trim();
+            
+            if (!patientId || !date || !time) {
+                showToast('Por favor completa todos los campos requeridos', 'error');
+                return;
+            }
+            
+            const appointments = getAppointments();
+            
+            if (editingAppointmentId) {
+                const aptIndex = appointments.findIndex(a => a.id === editingAppointmentId);
+                if (aptIndex !== -1) {
+                    appointments[aptIndex] = {
+                        ...appointments[aptIndex],
+                        patientId,
+                        date,
+                        time,
+                        duration,
+                        notes,
+                        updatedAt: new Date().toISOString()
+                    };
+                    showToast('Cita actualizada', 'success');
+                }
+            } else {
+                const newAppointment = {
+                    id: Date.now(),
+                    patientId,
+                    date,
+                    time,
+                    duration,
+                    notes,
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
+                };
+                appointments.push(newAppointment);
+                showToast('Cita agendada exitosamente', 'success');
+            }
+            
+            saveAppointments(appointments);
+            document.getElementById('appointmentModal').classList.add('hidden');
+            loadCalendar();
+        });
+
+        function editAppointment(appointmentId) {
+            const appointments = getAppointments();
+            const appointment = appointments.find(a => a.id === appointmentId);
+            
+            if (!appointment) return;
+            
+            editingAppointmentId = appointment.id;
+            document.getElementById('appointmentModalTitle').textContent = '✏️ Editar Cita';
+            
+            const patients = getPatients();
+            const select = document.getElementById('appointmentPatientSelect');
+            select.innerHTML = '<option value="">Selecciona un paciente</option>';
+            patients.forEach(p => {
+                const categoryInfo = CATEGORIES[p.category];
+                const option = document.createElement('option');
+                option.value = p.id;
+                option.textContent = `${categoryInfo.icon} ${p.name}`;
+                select.appendChild(option);
+            });
+            
+            document.getElementById('appointmentPatientSelect').value = appointment.patientId;
+            document.getElementById('appointmentDateInput').value = appointment.date;
+            document.getElementById('appointmentTimeInput').value = appointment.time;
+            document.getElementById('appointmentDurationInput').value = appointment.duration;
+            document.getElementById('appointmentNotesInput').value = appointment.notes || '';
+            
+            document.getElementById('appointmentModal').classList.remove('hidden');
+        }
+
+        function deleteAppointment(appointmentId) {
+            showConfirmDialog(
+                '¿Eliminar cita?',
+                'Esta acción no se puede deshacer',
+                () => {
+                    let appointments = getAppointments();
+                    appointments = appointments.filter(a => a.id !== appointmentId);
+                    saveAppointments(appointments);
+                    showToast('Cita eliminada', 'success');
+                    loadCalendar();
+                }
+            );
+        }
 
         function initializeSpeechRecognition() {
             if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
@@ -1189,6 +2076,16 @@
         }
 
         document.getElementById('addPatientBtn').addEventListener('click', () => {
+            const limits = checkPlanLimits();
+            
+            if (!limits.canAddPatient) {
+                showLimitWarning(
+                    '⚠️ Límite de Pacientes Alcanzado',
+                    `Has alcanzado el límite de ${limits.maxPatients} pacientes en tu ${limits.planName}. Actualiza tu plan para agregar más pacientes.`
+                );
+                return;
+            }
+            
             editingPatientId = null;
             document.getElementById('patientModalTitle').textContent = 'Agregar Paciente';
             document.getElementById('patientForm').reset();
@@ -1311,6 +2208,17 @@
         });
 
         document.getElementById('newSessionBtn').addEventListener('click', () => {
+            const limits = checkPlanLimits();
+            
+            if (!limits.canAddSession(currentPatientId)) {
+                const plan = PLANS[getCurrentPlan().type];
+                showLimitWarning(
+                    '⚠️ Límite de Sesiones Alcanzado',
+                    `Has alcanzado el límite de ${plan.maxSessionsPerPatient} sesiones por paciente en tu ${limits.planName}. Actualiza tu plan para grabar más sesiones.`
+                );
+                return;
+            }
+            
             document.getElementById('sessionModal').classList.remove('hidden');
             document.getElementById('sessionPreview').style.display = 'none';
             document.getElementById('startRecordingBtn').disabled = false;
@@ -1478,12 +2386,31 @@
                 document.getElementById('sessionStatusDot').classList.add('recording');
 
                 if (recognition) {
-                    isRecognitionActive = true;
-                    try {
-                        recognition.start();
+                    const currentPlan = getCurrentPlan();
+                    const plan = PLANS[currentPlan.type];
+                    
+                    if (plan.hasTranscription) {
+                        isRecognitionActive = true;
+                        try {
+                            recognition.start();
+                            document.getElementById('liveTranscriptionContainer').style.display = 'block';
+                        } catch (e) {
+                            console.log('Error iniciando reconocimiento:', e);
+                        }
+                    } else {
+                        document.getElementById('liveTranscriptionContainer').innerHTML = `
+                            <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-radius: 12px;">
+                                <div style="font-size: 2rem; margin-bottom: 10px;">🔒</div>
+                                <h4 style="color: #92400e; margin-bottom: 10px;">Transcripción Automática No Disponible</h4>
+                                <p style="color: #78350f; font-size: 0.9rem; margin-bottom: 15px;">
+                                    La transcripción automática con IA está disponible en los planes Flexible y Premium.
+                                </p>
+                                <button class="upgrade-link" onclick="document.getElementById('sessionModal').classList.add('hidden'); showPlansView();">
+                                    ⚡ Actualizar Plan
+                                </button>
+                            </div>
+                        `;
                         document.getElementById('liveTranscriptionContainer').style.display = 'block';
-                    } catch (e) {
-                        console.log('Error iniciando reconocimiento:', e);
                     }
                 }
 
@@ -1515,6 +2442,9 @@
         }
 
         function startTimer() {
+            const limits = checkPlanLimits();
+            const maxMinutes = limits.maxRecordingMinutes;
+            
             timerInterval = setInterval(() => {
                 const elapsed = Date.now() - recordingStartTime;
                 const hours = Math.floor(elapsed / 3600000);
@@ -1523,6 +2453,12 @@
                 
                 document.getElementById('sessionTimer').textContent = 
                     pad(hours) + ':' + pad(minutes) + ':' + pad(seconds);
+                
+                // Verificar límite de grabación
+                if (maxMinutes !== -1 && minutes >= maxMinutes) {
+                    stopRecording();
+                    showToast(`Límite de ${maxMinutes} minutos alcanzado`, 'info');
+                }
             }, 1000);
         }
 
@@ -1716,6 +2652,162 @@ Generado el: ${new Date().toLocaleString('es-ES')}
             }, 3000);
         }
 
+        function showLimitWarning(title, message) {
+            const dialog = document.createElement('div');
+            dialog.className = 'modal-overlay';
+            dialog.innerHTML = `
+                <div class="modal" style="max-width: 500px;">
+                    <div class="limit-warning" style="margin: 0; border: none;">
+                        <div class="limit-warning-icon">⚠️</div>
+                        <div class="limit-warning-content">
+                            <div class="limit-warning-title">${title}</div>
+                            <div class="limit-warning-text">${message}</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 15px; margin-top: 20px;">
+                        <button class="btn btn-primary" style="flex: 1;" onclick="this.closest('.modal-overlay').showPlans()">
+                            💎 Ver Planes
+                        </button>
+                        <button class="btn btn-secondary" style="flex: 1;" onclick="this.closest('.modal-overlay').remove()">
+                            Cerrar
+                        </button>
+                    </div>
+                </div>
+            `;
+            dialog.showPlans = () => {
+                dialog.remove();
+                showPlansView();
+            };
+            document.body.appendChild(dialog);
+        }
+
+        function showPlansView() {
+            currentView = 'plans';
+            document.getElementById('plansView').classList.remove('hidden');
+            document.getElementById('patientsView').classList.add('hidden');
+            document.getElementById('patientSessionsView').classList.add('hidden');
+            document.getElementById('calendarView').classList.add('hidden');
+            updatePlansView();
+        }
+
+        function updatePlansView() {
+            const currentPlan = getCurrentPlan();
+            const plan = PLANS[currentPlan.type];
+            
+            document.getElementById('currentPlanIcon').textContent = plan.icon;
+            document.getElementById('currentPlanName').textContent = plan.name;
+            
+            if (currentPlan.endDate && currentPlan.type !== 'free') {
+                const endDate = new Date(currentPlan.endDate);
+                const daysLeft = Math.ceil((endDate - new Date()) / (1000 * 60 * 60 * 24));
+                document.getElementById('currentPlanStatus').textContent = 
+                    `Plan activo - ${daysLeft} días restantes`;
+            } else {
+                document.getElementById('currentPlanStatus').textContent = 'Plan activo';
+            }
+            
+            // Actualizar botones de planes
+            document.querySelectorAll('.plan-btn').forEach(btn => {
+                const planType = btn.getAttribute('data-plan');
+                
+                if (planType === currentPlan.type) {
+                    btn.textContent = 'Plan Actual';
+                    btn.className = 'btn btn-secondary plan-btn';
+                    btn.disabled = true;
+                } else {
+                    const targetPlan = PLANS[planType];
+                    if (planType === 'free') {
+                        btn.textContent = 'Cambiar a Gratuito';
+                        btn.className = 'btn btn-secondary plan-btn';
+                    } else if (planType === 'flexible') {
+                        btn.textContent = 'Actualizar a Flexible';
+                        btn.className = 'btn btn-primary plan-btn';
+                    } else if (planType === 'premium') {
+                        btn.textContent = 'Actualizar a Premium';
+                        btn.className = 'btn btn-success plan-btn';
+                    }
+                    btn.disabled = false;
+                }
+            });
+        }
+
+        document.getElementById('plansBtn').addEventListener('click', () => {
+            showPlansView();
+        });
+
+        // Event listeners para los botones de planes
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('plan-btn') && !e.target.disabled) {
+                const planType = e.target.getAttribute('data-plan');
+                handlePlanSelection(planType);
+            }
+        });
+
+        function handlePlanSelection(planType) {
+            const plan = PLANS[planType];
+            const currentPlanData = getCurrentPlan();
+            
+            if (planType === currentPlanData.type) {
+                return;
+            }
+            
+            if (planType === 'free') {
+                showConfirmDialog(
+                    '¿Cambiar a Plan Gratuito?',
+                    'Perderás acceso a las funciones premium. Tus datos se mantendrán pero con límites reducidos.',
+                    () => {
+                        setCurrentPlan('free');
+                        showToast('Plan cambiado a Gratuito', 'info');
+                        updatePlansView();
+                    }
+                );
+                return;
+            }
+            
+            // Simular proceso de pago
+            const dialog = document.createElement('div');
+            dialog.className = 'modal-overlay';
+            dialog.innerHTML = `
+                <div class="modal" style="max-width: 500px;">
+                    <h2>💳 Proceso de Pago</h2>
+                    <div style="text-align: center; padding: 30px 0;">
+                        <div style="font-size: 4rem; margin-bottom: 20px;">${plan.icon}</div>
+                        <h3 style="color: #667eea; margin-bottom: 10px;">${plan.name}</h3>
+                        <div style="font-size: 2.5rem; font-weight: 700; color: #667eea; margin: 20px 0;">
+                            $${plan.price} <span style="font-size: 1rem; color: #6b7280;">/ ${plan.period}</span>
+                        </div>
+                        <p style="color: #6b7280; margin-bottom: 30px;">
+                            Esta es una versión de demostración. En producción, aquí se integraría Stripe, Mercado Pago o PayPal para procesar el pago real.
+                        </p>
+                        <div style="background: #f9fafb; border: 2px solid #e5e7eb; border-radius: 12px; padding: 20px; margin-bottom: 20px;">
+                            <h4 style="color: #374151; margin-bottom: 15px;">📋 Resumen del Plan:</h4>
+                            ${plan.features.map(f => '<div style="padding: 8px 0; color: #6b7280;">✓ ' + f + '</div>').join('')}
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 15px;">
+                        <button class="btn btn-success" style="flex: 1;" onclick="this.closest('.modal-overlay').confirmPurchase()">
+                            ✅ Confirmar (Demo)
+                        </button>
+                        <button class="btn btn-secondary" style="flex: 1;" onclick="this.closest('.modal-overlay').remove()">
+                            Cancelar
+                        </button>
+                    </div>
+                </div>
+            `;
+            dialog.confirmPurchase = () => {
+                setCurrentPlan(planType);
+                dialog.remove();
+                showToast(`¡Bienvenido a ${plan.name}!`, 'success');
+                updatePlansView();
+                
+                // Mostrar notificación de apps móviles
+                setTimeout(() => {
+                    showToast('📱 Recibirás acceso prioritario a las apps móviles', 'info');
+                }, 2000);
+            };
+            document.body.appendChild(dialog);
+        }
+
         // Inicialización
         document.addEventListener('DOMContentLoaded', () => {
             initializeSecurity();
@@ -1725,5 +2817,5 @@ Generado el: ${new Date().toLocaleString('es-ES')}
             }
         });
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c54d7f7625ee75c',t:'MTc2OTY0ODk2MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c54fe7c403ee75c',t:'MTc2OTY1MDUzOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
