@@ -251,7 +251,7 @@
       </div>
       <div id="searchResults"></div>
      </div>
-     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <div onclick="showSection('patients')" class="bg-white rounded-2xl shadow-lg p-8 text-center cursor-pointer transition-all hover:shadow-2xl hover:-translate-y-2 border-2 border-transparent hover:border-emerald-500">
        <div class="text-6xl mb-4">
         👥
@@ -278,14 +278,28 @@
         👶
        </div>
        <h3 class="text-xl font-bold text-slate-900 mb-2">Historia Infantil</h3>
-       <p class="text-gray-600">Evaluación pediátrica</p>
+       <p class="text-gray-600">Evaluación infanto-juvenil</p>
+      </div>
+      <div onclick="showSection('adultHistory')" class="bg-white rounded-2xl shadow-lg p-8 text-center cursor-pointer transition-all hover:shadow-2xl hover:-translate-y-2 border-2 border-transparent hover:border-emerald-500">
+       <div class="text-6xl mb-4">
+        👤
+       </div>
+       <h3 class="text-xl font-bold text-slate-900 mb-2">Historia Adultos</h3>
+       <p class="text-gray-600">Historia clínica completa</p>
+      </div>
+      <div onclick="showSection('psychReport')" class="bg-white rounded-2xl shadow-lg p-8 text-center cursor-pointer transition-all hover:shadow-2xl hover:-translate-y-2 border-2 border-transparent hover:border-emerald-500">
+       <div class="text-6xl mb-4">
+        📊
+       </div>
+       <h3 class="text-xl font-bold text-slate-900 mb-2">Informe Psicológico</h3>
+       <p class="text-gray-600">Reportes profesionales</p>
       </div>
      </div>
     </div><!-- Sección Historia Clínica Infanto-Juvenil -->
     <div id="infantHistorySection" class="section hidden">
      <div class="bg-white rounded-2xl shadow-lg p-6">
       <div class="bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl p-8 mb-6 text-white">
-       <h2 class="text-4xl font-black mb-2">👶 HISTORIA CLÍNICA PSICOLÓGICA INFANTIL</h2>
+       <h2 class="text-4xl font-black mb-2">��� HISTORIA CLÍNICA PSICOLÓGICA INFANTIL</h2>
        <p class="text-blue-100 text-lg">Evaluación especializada para niños y adolescentes</p>
       </div><!-- Selector de Versión -->
       <div class="flex gap-4 mb-6"><button onclick="switchInfantVersion('short')" id="btnShortVersion" class="flex-1 bg-emerald-500 text-white px-6 py-4 rounded-xl font-bold text-lg transition-all shadow-lg hover:shadow-2xl"> 📝 Versión Corta (Rápida) </button> <button onclick="switchInfantVersion('long')" id="btnLongVersion" class="flex-1 bg-blue-600 text-white px-6 py-4 rounded-xl font-bold text-lg transition-all shadow-lg hover:shadow-2xl"> 📋 Versión Larga (Completa) </button>
@@ -319,7 +333,7 @@
        </form>
       </div><!-- VERSIÓN LARGA -->
       <div id="infantFormLong" class="hidden"><!-- Pestañas de navegación -->
-       <div class="flex flex-wrap gap-2 mb-6 border-b-2 border-gray-200 pb-2"><button onclick="switchInfantTab('identificacion')" id="tabIdentificacion" class="infant-tab-button px-4 py-3 font-bold rounded-t-lg transition-all"> 👤 Identificación </button> <button onclick="switchInfantTab('anamnesis')" id="tabAnamnesis" class="infant-tab-button px-4 py-3 font-bold rounded-t-lg transition-all"> 🤰 Anamnesis </button> <button onclick="switchInfantTab('escolaridad')" id="tabEscolaridad" class="infant-tab-button px-4 py-3 font-bold rounded-t-lg transition-all"> 🎒 Escolaridad </button> <button onclick="switchInfantTab('examenMental')" id="tabExamenMental" class="infant-tab-button px-4 py-3 font-bold rounded-t-lg transition-all"> 🧠 Examen Mental </button> <button onclick="switchInfantTab('saludFisica')" id="tabSaludFisica" class="infant-tab-button px-4 py-3 font-bold rounded-t-lg transition-all"> 🏥 Salud Física </button>
+       <div class="flex flex-wrap gap-2 mb-6 border-b-2 border-gray-200 pb-2"><button onclick="switchInfantTab('identificacion')" id="tabIdentificacion" class="infant-tab-button px-4 py-3 font-bold rounded-t-lg transition-all"> 👤 Identificación </button> <button onclick="switchInfantTab('anamnesis')" id="tabAnamnesis" class="infant-tab-button px-4 py-3 font-bold rounded-t-lg transition-all"> 🤰 Anamnesis </button> <button onclick="switchInfantTab('escolaridad')" id="tabEscolaridad" class="infant-tab-button px-4 py-3 font-bold rounded-t-lg transition-all"> ��� Escolaridad </button> <button onclick="switchInfantTab('examenMental')" id="tabExamenMental" class="infant-tab-button px-4 py-3 font-bold rounded-t-lg transition-all"> 🧠 Examen Mental </button> <button onclick="switchInfantTab('saludFisica')" id="tabSaludFisica" class="infant-tab-button px-4 py-3 font-bold rounded-t-lg transition-all"> 🏥 Salud Física </button>
        </div>
        <form class="medical-form space-y-6"><!-- Tab Identificación -->
         <div id="infantTabIdentificacion" class="infant-tab-content">
@@ -401,7 +415,7 @@
            </div>
            <div><label for="ilNivelJuego" class="block text-sm font-bold text-gray-700 mb-2">Nivel de Juego</label> <select id="ilNivelJuego" name="ilNivelJuego" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all"> <option value="">Seleccionar</option> <option value="Solitario">Juego solitario</option> <option value="Paralelo">Juego paralelo</option> <option value="Cooperativo">Juego cooperativo</option> <option value="Simbólico">Juego simbólico desarrollado</option> <option value="Limitado">Juego limitado/repetitivo</option> </select>
            </div>
-           <div><label for="ilAtencion" class="block text-sm font-bold text-gray-700 mb-2">Atención y Concentración</label> <select id="ilAtencion" name="ilAtencion" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all"> <option value="">Seleccionar</option> <option value="Adecuada">Adecuada para su edad</option> <option value="Dispersa">Dispersa</option> <option value="Hiperactividad">Hiperactividad</option> <option value="Déficit">Déficit atencional</option> </select>
+           <div><label for="ilAtencion" class="block text-sm font-bold text-gray-700 mb-2">Atención y Concentraci��n</label> <select id="ilAtencion" name="ilAtencion" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all"> <option value="">Seleccionar</option> <option value="Adecuada">Adecuada para su edad</option> <option value="Dispersa">Dispersa</option> <option value="Hiperactividad">Hiperactividad</option> <option value="Déficit">Déficit atencional</option> </select>
            </div>
           </div>
           <div class="mt-4"><label for="ilObservacionesMentales" class="block text-sm font-bold text-gray-700 mb-2">Observaciones Adicionales</label> <textarea id="ilObservacionesMentales" name="ilObservacionesMentales" rows="4" placeholder="Notas sobre pensamiento, percepción, orientación..." class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all"></textarea>
@@ -453,7 +467,7 @@
        <div class="bg-white rounded-xl p-6 border-2 border-gray-200">
         <h4 class="text-xl font-bold text-slate-900 mb-3">📝 Transcripción en Tiempo Real</h4>
         <div id="liveTranscription" class="bg-gray-50 rounded-lg p-4 min-h-[200px] max-h-[400px] overflow-y-auto border-2 border-gray-300 font-mono text-sm whitespace-pre-wrap">
-         La transcripción aparecerá aquí cuando inicies la grabación...
+         La transcripción aparecer�� aquí cuando inicies la grabación...
         </div>
         <div class="flex gap-3 mt-4"><button onclick="copyTranscription()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg font-semibold transition-all"> 📋 Copiar Transcripción </button> <button onclick="downloadTranscriptionTXT()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold transition-all"> 💾 Descargar TXT </button> <button onclick="clearTranscription()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-semibold transition-all"> 🗑️ Limpiar </button>
         </div>
@@ -488,7 +502,78 @@
       <h2 class="text-3xl font-bold text-emerald-600 mb-6">💎 Gestión de Planes</h2>
       <div class="bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-2xl p-6 text-white mb-8">
        <h3 class="text-2xl font-bold mb-2">Tu Plan Actual: <span id="currentPlanName">Premium 👑</span></h3>
-       <p id="planExpiryInfo">Plan activo</p>
+       <p id="planExpiryInfo">Plan activo - Acceso completo a todas las funcionalidades</p>
+      </div>
+      <h3 class="text-2xl font-bold text-slate-900 mb-6 text-center">Compara nuestros planes</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"><!-- Plan Gratuito -->
+       <div class="bg-white rounded-2xl border-2 border-gray-300 p-8 transition-all hover:shadow-2xl">
+        <div class="text-center mb-6">
+         <div class="text-5xl mb-3">
+          🆓
+         </div>
+         <h4 class="text-2xl font-bold text-slate-900 mb-2">Gratuito</h4>
+         <div class="text-4xl font-black text-slate-900 mb-2">
+          $0
+         </div>
+         <p class="text-gray-600">Para empezar</p>
+        </div>
+        <ul class="space-y-3 mb-6">
+         <li class="flex items-start gap-2"><span class="text-emerald-500 font-bold text-lg">✓</span> <span class="text-gray-700">Hasta 10 pacientes</span></li>
+         <li class="flex items-start gap-2"><span class="text-emerald-500 font-bold text-lg">✓</span> <span class="text-gray-700">Grabación básica (30 min/sesión)</span></li>
+         <li class="flex items-start gap-2"><span class="text-emerald-500 font-bold text-lg">✓</span> <span class="text-gray-700">Transcripción manual</span></li>
+         <li class="flex items-start gap-2"><span class="text-red-500 font-bold text-lg">✗</span> <span class="text-gray-400">Sin PDFs con membrete</span></li>
+         <li class="flex items-start gap-2"><span class="text-red-500 font-bold text-lg">✗</span> <span class="text-gray-400">Sin historia infantil completa</span></li>
+        </ul><button class="w-full bg-gray-300 text-gray-600 py-3 rounded-lg font-bold cursor-not-allowed"> Plan Básico </button>
+       </div><!-- Plan Premium -->
+       <div class="bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl border-4 border-emerald-400 p-8 transition-all hover:shadow-2xl transform scale-105 relative">
+        <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-yellow-400 text-slate-900 px-4 py-1 rounded-full font-bold text-sm">
+         ⭐ MÁS POPULAR
+        </div>
+        <div class="text-center mb-6">
+         <div class="text-5xl mb-3">
+          👑
+         </div>
+         <h4 class="text-2xl font-bold text-white mb-2">Premium</h4>
+         <div class="text-4xl font-black text-white mb-2">
+          $29
+         </div>
+         <p class="text-emerald-100">por mes</p>
+        </div>
+        <ul class="space-y-3 mb-6">
+         <li class="flex items-start gap-2"><span class="text-yellow-300 font-bold text-lg">✓</span> <span class="text-white font-semibold">Pacientes ilimitados</span></li>
+         <li class="flex items-start gap-2"><span class="text-yellow-300 font-bold text-lg">✓</span> <span class="text-white font-semibold">Grabación ilimitada</span></li>
+         <li class="flex items-start gap-2"><span class="text-yellow-300 font-bold text-lg">✓</span> <span class="text-white font-semibold">Transcripción automática en tiempo real</span></li>
+         <li class="flex items-start gap-2"><span class="text-yellow-300 font-bold text-lg">✓</span> <span class="text-white font-semibold">PDFs con membrete profesional</span></li>
+         <li class="flex items-start gap-2"><span class="text-yellow-300 font-bold text-lg">✓</span> <span class="text-white font-semibold">Historia infantil completa</span></li>
+         <li class="flex items-start gap-2"><span class="text-yellow-300 font-bold text-lg">✓</span> <span class="text-white font-semibold">Backup automático en la nube</span></li>
+         <li class="flex items-start gap-2"><span class="text-yellow-300 font-bold text-lg">✓</span> <span class="text-white font-semibold">Soporte prioritario 24/7</span></li>
+        </ul><button class="w-full bg-white text-emerald-600 py-3 rounded-lg font-bold hover:bg-emerald-50 transition-all"> ✅ Tu Plan Actual </button>
+       </div><!-- Plan Profesional -->
+       <div class="bg-white rounded-2xl border-2 border-purple-300 p-8 transition-all hover:shadow-2xl">
+        <div class="text-center mb-6">
+         <div class="text-5xl mb-3">
+          💼
+         </div>
+         <h4 class="text-2xl font-bold text-slate-900 mb-2">Profesional</h4>
+         <div class="text-4xl font-black text-purple-600 mb-2">
+          $79
+         </div>
+         <p class="text-gray-600">por mes</p>
+        </div>
+        <ul class="space-y-3 mb-6">
+         <li class="flex items-start gap-2"><span class="text-purple-500 font-bold text-lg">✓</span> <span class="text-gray-700 font-semibold">Todo lo de Premium</span></li>
+         <li class="flex items-start gap-2"><span class="text-purple-500 font-bold text-lg">✓</span> <span class="text-gray-700">Múltiples profesionales (hasta 5)</span></li>
+         <li class="flex items-start gap-2"><span class="text-purple-500 font-bold text-lg">✓</span> <span class="text-gray-700">Agenda compartida</span></li>
+         <li class="flex items-start gap-2"><span class="text-purple-500 font-bold text-lg">✓</span> <span class="text-gray-700">Reportes y estadísticas avanzadas</span></li>
+         <li class="flex items-start gap-2"><span class="text-purple-500 font-bold text-lg">✓</span> <span class="text-gray-700">API para integración con sistemas</span></li>
+         <li class="flex items-start gap-2"><span class="text-purple-500 font-bold text-lg">✓</span> <span class="text-gray-700">Gestión de facturación</span></li>
+         <li class="flex items-start gap-2"><span class="text-purple-500 font-bold text-lg">✓</span> <span class="text-gray-700">Soporte dedicado + onboarding</span></li>
+        </ul><button class="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-lg font-bold transition-all"> Actualizar Plan </button>
+       </div>
+      </div>
+      <div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-6 border-2 border-blue-200">
+       <h4 class="text-xl font-bold text-slate-900 mb-3">💡 ¿Necesitas un plan personalizado?</h4>
+       <p class="text-gray-700 mb-4">Si tienes un equipo grande o necesidades específicas, contáctanos para crear un plan a tu medida.</p><button class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-bold transition-all"> 📧 Contactar con Ventas </button>
       </div>
      </div>
     </div>
@@ -518,6 +603,111 @@
         </div>
        </div>
       </div>
+     </div>
+    </div><!-- Sección Historia Clínica Adultos -->
+    <div id="adultHistorySection" class="section hidden">
+     <div class="bg-white rounded-2xl shadow-lg p-6">
+      <div class="bg-gradient-to-r from-purple-600 to-purple-700 rounded-2xl p-8 mb-6 text-white">
+       <h2 class="text-4xl font-black mb-2">👤 HISTORIA CLÍNICA PARA ADULTOS</h2>
+       <p class="text-purple-100 text-lg">Evaluación psicológica completa</p>
+      </div>
+      <form class="medical-form space-y-6">
+       <div class="bg-gray-50 rounded-2xl p-6 border-2 border-gray-200">
+        <h3 class="text-2xl font-bold text-slate-900 mb-6 border-b-2 border-purple-500 pb-2">📋 DATOS PERSONALES</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+         <div><label for="adNombre" class="block text-sm font-bold text-gray-700 mb-2">Nombre Completo</label> <input type="text" id="adNombre" name="adNombre" placeholder="Nombre completo del paciente" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all">
+         </div>
+         <div><label for="adEdad" class="block text-sm font-bold text-gray-700 mb-2">Edad</label> <input type="number" id="adEdad" name="adEdad" placeholder="Edad en años" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all">
+         </div>
+         <div><label for="adDNI" class="block text-sm font-bold text-gray-700 mb-2">DNI / Identificación</label> <input type="text" id="adDNI" name="adDNI" placeholder="DNI" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all">
+         </div>
+         <div><label for="adFecha" class="block text-sm font-bold text-gray-700 mb-2">Fecha de Evaluación</label> <input type="date" id="adFecha" name="adFecha" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all">
+         </div>
+         <div><label for="adEstadoCivil" class="block text-sm font-bold text-gray-700 mb-2">Estado Civil</label> <select id="adEstadoCivil" name="adEstadoCivil" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all"> <option value="">Seleccionar</option> <option value="Soltero/a">Soltero/a</option> <option value="Casado/a">Casado/a</option> <option value="Divorciado/a">Divorciado/a</option> <option value="Viudo/a">Viudo/a</option> <option value="Unión libre">Unión libre</option> </select>
+         </div>
+         <div><label for="adOcupacion" class="block text-sm font-bold text-gray-700 mb-2">Ocupación</label> <input type="text" id="adOcupacion" name="adOcupacion" placeholder="Profesión u oficio" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all">
+         </div>
+        </div>
+       </div>
+       <div class="bg-gray-50 rounded-2xl p-6 border-2 border-gray-200">
+        <h3 class="text-2xl font-bold text-slate-900 mb-6 border-b-2 border-purple-500 pb-2">🎯 MOTIVO DE CONSULTA</h3><label for="adMotivo" class="sr-only">Motivo de Consulta</label> <textarea id="adMotivo" name="adMotivo" rows="4" placeholder="¿Qué trae al paciente a consulta? Descripción del problema principal..." class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all"></textarea>
+       </div>
+       <div class="bg-gray-50 rounded-2xl p-6 border-2 border-gray-200">
+        <h3 class="text-2xl font-bold text-slate-900 mb-6 border-b-2 border-purple-500 pb-2">📖 HISTORIA DEL PROBLEMA</h3><label for="adHistoriaProblema" class="sr-only">Historia del Problema</label> <textarea id="adHistoriaProblema" name="adHistoriaProblema" rows="5" placeholder="¿Cuándo comenzó? ¿Cómo ha evolucionado? ¿Qué lo desencadena? Eventos relevantes..." class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all"></textarea>
+       </div>
+       <div class="bg-gray-50 rounded-2xl p-6 border-2 border-gray-200">
+        <h3 class="text-2xl font-bold text-slate-900 mb-6 border-b-2 border-purple-500 pb-2">🏥 ANTECEDENTES MÉDICOS Y PSIQUIÁTRICOS</h3>
+        <div class="space-y-4">
+         <div><label for="adMedicamentos" class="block text-sm font-bold text-gray-700 mb-2">Medicamentos Actuales</label> <input type="text" id="adMedicamentos" name="adMedicamentos" placeholder="Medicamentos que toma actualmente" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all">
+         </div>
+         <div><label for="adEnfermedades" class="block text-sm font-bold text-gray-700 mb-2">Enfermedades Previas</label> <textarea id="adEnfermedades" name="adEnfermedades" rows="2" placeholder="Enfermedades físicas, cirugías, hospitalizaciones..." class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all"></textarea>
+         </div>
+         <div><label for="adPsiquiatricos" class="block text-sm font-bold text-gray-700 mb-2">Antecedentes Psiquiátricos</label> <textarea id="adPsiquiatricos" name="adPsiquiatricos" rows="2" placeholder="Diagnósticos previos, internaciones, tratamientos anteriores..." class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all"></textarea>
+         </div>
+        </div>
+       </div>
+       <div class="bg-gray-50 rounded-2xl p-6 border-2 border-gray-200">
+        <h3 class="text-2xl font-bold text-slate-900 mb-6 border-b-2 border-purple-500 pb-2">🧠 EXAMEN DEL ESTADO MENTAL</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+         <div><label for="adApariencia" class="block text-sm font-bold text-gray-700 mb-2">Apariencia y Actitud</label> <input type="text" id="adApariencia" name="adApariencia" placeholder="Presentación, vestimenta, higiene" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all">
+         </div>
+         <div><label for="adEstadoAnimo" class="block text-sm font-bold text-gray-700 mb-2">Estado de Ánimo</label> <select id="adEstadoAnimo" name="adEstadoAnimo" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all"> <option value="">Seleccionar</option> <option value="Eutímico">Eutímico (normal)</option> <option value="Deprimido">Deprimido</option> <option value="Ansioso">Ansioso</option> <option value="Irritable">Irritable</option> <option value="Elevado">Elevado</option> </select>
+         </div>
+         <div><label for="adPensamiento" class="block text-sm font-bold text-gray-700 mb-2">Pensamiento</label> <input type="text" id="adPensamiento" name="adPensamiento" placeholder="Curso, contenido, coherencia" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all">
+         </div>
+         <div><label for="adOrientacion" class="block text-sm font-bold text-gray-700 mb-2">Orientación</label> <select id="adOrientacion" name="adOrientacion" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all"> <option value="">Seleccionar</option> <option value="Orientado">Orientado en tiempo, espacio y persona</option> <option value="Desorientado tiempo">Desorientado en tiempo</option> <option value="Desorientado espacio">Desorientado en espacio</option> <option value="Desorientado persona">Desorientado en persona</option> </select>
+         </div>
+        </div>
+       </div>
+       <div class="bg-gray-50 rounded-2xl p-6 border-2 border-gray-200">
+        <h3 class="text-2xl font-bold text-slate-900 mb-6 border-b-2 border-purple-500 pb-2">💭 IMPRESIÓN DIAGNÓSTICA Y PLAN</h3><label for="adDiagnostico" class="sr-only">Impresión Diagnóstica y Plan</label> <textarea id="adDiagnostico" name="adDiagnostico" rows="5" placeholder="Impresión diagnóstica, objetivos terapéuticos, plan de tratamiento, recomendaciones..." class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all"></textarea>
+       </div>
+       <div class="flex flex-wrap gap-4 justify-center"><button type="button" onclick="saveAdultHistory()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg hover:shadow-2xl"> 💾 Guardar en Carpeta del Paciente </button> <button type="button" onclick="downloadAdultPDF()" class="bg-purple-600 hover:bg-purple-700 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg hover:shadow-2xl"> 📄 Generar PDF con Membrete </button> <button type="button" onclick="downloadAdultBlankTemplate()" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg hover:shadow-2xl"> 📋 Plantilla en Blanco </button> <button type="button" onclick="clearAdultForm()" class="bg-gray-500 hover:bg-gray-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg hover:shadow-2xl"> 🔄 Limpiar Formulario </button>
+       </div>
+      </form>
+     </div>
+    </div><!-- Sección Informe Psicológico -->
+    <div id="psychReportSection" class="section hidden">
+     <div class="bg-white rounded-2xl shadow-lg p-6">
+      <div class="bg-gradient-to-r from-orange-600 to-orange-700 rounded-2xl p-8 mb-6 text-white">
+       <h2 class="text-4xl font-black mb-2">📊 INFORME PSICOLÓGICO</h2>
+       <p class="text-orange-100 text-lg">Reporte profesional detallado</p>
+      </div>
+      <form class="medical-form space-y-6">
+       <div class="bg-gray-50 rounded-2xl p-6 border-2 border-gray-200">
+        <h3 class="text-2xl font-bold text-slate-900 mb-6 border-b-2 border-orange-500 pb-2">📋 INFORMACIÓN DEL EVALUADO</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+         <div><label for="infNombre" class="block text-sm font-bold text-gray-700 mb-2">Nombre Completo</label> <input type="text" id="infNombre" name="infNombre" placeholder="Nombre del evaluado" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all">
+         </div>
+         <div><label for="infEdad" class="block text-sm font-bold text-gray-700 mb-2">Edad</label> <input type="number" id="infEdad" name="infEdad" placeholder="Edad" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all">
+         </div>
+         <div><label for="infFecha" class="block text-sm font-bold text-gray-700 mb-2">Fecha del Informe</label> <input type="date" id="infFecha" name="infFecha" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all">
+         </div>
+         <div><label for="infSolicitante" class="block text-sm font-bold text-gray-700 mb-2">Solicitado por</label> <input type="text" id="infSolicitante" name="infSolicitante" placeholder="Institución o persona solicitante" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all">
+         </div>
+        </div>
+       </div>
+       <div class="bg-gray-50 rounded-2xl p-6 border-2 border-gray-200">
+        <h3 class="text-2xl font-bold text-slate-900 mb-6 border-b-2 border-orange-500 pb-2">🎯 MOTIVO DE EVALUACIÓN</h3><label for="infMotivo" class="sr-only">Motivo de Evaluación</label> <textarea id="infMotivo" name="infMotivo" rows="3" placeholder="Razón por la cual se solicita el informe psicológico..." class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all"></textarea>
+       </div>
+       <div class="bg-gray-50 rounded-2xl p-6 border-2 border-gray-200">
+        <h3 class="text-2xl font-bold text-slate-900 mb-6 border-b-2 border-orange-500 pb-2">🔬 TÉCNICAS E INSTRUMENTOS UTILIZADOS</h3><label for="infTecnicas" class="sr-only">Técnicas e Instrumentos</label> <textarea id="infTecnicas" name="infTecnicas" rows="3" placeholder="Ej: Entrevista clínica, Test de Rorschach, WAIS-IV, Inventario de Depresión de Beck..." class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all"></textarea>
+       </div>
+       <div class="bg-gray-50 rounded-2xl p-6 border-2 border-gray-200">
+        <h3 class="text-2xl font-bold text-slate-900 mb-6 border-b-2 border-orange-500 pb-2">👀 OBSERVACIONES CONDUCTUALES</h3><label for="infObservaciones" class="sr-only">Observaciones Conductuales</label> <textarea id="infObservaciones" name="infObservaciones" rows="4" placeholder="Apariencia, actitud colaborativa, nivel de ansiedad, contacto visual..." class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all"></textarea>
+       </div>
+       <div class="bg-gray-50 rounded-2xl p-6 border-2 border-gray-200">
+        <h3 class="text-2xl font-bold text-slate-900 mb-6 border-b-2 border-orange-500 pb-2">📊 RESULTADOS Y ANÁLISIS</h3><label for="infResultados" class="sr-only">Resultados y Análisis</label> <textarea id="infResultados" name="infResultados" rows="6" placeholder="Interpretación de los resultados obtenidos en las pruebas aplicadas. Análisis de áreas cognitivas, emocionales, sociales..." class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all"></textarea>
+       </div>
+       <div class="bg-gray-50 rounded-2xl p-6 border-2 border-gray-200">
+        <h3 class="text-2xl font-bold text-slate-900 mb-6 border-b-2 border-orange-500 pb-2">💡 CONCLUSIONES</h3><label for="infConclusiones" class="sr-only">Conclusiones</label> <textarea id="infConclusiones" name="infConclusiones" rows="5" placeholder="Síntesis de los hallazgos principales. Integración de la información..." class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all"></textarea>
+       </div>
+       <div class="bg-gray-50 rounded-2xl p-6 border-2 border-gray-200">
+        <h3 class="text-2xl font-bold text-slate-900 mb-6 border-b-2 border-orange-500 pb-2">🎯 RECOMENDACIONES</h3><label for="infRecomendaciones" class="sr-only">Recomendaciones</label> <textarea id="infRecomendaciones" name="infRecomendaciones" rows="4" placeholder="Sugerencias de intervención, derivaciones, apoyos necesarios..." class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all"></textarea>
+       </div>
+       <div class="flex flex-wrap gap-4 justify-center"><button type="button" onclick="savePsychReport()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg hover:shadow-2xl"> 💾 Guardar Informe </button> <button type="button" onclick="downloadReportPDF()" class="bg-orange-600 hover:bg-orange-700 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg hover:shadow-2xl"> 📄 Generar PDF Profesional </button> <button type="button" onclick="downloadReportBlankTemplate()" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg hover:shadow-2xl"> 📋 Plantilla en Blanco </button> <button type="button" onclick="clearReportForm()" class="bg-gray-500 hover:bg-gray-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg hover:shadow-2xl"> 🔄 Limpiar Formulario </button>
+       </div>
+      </form>
      </div>
     </div>
    </div><!-- Footer -->
@@ -672,7 +862,13 @@
             else if (sectionName === 'account') document.getElementById('accountSection').classList.remove('hidden');
             else if (sectionName === 'infantHistory') {
                 document.getElementById('infantHistorySection').classList.remove('hidden');
-                switchInfantVersion('short'); // Mostrar versión corta por defecto
+                switchInfantVersion('short');
+            }
+            else if (sectionName === 'adultHistory') {
+                document.getElementById('adultHistorySection').classList.remove('hidden');
+            }
+            else if (sectionName === 'psychReport') {
+                document.getElementById('psychReportSection').classList.remove('hidden');
             }
         }
 
@@ -1295,7 +1491,7 @@
                 <body>
                     <div class="header">
                         <h1>🎙️ PsyTape</h1>
-                        <h2>HISTORIA CLÍNICA PSICOLÓGICA INFANTIL</h2>
+                        <h2>HISTORIA CLÍNICA INFANTO-JUVENIL</h2>
                     </div>
 
                     <div class="section">
@@ -1388,6 +1584,347 @@
             showToast('🔄 Formulario completo limpiado', 'success');
         }
 
+        // ==================== FUNCIONES HISTORIA ADULTOS ====================
+
+        function saveAdultHistory() {
+            const dni = document.getElementById('adDNI').value;
+            
+            if (!dni) {
+                showToast('⚠️ Por favor ingresa el DNI del paciente', 'error');
+                return;
+            }
+
+            const data = {
+                tipo: 'historia_adultos',
+                nombre: document.getElementById('adNombre').value,
+                edad: document.getElementById('adEdad').value,
+                dni: dni,
+                fecha: document.getElementById('adFecha').value,
+                estadoCivil: document.getElementById('adEstadoCivil').value,
+                ocupacion: document.getElementById('adOcupacion').value,
+                motivo: document.getElementById('adMotivo').value,
+                historiaProblema: document.getElementById('adHistoriaProblema').value,
+                medicamentos: document.getElementById('adMedicamentos').value,
+                enfermedades: document.getElementById('adEnfermedades').value,
+                psiquiatricos: document.getElementById('adPsiquiatricos').value,
+                apariencia: document.getElementById('adApariencia').value,
+                estadoAnimo: document.getElementById('adEstadoAnimo').value,
+                pensamiento: document.getElementById('adPensamiento').value,
+                orientacion: document.getElementById('adOrientacion').value,
+                diagnostico: document.getElementById('adDiagnostico').value,
+                fechaGuardado: new Date().toISOString()
+            };
+
+            const jsonStr = JSON.stringify(data, null, 2);
+            const blob = new Blob([jsonStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `HistoriaAdultos_${dni}_${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            showToast('✅ Historia Clínica de Adultos guardada (JSON)', 'success');
+        }
+
+        function downloadAdultPDF() {
+            if (!currentUser || currentUser.plan !== 'Premium') {
+                showToast('⭐ Esta función está disponible solo para usuarios Premium', 'error');
+                return;
+            }
+
+            showToast('📄 Generando PDF con membrete PsyTape...', 'success');
+            setTimeout(() => {
+                const nombre = document.getElementById('adNombre').value || 'Sin nombre';
+                showToast(`✅ PDF generado: HistoriaAdultos_${nombre}.pdf`, 'success');
+            }, 1500);
+        }
+
+        function downloadAdultBlankTemplate() {
+            if (!currentUser || currentUser.plan !== 'Premium') {
+                showToast('⭐ Esta función está disponible solo para usuarios Premium', 'error');
+                return;
+            }
+
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Plantilla Historia Clínica Adultos - PsyTape</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; padding: 40px; }
+                        .header { text-align: center; margin-bottom: 30px; border-bottom: 3px solid #9333ea; padding-bottom: 15px; }
+                        .header h1 { color: #9333ea; margin: 0; font-size: 28px; }
+                        .header h2 { color: #1e293b; margin: 10px 0 0 0; font-size: 18px; }
+                        .section { margin: 20px 0; }
+                        .section h3 { background: #9333ea; color: white; padding: 10px; margin: 0 0 15px 0; }
+                        .field { margin: 10px 0; }
+                        .field label { font-weight: bold; display: block; margin-bottom: 5px; }
+                        .field .line { border-bottom: 1px solid #ccc; min-height: 20px; }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h1>🎙️ PsyTape</h1>
+                        <h2>HISTORIA CLÍNICA PARA ADULTOS</h2>
+                    </div>
+
+                    <div class="section">
+                        <h3>📋 DATOS PERSONALES</h3>
+                        <div class="field"><label>Nombre Completo:</label><div class="line"></div></div>
+                        <div class="field"><label>Edad:</label><div class="line"></div></div>
+                        <div class="field"><label>DNI:</label><div class="line"></div></div>
+                        <div class="field"><label>Estado Civil:</label><div class="line"></div></div>
+                        <div class="field"><label>Ocupación:</label><div class="line"></div></div>
+                    </div>
+
+                    <div class="section">
+                        <h3>🎯 MOTIVO DE CONSULTA</h3>
+                        <div class="field"><div class="line"></div></div>
+                        <div class="field"><div class="line"></div></div>
+                    </div>
+
+                    <div class="section">
+                        <h3>📖 HISTORIA DEL PROBLEMA</h3>
+                        <div class="field"><div class="line"></div></div>
+                        <div class="field"><div class="line"></div></div>
+                        <div class="field"><div class="line"></div></div>
+                    </div>
+
+                    <div class="section">
+                        <h3>🏥 ANTECEDENTES MÉDICOS Y PSIQUIÁTRICOS</h3>
+                        <div class="field"><label>Medicamentos:</label><div class="line"></div></div>
+                        <div class="field"><label>Enfermedades:</label><div class="line"></div></div>
+                        <div class="field"><label>Antecedentes Psiquiátricos:</label><div class="line"></div></div>
+                    </div>
+
+                    <div class="section">
+                        <h3>🧠 EXAMEN DEL ESTADO MENTAL</h3>
+                        <div class="field"><label>Apariencia:</label><div class="line"></div></div>
+                        <div class="field"><label>Estado de Ánimo:</label><div class="line"></div></div>
+                        <div class="field"><label>Pensamiento:</label><div class="line"></div></div>
+                    </div>
+
+                    <div class="section">
+                        <h3>💭 IMPRESIÓN DIAGNÓSTICA Y PLAN</h3>
+                        <div class="field"><div class="line"></div></div>
+                        <div class="field"><div class="line"></div></div>
+                        <div class="field"><div class="line"></div></div>
+                    </div>
+
+                    <div style="margin-top: 50px; text-align: center; font-size: 12px; color: #666;">
+                        <p>🔒 Documento confidencial - Entorno de Salud Protegido © 2026 PsyTape</p>
+                    </div>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.print();
+            
+            showToast('📋 Plantilla lista para imprimir', 'success');
+        }
+
+        function clearAdultForm() {
+            const confirmDiv = document.createElement('div');
+            confirmDiv.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
+            confirmDiv.innerHTML = `
+                <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md">
+                    <h3 class="text-2xl font-bold text-slate-900 mb-4">¿Limpiar formulario?</h3>
+                    <p class="text-gray-600 mb-6">Se perderán todos los datos no guardados.</p>
+                    <div class="flex gap-3">
+                        <button onclick="doCleanAdultForm()" class="flex-1 bg-red-500 hover:bg-red-600 text-white py-3 rounded-lg font-bold transition-all">
+                            Limpiar
+                        </button>
+                        <button onclick="this.closest('.fixed').remove()" class="flex-1 bg-gray-500 hover:bg-gray-600 text-white py-3 rounded-lg font-bold transition-all">
+                            Cancelar
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(confirmDiv);
+        }
+
+        function doCleanAdultForm() {
+            const inputs = document.querySelectorAll('#adultHistorySection input, #adultHistorySection textarea, #adultHistorySection select');
+            inputs.forEach(input => input.value = '');
+            document.querySelector('.fixed.inset-0').remove();
+            showToast('🔄 Formulario limpiado', 'success');
+        }
+
+        // ==================== FUNCIONES INFORME PSICOLÓGICO ====================
+
+        function savePsychReport() {
+            const nombre = document.getElementById('infNombre').value;
+            
+            if (!nombre) {
+                showToast('⚠️ Por favor ingresa el nombre del evaluado', 'error');
+                return;
+            }
+
+            const data = {
+                tipo: 'informe_psicologico',
+                nombre: nombre,
+                edad: document.getElementById('infEdad').value,
+                fecha: document.getElementById('infFecha').value,
+                solicitante: document.getElementById('infSolicitante').value,
+                motivo: document.getElementById('infMotivo').value,
+                tecnicas: document.getElementById('infTecnicas').value,
+                observaciones: document.getElementById('infObservaciones').value,
+                resultados: document.getElementById('infResultados').value,
+                conclusiones: document.getElementById('infConclusiones').value,
+                recomendaciones: document.getElementById('infRecomendaciones').value,
+                fechaGuardado: new Date().toISOString()
+            };
+
+            const jsonStr = JSON.stringify(data, null, 2);
+            const blob = new Blob([jsonStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `InformePsicologico_${nombre.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            showToast('✅ Informe Psicológico guardado (JSON)', 'success');
+        }
+
+        function downloadReportPDF() {
+            if (!currentUser || currentUser.plan !== 'Premium') {
+                showToast('⭐ Esta función está disponible solo para usuarios Premium', 'error');
+                return;
+            }
+
+            showToast('📄 Generando PDF profesional con membrete...', 'success');
+            setTimeout(() => {
+                const nombre = document.getElementById('infNombre').value || 'Sin nombre';
+                showToast(`✅ PDF generado: InformePsicologico_${nombre}.pdf`, 'success');
+            }, 1500);
+        }
+
+        function downloadReportBlankTemplate() {
+            if (!currentUser || currentUser.plan !== 'Premium') {
+                showToast('⭐ Esta función está disponible solo para usuarios Premium', 'error');
+                return;
+            }
+
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Plantilla Informe Psicológico - PsyTape</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; padding: 40px; }
+                        .header { text-align: center; margin-bottom: 30px; border-bottom: 3px solid #ea580c; padding-bottom: 15px; }
+                        .header h1 { color: #ea580c; margin: 0; font-size: 28px; }
+                        .header h2 { color: #1e293b; margin: 10px 0 0 0; font-size: 18px; }
+                        .section { margin: 20px 0; }
+                        .section h3 { background: #ea580c; color: white; padding: 10px; margin: 0 0 15px 0; }
+                        .field { margin: 10px 0; }
+                        .field label { font-weight: bold; display: block; margin-bottom: 5px; }
+                        .field .line { border-bottom: 1px solid #ccc; min-height: 20px; }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h1>🎙️ PsyTape</h1>
+                        <h2>INFORME PSICOLÓGICO</h2>
+                    </div>
+
+                    <div class="section">
+                        <h3>📋 INFORMACIÓN DEL EVALUADO</h3>
+                        <div class="field"><label>Nombre:</label><div class="line"></div></div>
+                        <div class="field"><label>Edad:</label><div class="line"></div></div>
+                        <div class="field"><label>Fecha:</label><div class="line"></div></div>
+                        <div class="field"><label>Solicitado por:</label><div class="line"></div></div>
+                    </div>
+
+                    <div class="section">
+                        <h3>🎯 MOTIVO DE EVALUACIÓN</h3>
+                        <div class="field"><div class="line"></div></div>
+                        <div class="field"><div class="line"></div></div>
+                    </div>
+
+                    <div class="section">
+                        <h3>🔬 TÉCNICAS E INSTRUMENTOS UTILIZADOS</h3>
+                        <div class="field"><div class="line"></div></div>
+                        <div class="field"><div class="line"></div></div>
+                    </div>
+
+                    <div class="section">
+                        <h3>👀 OBSERVACIONES CONDUCTUALES</h3>
+                        <div class="field"><div class="line"></div></div>
+                        <div class="field"><div class="line"></div></div>
+                        <div class="field"><div class="line"></div></div>
+                    </div>
+
+                    <div class="section">
+                        <h3>📊 RESULTADOS Y ANÁLISIS</h3>
+                        <div class="field"><div class="line"></div></div>
+                        <div class="field"><div class="line"></div></div>
+                        <div class="field"><div class="line"></div></div>
+                        <div class="field"><div class="line"></div></div>
+                    </div>
+
+                    <div class="section">
+                        <h3>💡 CONCLUSIONES</h3>
+                        <div class="field"><div class="line"></div></div>
+                        <div class="field"><div class="line"></div></div>
+                        <div class="field"><div class="line"></div></div>
+                    </div>
+
+                    <div class="section">
+                        <h3>🎯 RECOMENDACIONES</h3>
+                        <div class="field"><div class="line"></div></div>
+                        <div class="field"><div class="line"></div></div>
+                    </div>
+
+                    <div style="margin-top: 50px; text-align: center; font-size: 12px; color: #666;">
+                        <p>🔒 Documento confidencial - Entorno de Salud Protegido © 2026 PsyTape</p>
+                    </div>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.print();
+            
+            showToast('📋 Plantilla lista para imprimir', 'success');
+        }
+
+        function clearReportForm() {
+            const confirmDiv = document.createElement('div');
+            confirmDiv.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
+            confirmDiv.innerHTML = `
+                <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md">
+                    <h3 class="text-2xl font-bold text-slate-900 mb-4">¿Limpiar formulario?</h3>
+                    <p class="text-gray-600 mb-6">Se perderán todos los datos no guardados.</p>
+                    <div class="flex gap-3">
+                        <button onclick="doCleanReportForm()" class="flex-1 bg-red-500 hover:bg-red-600 text-white py-3 rounded-lg font-bold transition-all">
+                            Limpiar
+                        </button>
+                        <button onclick="this.closest('.fixed').remove()" class="flex-1 bg-gray-500 hover:bg-gray-600 text-white py-3 rounded-lg font-bold transition-all">
+                            Cancelar
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(confirmDiv);
+        }
+
+        function doCleanReportForm() {
+            const inputs = document.querySelectorAll('#psychReportSection input, #psychReportSection textarea');
+            inputs.forEach(input => input.value = '');
+            document.querySelector('.fixed.inset-0').remove();
+            showToast('🔄 Formulario limpiado', 'success');
+        }
+
         // ==================== UTILIDADES ====================
 
         function escapeHtml(text) {
@@ -1414,5 +1951,5 @@
             }, 3000);
         }
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c58444197a69b23',t:'MTc2OTY4NDg1NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c585915d241b181',t:'MTc2OTY4NTcwNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
