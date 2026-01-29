@@ -115,6 +115,11 @@
          <p class="text-sm text-gray-300 italic">Menos notas, más empatía. Graba, transcribe y conecta.</p>
         </div>
        </div><span id="headerDate" class="px-5 py-2 bg-white bg-opacity-10 backdrop-blur-md text-white rounded-full font-bold text-sm"></span>
+      </div><!-- BUSCADOR GLOBAL -->
+      <div class="mb-4">
+       <div class="relative"><input type="text" id="globalSearch" placeholder="🔍 Buscar paciente, DNI, legajo o fiscal..." class="w-full px-6 py-3 pr-12 rounded-xl border-2 border-gray-300 focus:border-purple-500 focus:outline-none text-gray-900 font-medium" oninput="performGlobalSearch(this.value)"> <button onclick="clearSearch()" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"> ✖ </button>
+       </div>
+       <div id="searchResults" class="hidden mt-3 bg-white rounded-xl shadow-2xl max-h-96 overflow-y-auto"></div>
       </div>
       <div class="border-t border-white border-opacity-20 pt-4">
        <h2 class="text-2xl font-bold text-white" id="sectionTitle">Panel de Control</h2>
@@ -140,7 +145,7 @@
          <div><label for="newPatientPhone" class="block text-sm font-semibold text-gray-700 mb-2">Teléfono (opcional)</label> <input type="tel" id="newPatientPhone" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none" placeholder="555-1234">
          </div>
         </div>
-        <div class="flex gap-3"><button onclick="addPatient()" class="flex-1 bg-purple-500 hover:bg-purple-600 text-white py-3 rounded-lg font-bold transition-colors"> Guardar Paciente </button> <button onclick="hideAddPatientForm()" class="flex-1 bg-gray-500 hover:bg-gray-600 text-white py-3 rounded-lg font-bold transition-colors"> ❌ Cancelar </button>
+        <div class="flex gap-3"><button onclick="addPatient()" class="flex-1 bg-purple-500 hover:bg-purple-600 text-white py-3 rounded-lg font-bold transition-colors"> ����� Guardar Paciente </button> <button onclick="hideAddPatientForm()" class="flex-1 bg-gray-500 hover:bg-gray-600 text-white py-3 rounded-lg font-bold transition-colors"> ❌ Cancelar </button>
         </div>
        </div><!-- Lista de Pacientes -->
        <div id="patientsList" class="space-y-4">
@@ -176,9 +181,10 @@
      <section id="sessionsSection" class="section-content hidden">
       <div class="bg-white rounded-2xl shadow-xl p-8">
        <h2 class="text-3xl font-bold text-gray-900 mb-8">🎙️ Nueva Sesión</h2><!-- Selector de Paciente -->
-       <div class="mb-6"><label for="sessionPatientSelect" class="block text-sm font-semibold text-gray-700 mb-2">Seleccionar Paciente *</label> <select id="sessionPatientSelect" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none"> <option value="">-- Seleccionar paciente --</option> </select>
+       <div class="mb-6"><label for="sessionPatientSelect" class="block text-sm font-semibold text-gray-700 mb-2">Seleccionar Paciente (Opcional)</label> <select id="sessionPatientSelect" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none"> <option value="">-- Seleccionar paciente --</option> </select>
        </div><!-- Selector de Legajo -->
        <div class="mb-6"><label for="sessionLegajoSelect" class="block text-sm font-semibold text-gray-700 mb-2">Seleccionar Legajo (Opcional)</label> <select id="sessionLegajoSelect" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none"> <option value="">-- Seleccionar legajo --</option> </select>
+        <p class="text-xs text-gray-500 mt-2">💡 Puedes seleccionar un paciente, un legajo, o ambos</p>
        </div><!-- Fecha de Sesión -->
        <div class="mb-6"><label for="sessionDate" class="block text-sm font-semibold text-gray-700 mb-2">Fecha de Sesión</label> <input type="date" id="sessionDate" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none">
        </div><!-- Controles de Grabación -->
@@ -190,7 +196,7 @@
         </div>
        </div><!-- Transcripción en Tiempo Real -->
        <div class="mb-6">
-        <h3 class="text-xl font-bold text-gray-900 mb-4">Transcripción en Tiempo Real</h3>
+        <h3 class="text-xl font-bold text-gray-900 mb-4">���� Transcripción en Tiempo Real</h3>
         <div id="liveTranscription" class="min-h-[300px] max-h-[400px] overflow-y-auto p-6 bg-gray-50 border-2 border-gray-300 rounded-xl">
          <p class="text-gray-400 italic">La transcripción aparecerá aquí cuando inicies la grabación...</p>
         </div>
@@ -202,7 +208,7 @@
      <section id="calendarSection" class="section-content hidden">
       <div class="bg-white rounded-2xl shadow-xl p-8">
        <div class="flex justify-between items-center mb-8">
-        <h2 class="text-3xl font-bold text-gray-900">Agenda de Sesiones</h2><button onclick="showAddAppointmentForm()" class="px-6 py-3 bg-[#10B981] hover:bg-[#059669] text-white rounded-xl font-bold transition-all transform hover:scale-105 shadow-lg"> ➕ Nueva Cita </button>
+        <h2 class="text-3xl font-bold text-gray-900">���� Agenda de Sesiones</h2><button onclick="showAddAppointmentForm()" class="px-6 py-3 bg-[#10B981] hover:bg-[#059669] text-white rounded-xl font-bold transition-all transform hover:scale-105 shadow-lg"> ➕ Nueva Cita </button>
        </div><!-- Formulario de Nueva Cita -->
        <div id="addAppointmentForm" class="hidden mb-8 p-6 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl border-2 border-blue-200">
         <h3 class="text-xl font-bold text-gray-900 mb-4">Programar Nueva Cita</h3>
@@ -266,6 +272,7 @@
         let legajos = [];
         let appointments = [];
         let reminders = [];
+        let sessions = [];
         let isRecording = false;
         let recognition = null;
         let transcriptionText = '';
@@ -288,7 +295,8 @@
                 patients: patients,
                 legajos: legajos,
                 appointments: appointments,
-                reminders: reminders
+                reminders: reminders,
+                sessions: sessions
             };
             localStorage.setItem(userKey, JSON.stringify(data));
         }
@@ -303,6 +311,7 @@
                 legajos = data.legajos || [];
                 appointments = data.appointments || [];
                 reminders = data.reminders || [];
+                sessions = data.sessions || [];
                 
                 renderPatients();
                 renderLegajos();
@@ -427,9 +436,12 @@
                 return;
             }
 
-            container.innerHTML = patients.map(patient => `
+            container.innerHTML = patients.map(patient => {
+                const patientSessions = sessions.filter(s => s.patient_id === patient.id);
+                
+                return `
                 <div class="bg-gradient-to-r from-purple-50 to-indigo-50 p-6 rounded-xl border-2 border-purple-200 card-hover">
-                    <div class="flex justify-between items-start">
+                    <div class="flex justify-between items-start mb-4">
                         <div class="flex-1">
                             <h3 class="text-xl font-bold text-gray-900 mb-2">📁 ${escapeHtml(patient.name)}</h3>
                             <div class="space-y-1">
@@ -437,14 +449,43 @@
                                 ${patient.email ? `<p class="text-gray-700"><strong>Email:</strong> ${escapeHtml(patient.email)}</p>` : ''}
                                 ${patient.phone ? `<p class="text-gray-700"><strong>Teléfono:</strong> ${escapeHtml(patient.phone)}</p>` : ''}
                                 <p class="text-gray-500 text-sm"><strong>Fecha de registro:</strong> ${new Date(patient.created_at).toLocaleDateString('es-ES')}</p>
+                                <p class="text-purple-600 font-bold mt-2">📊 ${patientSessions.length} sesiones guardadas</p>
                             </div>
                         </div>
                         <button onclick="deletePatient('${patient.id}')" class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-bold transition-colors">
                             🗑️
                         </button>
                     </div>
+                    
+                    ${patientSessions.length > 0 ? `
+                        <div class="border-t-2 border-purple-200 pt-4 mt-4">
+                            <button onclick="togglePatientSessions('${patient.id}')" class="w-full text-left px-4 py-2 bg-purple-100 hover:bg-purple-200 rounded-lg font-semibold text-purple-700 transition-colors">
+                                📂 Ver Sesiones (${patientSessions.length})
+                            </button>
+                            <div id="sessions-${patient.id}" class="hidden mt-3 space-y-2">
+                                ${patientSessions.map(session => `
+                                    <div class="bg-white p-4 rounded-lg border border-purple-300">
+                                        <div class="flex justify-between items-start">
+                                            <div class="flex-1">
+                                                <p class="font-semibold text-gray-900">📅 ${new Date(session.date).toLocaleDateString('es-ES')}</p>
+                                                ${session.legajo_name ? `<p class="text-sm text-gray-600">🗂️ Legajo: ${escapeHtml(session.legajo_name)}</p>` : ''}
+                                                <p class="text-sm text-gray-500 mt-1">${new Date(session.created_at).toLocaleString('es-ES')}</p>
+                                                ${session.transcription ? `<p class="text-sm text-gray-700 mt-2 line-clamp-2">${escapeHtml(session.transcription.substring(0, 100))}...</p>` : ''}
+                                            </div>
+                                            <div class="flex gap-2">
+                                                ${session.audio ? `<button onclick="playSessionAudio('${session.id}')" class="px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm font-bold transition-colors">🎵</button>` : ''}
+                                                <button onclick="viewSessionTranscription('${session.id}')" class="px-3 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg text-sm font-bold transition-colors">📄</button>
+                                                <button onclick="deleteSession('${session.id}')" class="px-3 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg text-sm font-bold transition-colors">🗑️</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
                 </div>
-            `).join('');
+            `;
+            }).join('');
         }
 
         function showAddPatientForm() {
@@ -502,7 +543,7 @@
                 <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md">
                     <h3 class="text-2xl font-bold text-slate-900 mb-4">¿Eliminar paciente?</h3>
                     <p class="text-gray-600 mb-2"><strong>${escapeHtml(patientData.name)}</strong></p>
-                    <p class="text-gray-600 mb-6">Esta acción eliminar toda la carpeta del paciente.</p>
+                    <p class="text-gray-600 mb-6">Esta acción eliminar�� toda la carpeta del paciente.</p>
                     <div class="flex gap-3">
                         <button onclick="confirmDeletePatient('${id}')" class="flex-1 bg-red-500 hover:bg-red-600 text-white py-3 rounded-lg font-bold transition-all">
                             Eliminar
@@ -652,8 +693,10 @@
         // ==================== GRABACIÓN DE SESIONES ====================
         async function startRecording() {
             const patientId = document.getElementById('sessionPatientSelect').value;
-            if (!patientId) {
-                showToast('⚠️ Selecciona un paciente primero');
+            const legajoId = document.getElementById('sessionLegajoSelect').value;
+            
+            if (!patientId && !legajoId) {
+                showToast('⚠️ Selecciona al menos un paciente o un legajo');
                 return;
             }
 
@@ -769,7 +812,7 @@
             const patient = patients.find(p => p.id === patientId);
             const sessionDate = document.getElementById('sessionDate').value;
 
-            showToast('Sesión guardada. Usa los botones de descarga para obtener el audio y las notas.');
+            showToast('�� Sesión guardada. Usa los botones de descarga para obtener el audio y las notas.');
         }
 
         function downloadAudio() {
@@ -779,13 +822,24 @@
             }
 
             const patientId = document.getElementById('sessionPatientSelect').value;
+            const legajoId = document.getElementById('sessionLegajoSelect').value;
             const patient = patients.find(p => p.id === patientId);
+            const legajo = legajos.find(l => l.id === legajoId);
             const sessionDate = document.getElementById('sessionDate').value || new Date().toISOString().split('T')[0];
+
+            let fileName = 'Sesion';
+            if (patient && legajo) {
+                fileName = `${sanitizeFileName(patient.name)}_${sanitizeFileName(legajo.name)}`;
+            } else if (patient) {
+                fileName = sanitizeFileName(patient.name);
+            } else if (legajo) {
+                fileName = sanitizeFileName(legajo.name);
+            }
 
             const audioUrl = URL.createObjectURL(recordedAudioBlob);
             const audioLink = document.createElement('a');
             audioLink.href = audioUrl;
-            audioLink.download = `Audio_${sanitizeFileName(patient?.name || 'Sesion')}_${sessionDate}.webm`;
+            audioLink.download = `Audio_${fileName}_${sessionDate}.webm`;
             document.body.appendChild(audioLink);
             audioLink.click();
             document.body.removeChild(audioLink);
@@ -801,15 +855,31 @@
             }
 
             const patientId = document.getElementById('sessionPatientSelect').value;
+            const legajoId = document.getElementById('sessionLegajoSelect').value;
             const patient = patients.find(p => p.id === patientId);
+            const legajo = legajos.find(l => l.id === legajoId);
             const sessionDate = document.getElementById('sessionDate').value || new Date().toISOString().split('T')[0];
 
-            const txtContent = `NOTAS DE SESIÓN\n\nPaciente: ${patient?.name || 'N/A'}\nFecha: ${sessionDate}\n\n${transcriptionText}`;
+            let fileName = 'Sesion';
+            let headerInfo = 'NOTAS DE SESIÓN\n\n';
+            
+            if (patient && legajo) {
+                fileName = `${sanitizeFileName(patient.name)}_${sanitizeFileName(legajo.name)}`;
+                headerInfo += `Paciente: ${patient.name}\nLegajo: ${legajo.name} (${legajo.number})\nFecha: ${sessionDate}\n\n`;
+            } else if (patient) {
+                fileName = sanitizeFileName(patient.name);
+                headerInfo += `Paciente: ${patient.name}\nFecha: ${sessionDate}\n\n`;
+            } else if (legajo) {
+                fileName = sanitizeFileName(legajo.name);
+                headerInfo += `Legajo: ${legajo.name} (${legajo.number})\nFecha: ${sessionDate}\n\n`;
+            }
+
+            const txtContent = headerInfo + transcriptionText;
             const txtBlob = new Blob([txtContent], { type: 'text/plain' });
             const txtUrl = URL.createObjectURL(txtBlob);
             const txtLink = document.createElement('a');
             txtLink.href = txtUrl;
-            txtLink.download = `Notas_${sanitizeFileName(patient?.name || 'Sesion')}_${sessionDate}.txt`;
+            txtLink.download = `Notas_${fileName}_${sessionDate}.txt`;
             document.body.appendChild(txtLink);
             txtLink.click();
             document.body.removeChild(txtLink);
@@ -931,7 +1001,7 @@
                     <div class="bg-gradient-to-r from-blue-50 to-cyan-50 p-6 rounded-xl border-2 border-blue-200 card-hover">
                         <div class="flex justify-between items-start">
                             <div class="flex-1">
-                                <h3 class="text-xl font-bold text-gray-900 mb-2">${titleText}</h3>
+                                <h3 class="text-xl font-bold text-gray-900 mb-2">�� ${titleText}</h3>
                                 ${apt.legajo_number ? `<p class="text-gray-700"><strong>Legajo Nº:</strong> ${escapeHtml(apt.legajo_number)}</p>` : ''}
                                 <p class="text-gray-700"><strong>Fecha:</strong> ${new Date(apt.date).toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
                                 <p class="text-gray-700"><strong>Hora:</strong> ${apt.time}</p>
@@ -947,7 +1017,7 @@
         }
 
         function deleteAppointment(id) {
-            const aptToDelete = allData.find(a => a.id === id && a.type === 'appointment');
+            const aptToDelete = appointments.find(a => a.id === id);
             if (!aptToDelete) return;
 
             const confirmDiv = document.createElement('div');
@@ -1119,6 +1189,228 @@
             showToast('🗑️ Recordatorio eliminado');
         }
 
+        // ==================== FUNCIONES DE SESIONES ====================
+        function togglePatientSessions(patientId) {
+            const sessionsDiv = document.getElementById(`sessions-${patientId}`);
+            if (sessionsDiv.classList.contains('hidden')) {
+                sessionsDiv.classList.remove('hidden');
+            } else {
+                sessionsDiv.classList.add('hidden');
+            }
+        }
+
+        function playSessionAudio(sessionId) {
+            const session = sessions.find(s => s.id === sessionId);
+            if (!session || !session.audio) {
+                showToast('⚠️ No hay audio disponible');
+                return;
+            }
+
+            // Crear modal para reproducir audio
+            const modalDiv = document.createElement('div');
+            modalDiv.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
+            modalDiv.innerHTML = `
+                <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full">
+                    <h3 class="text-2xl font-bold text-slate-900 mb-4">🎵 Reproducir Audio</h3>
+                    <p class="text-gray-600 mb-4">Sesión del ${new Date(session.date).toLocaleDateString('es-ES')}</p>
+                    <audio controls class="w-full mb-4" autoplay>
+                        <source src="${session.audio}" type="audio/webm">
+                        Tu navegador no soporta la reproducción de audio.
+                    </audio>
+                    <button onclick="this.closest('.fixed').remove()" class="w-full bg-gray-500 hover:bg-gray-600 text-white py-3 rounded-lg font-bold transition-all">
+                        Cerrar
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(modalDiv);
+        }
+
+        function viewSessionTranscription(sessionId) {
+            const session = sessions.find(s => s.id === sessionId);
+            if (!session || !session.transcription) {
+                showToast('⚠️ No hay transcripción disponible');
+                return;
+            }
+
+            // Crear modal para ver transcripción
+            const modalDiv = document.createElement('div');
+            modalDiv.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
+            modalDiv.innerHTML = `
+                <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-3xl w-full max-h-[80vh] overflow-y-auto">
+                    <h3 class="text-2xl font-bold text-slate-900 mb-4">📄 Notas de Sesión</h3>
+                    <div class="mb-4 p-4 bg-gray-50 rounded-lg">
+                        <p class="text-sm text-gray-700"><strong>Paciente:</strong> ${escapeHtml(session.patient_name)}</p>
+                        ${session.legajo_name ? `<p class="text-sm text-gray-700"><strong>Legajo:</strong> ${escapeHtml(session.legajo_name)} (${escapeHtml(session.legajo_number)})</p>` : ''}
+                        <p class="text-sm text-gray-700"><strong>Fecha:</strong> ${new Date(session.date).toLocaleDateString('es-ES')}</p>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg mb-4 max-h-96 overflow-y-auto">
+                        <p class="whitespace-pre-wrap text-gray-900">${escapeHtml(session.transcription)}</p>
+                    </div>
+                    <div class="flex gap-3">
+                        <button onclick="downloadSessionTranscription('${sessionId}')" class="flex-1 bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg font-bold transition-all">
+                            📥 Descargar
+                        </button>
+                        <button onclick="this.closest('.fixed').remove()" class="flex-1 bg-gray-500 hover:bg-gray-600 text-white py-3 rounded-lg font-bold transition-all">
+                            Cerrar
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modalDiv);
+        }
+
+        function downloadSessionTranscription(sessionId) {
+            const session = sessions.find(s => s.id === sessionId);
+            if (!session || !session.transcription) return;
+
+            let fileName = 'Sesion';
+            let headerInfo = 'NOTAS DE SESIÓN\n\n';
+            
+            if (session.patient_name && session.legajo_name) {
+                fileName = `${sanitizeFileName(session.patient_name)}_${sanitizeFileName(session.legajo_name)}`;
+                headerInfo += `Paciente: ${session.patient_name}\nLegajo: ${session.legajo_name} (${session.legajo_number})\nFecha: ${session.date}\n\n`;
+            } else if (session.patient_name) {
+                fileName = sanitizeFileName(session.patient_name);
+                headerInfo += `Paciente: ${session.patient_name}\nFecha: ${session.date}\n\n`;
+            } else if (session.legajo_name) {
+                fileName = sanitizeFileName(session.legajo_name);
+                headerInfo += `Legajo: ${session.legajo_name} (${session.legajo_number})\nFecha: ${session.date}\n\n`;
+            }
+
+            const txtContent = headerInfo + session.transcription;
+            const txtBlob = new Blob([txtContent], { type: 'text/plain' });
+            const txtUrl = URL.createObjectURL(txtBlob);
+            const txtLink = document.createElement('a');
+            txtLink.href = txtUrl;
+            txtLink.download = `Notas_${fileName}_${session.date}.txt`;
+            document.body.appendChild(txtLink);
+            txtLink.click();
+            document.body.removeChild(txtLink);
+            URL.revokeObjectURL(txtUrl);
+            
+            showToast('📄 Notas descargadas');
+        }
+
+        function deleteSession(sessionId) {
+            const confirmDiv = document.createElement('div');
+            confirmDiv.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
+            confirmDiv.innerHTML = `
+                <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md">
+                    <h3 class="text-2xl font-bold text-slate-900 mb-4">¿Eliminar sesión?</h3>
+                    <p class="text-gray-600 mb-6">Esta acción eliminará permanentemente la sesión y su contenido.</p>
+                    <div class="flex gap-3">
+                        <button onclick="confirmDeleteSession('${sessionId}')" class="flex-1 bg-red-500 hover:bg-red-600 text-white py-3 rounded-lg font-bold transition-all">
+                            Eliminar
+                        </button>
+                        <button onclick="this.closest('.fixed').remove()" class="flex-1 bg-gray-500 hover:bg-gray-600 text-white py-3 rounded-lg font-bold transition-all">
+                            Cancelar
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(confirmDiv);
+        }
+
+        function confirmDeleteSession(sessionId) {
+            sessions = sessions.filter(s => s.id !== sessionId);
+            saveLocalData();
+            renderPatients();
+            document.querySelector('.fixed.inset-0').remove();
+            showToast('🗑️ Sesión eliminada');
+        }
+
+        // ==================== BUSCADOR GLOBAL ====================
+        function performGlobalSearch(query) {
+            const searchResults = document.getElementById('searchResults');
+            
+            if (!query || query.trim().length < 2) {
+                searchResults.classList.add('hidden');
+                return;
+            }
+
+            const lowerQuery = query.toLowerCase().trim();
+            const results = [];
+
+            // Buscar en pacientes
+            patients.forEach(patient => {
+                if (patient.name.toLowerCase().includes(lowerQuery) || 
+                    patient.dni.includes(lowerQuery) ||
+                    (patient.email && patient.email.toLowerCase().includes(lowerQuery))) {
+                    results.push({
+                        type: 'patient',
+                        icon: '👤',
+                        title: patient.name,
+                        subtitle: `DNI: ${patient.dni}`,
+                        id: patient.id
+                    });
+                }
+            });
+
+            // Buscar en legajos
+            legajos.forEach(legajo => {
+                if (legajo.name.toLowerCase().includes(lowerQuery) || 
+                    legajo.number.toLowerCase().includes(lowerQuery) ||
+                    legajo.fiscal.toLowerCase().includes(lowerQuery) ||
+                    legajo.ufi.toLowerCase().includes(lowerQuery)) {
+                    results.push({
+                        type: 'legajo',
+                        icon: '📂',
+                        title: legajo.name,
+                        subtitle: `Legajo: ${legajo.number} | Fiscal: ${legajo.fiscal}`,
+                        id: legajo.id
+                    });
+                }
+            });
+
+            if (results.length === 0) {
+                searchResults.innerHTML = '<p class="p-4 text-gray-500 text-center">No se encontraron resultados</p>';
+                searchResults.classList.remove('hidden');
+                return;
+            }
+
+            searchResults.innerHTML = results.map(result => `
+                <div onclick="selectSearchResult('${result.type}', '${result.id}')" class="p-4 hover:bg-purple-50 cursor-pointer border-b border-gray-200 transition-colors">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">${result.icon}</span>
+                        <div class="flex-1">
+                            <p class="font-bold text-gray-900">${escapeHtml(result.title)}</p>
+                            <p class="text-sm text-gray-600">${escapeHtml(result.subtitle)}</p>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            
+            searchResults.classList.remove('hidden');
+        }
+
+        function selectSearchResult(type, id) {
+            clearSearch();
+            if (type === 'patient') {
+                showSection('patients');
+                setTimeout(() => {
+                    const patientCard = document.querySelector(`[onclick*="deletePatient('${id}')"]`).closest('.card-hover');
+                    if (patientCard) {
+                        patientCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        patientCard.style.animation = 'pulse 0.5s ease-in-out 2';
+                    }
+                }, 100);
+            } else if (type === 'legajo') {
+                showSection('legajos');
+                setTimeout(() => {
+                    const legajoCard = document.querySelector(`[onclick*="deleteLegajo('${id}')"]`).closest('.card-hover');
+                    if (legajoCard) {
+                        legajoCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        legajoCard.style.animation = 'pulse 0.5s ease-in-out 2';
+                    }
+                }, 100);
+            }
+        }
+
+        function clearSearch() {
+            document.getElementById('globalSearch').value = '';
+            document.getElementById('searchResults').classList.add('hidden');
+        }
+
         // ==================== UTILIDADES ====================
         function showToast(message) {
             const toast = document.createElement('div');
@@ -1145,5 +1437,5 @@
             return name.replace(/[^a-z0-9]/gi, '_').toLowerCase();
         }
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c594198650cb181',t:'MTc2OTY5NTIzMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c59542c5031b181',t:'MTc2OTY5NTk5Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
