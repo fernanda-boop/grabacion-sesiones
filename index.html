@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>🎙️ PsyTape - Gestión de Sesiones Psicológicas</title>
-  <script src="/_sdk/data_sdk.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
         body {
@@ -67,6 +66,7 @@
         }
     </style>
   <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
   <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
  </head>
  <body class="h-full bg-[#F8FAFC]"><!-- ==================== PANTALLA DE LOGIN ==================== -->
@@ -190,7 +190,7 @@
         </div>
        </div><!-- Transcripción en Tiempo Real -->
        <div class="mb-6">
-        <h3 class="text-xl font-bold text-gray-900 mb-4">ranscripción en Tiempo Real</h3>
+        <h3 class="text-xl font-bold text-gray-900 mb-4">Transcripción en Tiempo Real</h3>
         <div id="liveTranscription" class="min-h-[300px] max-h-[400px] overflow-y-auto p-6 bg-gray-50 border-2 border-gray-300 rounded-xl">
          <p class="text-gray-400 italic">La transcripción aparecerá aquí cuando inicies la grabación...</p>
         </div>
@@ -202,7 +202,7 @@
      <section id="calendarSection" class="section-content hidden">
       <div class="bg-white rounded-2xl shadow-xl p-8">
        <div class="flex justify-between items-center mb-8">
-        <h2 class="text-3xl font-bold text-gray-900">���� Agenda de Sesiones</h2><button onclick="showAddAppointmentForm()" class="px-6 py-3 bg-[#10B981] hover:bg-[#059669] text-white rounded-xl font-bold transition-all transform hover:scale-105 shadow-lg"> ➕ Nueva Cita </button>
+        <h2 class="text-3xl font-bold text-gray-900">Agenda de Sesiones</h2><button onclick="showAddAppointmentForm()" class="px-6 py-3 bg-[#10B981] hover:bg-[#059669] text-white rounded-xl font-bold transition-all transform hover:scale-105 shadow-lg"> ➕ Nueva Cita </button>
        </div><!-- Formulario de Nueva Cita -->
        <div id="addAppointmentForm" class="hidden mb-8 p-6 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl border-2 border-blue-200">
         <h3 class="text-xl font-bold text-gray-900 mb-4">Programar Nueva Cita</h3>
@@ -254,7 +254,7 @@
      </section>
     </div><!-- FOOTER -->
     <footer class="fixed bottom-0 left-280 right-0 bg-[#1E293B] py-3 px-8 border-t border-white border-opacity-10" style="margin-left: 280px;">
-     <div class="flex items-center justify-center gap-2 text-xs text-gray-300"><span>🔒</span> <span>Entorno cifrado de extremo a extremo. Cumple con normativas HIPAA y GDPR</span> <span class="mx-2">•</span> <span id="footerYear"></span>
+     <div class="flex items-center justify-center gap-2 text-xs text-gray-300"><span>���</span> <span>Entorno cifrado de extremo a extremo. Cumple con normativas HIPAA y GDPR</span> <span class="mx-2">•</span> <span id="footerYear"></span>
      </div>
     </footer>
    </main>
@@ -262,7 +262,6 @@
   <script>
         // ==================== VARIABLES GLOBALES ====================
         let currentUser = null;
-        let allData = [];
         let patients = [];
         let legajos = [];
         let appointments = [];
@@ -273,7 +272,6 @@
         let mediaRecorder = null;
         let audioChunks = [];
         let recordedAudioBlob = null;
-        let sdkInitialized = false;
         
         // Variables para recordatorios
         let reminderRecognition = null;
@@ -282,19 +280,29 @@
         let reminderTranscription = '';
         let isReminderRecording = false;
 
-        // ==================== DATA SDK ====================
-        const dataHandler = {
-            onDataChanged(data) {
-                allData = data;
-                
-                if (!currentUser) return;
-                
-                const userEmail = currentUser.email;
-                
-                patients = data.filter(item => item.type === 'patient' && item.user_email === userEmail);
-                legajos = data.filter(item => item.type === 'legajo' && item.user_email === userEmail);
-                appointments = data.filter(item => item.type === 'appointment' && item.user_email === userEmail);
-                reminders = data.filter(item => item.type === 'reminder' && item.user_email === userEmail);
+        // ==================== ALMACENAMIENTO LOCAL ====================
+        function saveLocalData() {
+            if (!currentUser) return;
+            const userKey = `psytape_data_${currentUser.email}`;
+            const data = {
+                patients: patients,
+                legajos: legajos,
+                appointments: appointments,
+                reminders: reminders
+            };
+            localStorage.setItem(userKey, JSON.stringify(data));
+        }
+
+        function loadLocalData() {
+            if (!currentUser) return;
+            const userKey = `psytape_data_${currentUser.email}`;
+            const saved = localStorage.getItem(userKey);
+            if (saved) {
+                const data = JSON.parse(saved);
+                patients = data.patients || [];
+                legajos = data.legajos || [];
+                appointments = data.appointments || [];
+                reminders = data.reminders || [];
                 
                 renderPatients();
                 renderLegajos();
@@ -303,19 +311,10 @@
                 updatePatientSelectors();
                 updateLegajoSelectors();
             }
-        };
+        }
 
         // ==================== INICIALIZACIÓN ====================
-        window.addEventListener('DOMContentLoaded', async function() {
-            if (window.dataSdk) {
-                const initResult = await window.dataSdk.init(dataHandler);
-                if (initResult.isOk) {
-                    sdkInitialized = true;
-                } else {
-                    console.error('Error al inicializar Data SDK');
-                }
-            }
-
+        window.addEventListener('DOMContentLoaded', function() {
             const savedUser = localStorage.getItem('psytape_user');
             if (savedUser) {
                 currentUser = JSON.parse(savedUser);
@@ -324,6 +323,7 @@
                 document.getElementById('sidebarUserName').textContent = currentUser.name;
                 document.getElementById('welcomeMessage').textContent = `¡Bienvenido/a, ${currentUser.name}!`;
                 updateHeaderDate();
+                loadLocalData();
                 showSection('patients');
             }
             
@@ -475,15 +475,8 @@
                 return;
             }
 
-            if (patients.length >= 999) {
-                showToast('⚠️ Has alcanzado el límite de 999 pacientes');
-                return;
-            }
-
             const newPatient = {
                 id: Date.now().toString(),
-                type: 'patient',
-                user_email: currentUser.email,
                 name: name,
                 dni: dni,
                 email: email || '',
@@ -491,21 +484,12 @@
                 created_at: new Date().toISOString()
             };
 
-            const addBtn = event.target;
-            addBtn.disabled = true;
-            addBtn.textContent = 'Guardando...';
-
-            window.dataSdk.create(newPatient).then(result => {
-                addBtn.disabled = false;
-                addBtn.innerHTML = '💾 Guardar Paciente';
-                
-                if (result.isOk) {
-                    hideAddPatientForm();
-                    showToast('✅ Paciente agregado exitosamente');
-                } else {
-                    showToast('❌ Error al guardar paciente');
-                }
-            });
+            patients.push(newPatient);
+            saveLocalData();
+            renderPatients();
+            updatePatientSelectors();
+            hideAddPatientForm();
+            showToast('✅ Paciente agregado exitosamente');
         }
 
         function deletePatient(id) {
@@ -518,7 +502,7 @@
                 <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md">
                     <h3 class="text-2xl font-bold text-slate-900 mb-4">¿Eliminar paciente?</h3>
                     <p class="text-gray-600 mb-2"><strong>${escapeHtml(patientData.name)}</strong></p>
-                    <p class="text-gray-600 mb-6">Esta acción eliminar�� toda la carpeta del paciente.</p>
+                    <p class="text-gray-600 mb-6">Esta acción eliminar toda la carpeta del paciente.</p>
                     <div class="flex gap-3">
                         <button onclick="confirmDeletePatient('${id}')" class="flex-1 bg-red-500 hover:bg-red-600 text-white py-3 rounded-lg font-bold transition-all">
                             Eliminar
@@ -533,25 +517,12 @@
         }
 
         function confirmDeletePatient(id) {
-            const patientToDelete = allData.find(p => p.id === id && p.type === 'patient');
-            if (!patientToDelete) {
-                document.querySelector('.fixed.inset-0').remove();
-                return;
-            }
-
-            const deleteBtn = document.querySelector('.fixed.inset-0 button');
-            deleteBtn.disabled = true;
-            deleteBtn.textContent = 'Eliminando...';
-
-            window.dataSdk.delete(patientToDelete).then(result => {
-                document.querySelector('.fixed.inset-0').remove();
-                
-                if (result.isOk) {
-                    showToast('🗑️ Paciente eliminado');
-                } else {
-                    showToast('❌ Error al eliminar paciente');
-                }
-            });
+            patients = patients.filter(p => p.id !== id);
+            saveLocalData();
+            renderPatients();
+            updatePatientSelectors();
+            document.querySelector('.fixed.inset-0').remove();
+            showToast('🗑️ Paciente eliminado');
         }
 
         function updatePatientSelectors() {
@@ -616,15 +587,8 @@
                 return;
             }
 
-            if (legajos.length >= 999) {
-                showToast('⚠️ Has alcanzado el límite de 999 legajos');
-                return;
-            }
-
             const newLegajo = {
                 id: Date.now().toString(),
-                type: 'legajo',
-                user_email: currentUser.email,
                 name: name,
                 number: number,
                 fiscal: fiscal,
@@ -632,21 +596,12 @@
                 created_at: new Date().toISOString()
             };
 
-            const addBtn = event.target;
-            addBtn.disabled = true;
-            addBtn.textContent = 'Guardando...';
-
-            window.dataSdk.create(newLegajo).then(result => {
-                addBtn.disabled = false;
-                addBtn.innerHTML = '💾 Guardar Legajo';
-                
-                if (result.isOk) {
-                    hideAddLegajoForm();
-                    showToast('✅ Legajo agregado exitosamente');
-                } else {
-                    showToast('❌ Error al guardar legajo');
-                }
-            });
+            legajos.push(newLegajo);
+            saveLocalData();
+            renderLegajos();
+            updateLegajoSelectors();
+            hideAddLegajoForm();
+            showToast('✅ Legajo agregado exitosamente');
         }
 
         function deleteLegajo(id) {
@@ -675,25 +630,12 @@
         }
 
         function confirmDeleteLegajo(id) {
-            const legajoToDelete = allData.find(l => l.id === id && l.type === 'legajo');
-            if (!legajoToDelete) {
-                document.querySelector('.fixed.inset-0').remove();
-                return;
-            }
-
-            const deleteBtn = document.querySelector('.fixed.inset-0 button');
-            deleteBtn.disabled = true;
-            deleteBtn.textContent = 'Eliminando...';
-
-            window.dataSdk.delete(legajoToDelete).then(result => {
-                document.querySelector('.fixed.inset-0').remove();
-                
-                if (result.isOk) {
-                    showToast('🗑️ Legajo eliminado');
-                } else {
-                    showToast('❌ Error al eliminar legajo');
-                }
-            });
+            legajos = legajos.filter(l => l.id !== id);
+            saveLocalData();
+            renderLegajos();
+            updateLegajoSelectors();
+            document.querySelector('.fixed.inset-0').remove();
+            showToast('🗑️ Legajo eliminado');
         }
 
         function updateLegajoSelectors() {
@@ -827,7 +769,7 @@
             const patient = patients.find(p => p.id === patientId);
             const sessionDate = document.getElementById('sessionDate').value;
 
-            showToast('�� Sesión guardada. Usa los botones de descarga para obtener el audio y las notas.');
+            showToast('Sesión guardada. Usa los botones de descarga para obtener el audio y las notas.');
         }
 
         function downloadAudio() {
@@ -937,18 +879,11 @@
                 return;
             }
 
-            if (appointments.length >= 999) {
-                showToast('⚠️ Has alcanzado el límite de 999 citas');
-                return;
-            }
-
             const patient = patients.find(p => p.id === patientId);
             const legajo = legajos.find(l => l.id === legajoId);
 
             const appointment = {
                 id: Date.now().toString(),
-                type: 'appointment',
-                user_email: currentUser.email,
                 patient_id: patientId || '',
                 patient_name: patient ? patient.name : '',
                 legajo_id: legajoId || '',
@@ -960,21 +895,11 @@
                 created_at: new Date().toISOString()
             };
 
-            const addBtn = event.target;
-            addBtn.disabled = true;
-            addBtn.textContent = 'Guardando...';
-
-            window.dataSdk.create(appointment).then(result => {
-                addBtn.disabled = false;
-                addBtn.innerHTML = '📅 Guardar Cita';
-                
-                if (result.isOk) {
-                    hideAddAppointmentForm();
-                    showToast('📅 Cita programada');
-                } else {
-                    showToast('❌ Error al guardar cita');
-                }
-            });
+            appointments.push(appointment);
+            saveLocalData();
+            renderAppointments();
+            hideAddAppointmentForm();
+            showToast('📅 Cita programada');
         }
 
         function renderAppointments() {
@@ -1006,7 +931,7 @@
                     <div class="bg-gradient-to-r from-blue-50 to-cyan-50 p-6 rounded-xl border-2 border-blue-200 card-hover">
                         <div class="flex justify-between items-start">
                             <div class="flex-1">
-                                <h3 class="text-xl font-bold text-gray-900 mb-2">📅 ${titleText}</h3>
+                                <h3 class="text-xl font-bold text-gray-900 mb-2">${titleText}</h3>
                                 ${apt.legajo_number ? `<p class="text-gray-700"><strong>Legajo Nº:</strong> ${escapeHtml(apt.legajo_number)}</p>` : ''}
                                 <p class="text-gray-700"><strong>Fecha:</strong> ${new Date(apt.date).toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
                                 <p class="text-gray-700"><strong>Hora:</strong> ${apt.time}</p>
@@ -1045,25 +970,11 @@
         }
 
         function confirmDeleteAppointment(id) {
-            const aptToDelete = allData.find(a => a.id === id && a.type === 'appointment');
-            if (!aptToDelete) {
-                document.querySelector('.fixed.inset-0').remove();
-                return;
-            }
-
-            const deleteBtn = document.querySelector('.fixed.inset-0 button');
-            deleteBtn.disabled = true;
-            deleteBtn.textContent = 'Eliminando...';
-
-            window.dataSdk.delete(aptToDelete).then(result => {
-                document.querySelector('.fixed.inset-0').remove();
-                
-                if (result.isOk) {
-                    showToast('🗑️ Cita eliminada');
-                } else {
-                    showToast('❌ Error al eliminar cita');
-                }
-            });
+            appointments = appointments.filter(a => a.id !== id);
+            saveLocalData();
+            renderAppointments();
+            document.querySelector('.fixed.inset-0').remove();
+            showToast('🗑️ Cita eliminada');
         }
 
         // ==================== RECORDATORIOS ====================
@@ -1155,35 +1066,18 @@
                 return;
             }
 
-            if (reminders.length >= 999) {
-                showToast('⚠️ Has alcanzado el límite de 999 recordatorios');
-                return;
-            }
-
             const reminder = {
                 id: Date.now().toString(),
-                type: 'reminder',
-                user_email: currentUser.email,
                 text: text,
                 created_at: new Date().toISOString(),
                 completed: false
             };
 
-            const saveBtn = event.target;
-            saveBtn.disabled = true;
-            saveBtn.textContent = 'Guardando...';
-
-            window.dataSdk.create(reminder).then(result => {
-                saveBtn.disabled = false;
-                saveBtn.innerHTML = '💾 Guardar Recordatorio';
-                
-                if (result.isOk) {
-                    hideAddReminderForm();
-                    showToast('✅ Recordatorio guardado');
-                } else {
-                    showToast('❌ Error al guardar recordatorio');
-                }
-            });
+            reminders.push(reminder);
+            saveLocalData();
+            renderReminders();
+            hideAddReminderForm();
+            showToast('✅ Recordatorio guardado');
         }
 
         function renderReminders() {
@@ -1210,29 +1104,19 @@
         }
 
         function toggleReminder(id) {
-            const reminder = allData.find(r => r.id === id && r.type === 'reminder');
-            if (!reminder) return;
-
-            const updatedReminder = { ...reminder, completed: !reminder.completed };
-            
-            window.dataSdk.update(updatedReminder).then(result => {
-                if (!result.isOk) {
-                    showToast('❌ Error al actualizar recordatorio');
-                }
-            });
+            const reminder = reminders.find(r => r.id === id);
+            if (reminder) {
+                reminder.completed = !reminder.completed;
+                saveLocalData();
+                renderReminders();
+            }
         }
 
         function deleteReminder(id) {
-            const remToDelete = allData.find(r => r.id === id && r.type === 'reminder');
-            if (!remToDelete) return;
-
-            window.dataSdk.delete(remToDelete).then(result => {
-                if (result.isOk) {
-                    showToast('🗑️ Recordatorio eliminado');
-                } else {
-                    showToast('❌ Error al eliminar recordatorio');
-                }
-            });
+            reminders = reminders.filter(r => r.id !== id);
+            saveLocalData();
+            renderReminders();
+            showToast('🗑️ Recordatorio eliminado');
         }
 
         // ==================== UTILIDADES ====================
@@ -1261,5 +1145,5 @@
             return name.replace(/[^a-z0-9]/gi, '_').toLowerCase();
         }
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c59391e71d0b181',t:'MTc2OTY5NDg4My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c594198650cb181',t:'MTc2OTY5NTIzMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
