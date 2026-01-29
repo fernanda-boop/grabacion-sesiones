@@ -97,7 +97,7 @@
       </div>
      </div>
     </div>
-    <nav class="p-4"><button onclick="showSection('patients')" class="nav-btn w-full text-left px-4 py-3 rounded-lg font-semibold text-gray-300 hover:bg-white hover:bg-opacity-10 hover:text-white transition-colors mb-2" id="navPatients"> 👥 Pacientes </button> <button onclick="showSection('sessions')" class="nav-btn w-full text-left px-4 py-3 rounded-lg font-semibold text-gray-300 hover:bg-white hover:bg-opacity-10 hover:text-white transition-colors mb-2" id="navSessions"> 🎙️ Nueva Sesión </button> <button onclick="showSection('calendar')" class="nav-btn w-full text-left px-4 py-3 rounded-lg font-semibold text-gray-300 hover:bg-white hover:bg-opacity-10 hover:text-white transition-colors mb-2" id="navCalendar"> 📅 Agenda </button> <button onclick="showSection('reminders')" class="nav-btn w-full text-left px-4 py-3 rounded-lg font-semibold text-gray-300 hover:bg-white hover:bg-opacity-10 hover:text-white transition-colors mb-2" id="navReminders"> ✅ Recordatorios </button>
+    <nav class="p-4"><button onclick="showSection('patients')" class="nav-btn w-full text-left px-4 py-3 rounded-lg font-semibold text-gray-300 hover:bg-white hover:bg-opacity-10 hover:text-white transition-colors mb-2" id="navPatients"> 👥 Pacientes </button> <button onclick="showSection('legajos')" class="nav-btn w-full text-left px-4 py-3 rounded-lg font-semibold text-gray-300 hover:bg-white hover:bg-opacity-10 hover:text-white transition-colors mb-2" id="navLegajos"> 📂 Legajos </button> <button onclick="showSection('sessions')" class="nav-btn w-full text-left px-4 py-3 rounded-lg font-semibold text-gray-300 hover:bg-white hover:bg-opacity-10 hover:text-white transition-colors mb-2" id="navSessions"> 🎙️ Nueva Sesión </button> <button onclick="showSection('calendar')" class="nav-btn w-full text-left px-4 py-3 rounded-lg font-semibold text-gray-300 hover:bg-white hover:bg-opacity-10 hover:text-white transition-colors mb-2" id="navCalendar"> 📅 Agenda </button> <button onclick="showSection('reminders')" class="nav-btn w-full text-left px-4 py-3 rounded-lg font-semibold text-gray-300 hover:bg-white hover:bg-opacity-10 hover:text-white transition-colors mb-2" id="navReminders"> ✅ Recordatorios </button>
     </nav>
     <div class="absolute bottom-0 left-0 right-0 p-4 border-t-2 border-white border-opacity-20"><button onclick="logout()" class="w-full px-4 py-3 bg-[#EF4444] hover:bg-[#DC2626] text-white rounded-lg font-bold transition-colors"> 🚪 Cerrar Sesión </button>
     </div>
@@ -140,11 +140,36 @@
          <div><label for="newPatientPhone" class="block text-sm font-semibold text-gray-700 mb-2">Teléfono (opcional)</label> <input type="tel" id="newPatientPhone" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none" placeholder="555-1234">
          </div>
         </div>
-        <div class="flex gap-3"><button onclick="addPatient()" class="flex-1 bg-purple-500 hover:bg-purple-600 text-white py-3 rounded-lg font-bold transition-colors"> 💾 Guardar Paciente </button> <button onclick="hideAddPatientForm()" class="flex-1 bg-gray-500 hover:bg-gray-600 text-white py-3 rounded-lg font-bold transition-colors"> ❌ Cancelar </button>
+        <div class="flex gap-3"><button onclick="addPatient()" class="flex-1 bg-purple-500 hover:bg-purple-600 text-white py-3 rounded-lg font-bold transition-colors"> Guardar Paciente </button> <button onclick="hideAddPatientForm()" class="flex-1 bg-gray-500 hover:bg-gray-600 text-white py-3 rounded-lg font-bold transition-colors"> ❌ Cancelar </button>
         </div>
        </div><!-- Lista de Pacientes -->
        <div id="patientsList" class="space-y-4">
         <p class="text-gray-500 text-center py-8">Cargando pacientes...</p>
+       </div>
+      </div>
+     </section><!-- ==================== SECCIÓN: LEGAJOS ==================== -->
+     <section id="legajosSection" class="section-content hidden">
+      <div class="bg-white rounded-2xl shadow-xl p-8">
+       <div class="flex justify-between items-center mb-8">
+        <h2 class="text-3xl font-bold text-gray-900">📂 Gestión de Legajos</h2><button onclick="showAddLegajoForm()" class="px-6 py-3 bg-[#10B981] hover:bg-[#059669] text-white rounded-xl font-bold transition-all transform hover:scale-105 shadow-lg"> ➕ Nuevo Legajo </button>
+       </div><!-- Formulario de Nuevo Legajo -->
+       <div id="addLegajoForm" class="hidden mb-8 p-6 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl border-2 border-blue-200">
+        <h3 class="text-xl font-bold text-gray-900 mb-4">Agregar Nuevo Legajo</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+         <div><label for="newLegajoName" class="block text-sm font-semibold text-gray-700 mb-2">Nombre *</label> <input type="text" id="newLegajoName" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none" placeholder="Nombre del caso">
+         </div>
+         <div><label for="newLegajoNumber" class="block text-sm font-semibold text-gray-700 mb-2">Nº Legajo *</label> <input type="text" id="newLegajoNumber" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none" placeholder="12345/2024">
+         </div>
+         <div><label for="newLegajoFiscal" class="block text-sm font-semibold text-gray-700 mb-2">Fiscal *</label> <input type="text" id="newLegajoFiscal" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none" placeholder="Nombre del fiscal">
+         </div>
+         <div><label for="newLegajoUFI" class="block text-sm font-semibold text-gray-700 mb-2">UFI *</label> <input type="text" id="newLegajoUFI" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none" placeholder="UFI Nº">
+         </div>
+        </div>
+        <div class="flex gap-3"><button onclick="addLegajo()" class="flex-1 bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-lg font-bold transition-colors"> 💾 Guardar Legajo </button> <button onclick="hideAddLegajoForm()" class="flex-1 bg-gray-500 hover:bg-gray-600 text-white py-3 rounded-lg font-bold transition-colors"> ❌ Cancelar </button>
+        </div>
+       </div><!-- Lista de Legajos -->
+       <div id="legajosList" class="space-y-4">
+        <p class="text-gray-500 text-center py-8">Cargando legajos...</p>
        </div>
       </div>
      </section><!-- ==================== SECCIÓN: NUEVA SESIÓN ==================== -->
@@ -152,6 +177,8 @@
       <div class="bg-white rounded-2xl shadow-xl p-8">
        <h2 class="text-3xl font-bold text-gray-900 mb-8">🎙️ Nueva Sesión</h2><!-- Selector de Paciente -->
        <div class="mb-6"><label for="sessionPatientSelect" class="block text-sm font-semibold text-gray-700 mb-2">Seleccionar Paciente *</label> <select id="sessionPatientSelect" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none"> <option value="">-- Seleccionar paciente --</option> </select>
+       </div><!-- Selector de Legajo -->
+       <div class="mb-6"><label for="sessionLegajoSelect" class="block text-sm font-semibold text-gray-700 mb-2">Seleccionar Legajo (Opcional)</label> <select id="sessionLegajoSelect" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none"> <option value="">-- Seleccionar legajo --</option> </select>
        </div><!-- Fecha de Sesión -->
        <div class="mb-6"><label for="sessionDate" class="block text-sm font-semibold text-gray-700 mb-2">Fecha de Sesión</label> <input type="date" id="sessionDate" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none">
        </div><!-- Controles de Grabación -->
@@ -163,7 +190,7 @@
         </div>
        </div><!-- Transcripción en Tiempo Real -->
        <div class="mb-6">
-        <h3 class="text-xl font-bold text-gray-900 mb-4">📝 Transcripción en Tiempo Real</h3>
+        <h3 class="text-xl font-bold text-gray-900 mb-4">ranscripción en Tiempo Real</h3>
         <div id="liveTranscription" class="min-h-[300px] max-h-[400px] overflow-y-auto p-6 bg-gray-50 border-2 border-gray-300 rounded-xl">
          <p class="text-gray-400 italic">La transcripción aparecerá aquí cuando inicies la grabación...</p>
         </div>
@@ -175,12 +202,14 @@
      <section id="calendarSection" class="section-content hidden">
       <div class="bg-white rounded-2xl shadow-xl p-8">
        <div class="flex justify-between items-center mb-8">
-        <h2 class="text-3xl font-bold text-gray-900">📅 Agenda de Sesiones</h2><button onclick="showAddAppointmentForm()" class="px-6 py-3 bg-[#10B981] hover:bg-[#059669] text-white rounded-xl font-bold transition-all transform hover:scale-105 shadow-lg"> ➕ Nueva Cita </button>
+        <h2 class="text-3xl font-bold text-gray-900">���� Agenda de Sesiones</h2><button onclick="showAddAppointmentForm()" class="px-6 py-3 bg-[#10B981] hover:bg-[#059669] text-white rounded-xl font-bold transition-all transform hover:scale-105 shadow-lg"> ➕ Nueva Cita </button>
        </div><!-- Formulario de Nueva Cita -->
        <div id="addAppointmentForm" class="hidden mb-8 p-6 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl border-2 border-blue-200">
         <h3 class="text-xl font-bold text-gray-900 mb-4">Programar Nueva Cita</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-         <div><label for="appointmentPatientSelect" class="block text-sm font-semibold text-gray-700 mb-2">Paciente *</label> <select id="appointmentPatientSelect" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none"> <option value="">-- Seleccionar paciente --</option> </select>
+         <div><label for="appointmentPatientSelect" class="block text-sm font-semibold text-gray-700 mb-2">Paciente</label> <select id="appointmentPatientSelect" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none"> <option value="">-- Seleccionar paciente --</option> </select>
+         </div>
+         <div><label for="appointmentLegajoSelect" class="block text-sm font-semibold text-gray-700 mb-2">Legajo</label> <select id="appointmentLegajoSelect" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none"> <option value="">-- Seleccionar legajo --</option> </select>
          </div>
          <div><label for="appointmentDate" class="block text-sm font-semibold text-gray-700 mb-2">Fecha *</label> <input type="date" id="appointmentDate" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none">
          </div>
@@ -233,7 +262,9 @@
   <script>
         // ==================== VARIABLES GLOBALES ====================
         let currentUser = null;
+        let allData = [];
         let patients = [];
+        let legajos = [];
         let appointments = [];
         let reminders = [];
         let isRecording = false;
@@ -242,6 +273,7 @@
         let mediaRecorder = null;
         let audioChunks = [];
         let recordedAudioBlob = null;
+        let sdkInitialized = false;
         
         // Variables para recordatorios
         let reminderRecognition = null;
@@ -250,30 +282,56 @@
         let reminderTranscription = '';
         let isReminderRecording = false;
 
-        // ==================== INICIALIZACIÓN DATA SDK ====================
+        // ==================== DATA SDK ====================
         const dataHandler = {
             onDataChanged(data) {
-                patients = data.map(record => ({
-                    id: record.__backendId,
-                    name: record.name,
-                    dni: record.dni,
-                    email: record.email,
-                    phone: record.phone || '',
-                    created_at: record.created_at
-                }));
+                allData = data;
+                
+                if (!currentUser) return;
+                
+                const userEmail = currentUser.email;
+                
+                patients = data.filter(item => item.type === 'patient' && item.user_email === userEmail);
+                legajos = data.filter(item => item.type === 'legajo' && item.user_email === userEmail);
+                appointments = data.filter(item => item.type === 'appointment' && item.user_email === userEmail);
+                reminders = data.filter(item => item.type === 'reminder' && item.user_email === userEmail);
+                
                 renderPatients();
+                renderLegajos();
+                renderAppointments();
+                renderReminders();
                 updatePatientSelectors();
+                updateLegajoSelectors();
             }
         };
 
-        (async function initializeDataSDK() {
+        // ==================== INICIALIZACIÓN ====================
+        window.addEventListener('DOMContentLoaded', async function() {
             if (window.dataSdk) {
-                const result = await window.dataSdk.init(dataHandler);
-                if (!result.isOk) {
-                    console.error('Error inicializando Data SDK');
+                const initResult = await window.dataSdk.init(dataHandler);
+                if (initResult.isOk) {
+                    sdkInitialized = true;
+                } else {
+                    console.error('Error al inicializar Data SDK');
                 }
             }
-        })();
+
+            const savedUser = localStorage.getItem('psytape_user');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('mainApp').classList.remove('hidden');
+                document.getElementById('sidebarUserName').textContent = currentUser.name;
+                document.getElementById('welcomeMessage').textContent = `¡Bienvenido/a, ${currentUser.name}!`;
+                updateHeaderDate();
+                showSection('patients');
+            }
+            
+            document.getElementById('footerYear').textContent = `© ${new Date().getFullYear()} PsyTape`;
+            
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('sessionDate').value = today;
+        });
 
         // ==================== SISTEMA DE LOGIN ====================
         function login() {
@@ -312,26 +370,6 @@
             showToast('👋 Sesión cerrada');
         }
 
-        window.addEventListener('DOMContentLoaded', function() {
-            const savedUser = localStorage.getItem('psytape_user');
-            if (savedUser) {
-                currentUser = JSON.parse(savedUser);
-                document.getElementById('loginScreen').classList.add('hidden');
-                document.getElementById('mainApp').classList.remove('hidden');
-                document.getElementById('sidebarUserName').textContent = currentUser.name;
-                document.getElementById('welcomeMessage').textContent = `¡Bienvenido/a, ${currentUser.name}!`;
-                loadLocalData();
-                updateHeaderDate();
-                showSection('patients');
-            }
-            
-            document.getElementById('footerYear').textContent = `© ${new Date().getFullYear()} PsyTape`;
-            
-            // Set fecha actual
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('sessionDate').value = today;
-        });
-
         // ==================== NAVEGACIÓN ====================
         function showSection(sectionName) {
             document.querySelectorAll('.section-content').forEach(section => {
@@ -345,6 +383,7 @@
 
             const sectionMap = {
                 'patients': { id: 'patientsSection', title: 'Gestión de Pacientes', subtitle: 'Administra la información de tus pacientes', nav: 'navPatients' },
+                'legajos': { id: 'legajosSection', title: 'Gestión de Legajos', subtitle: 'Administra los legajos judiciales', nav: 'navLegajos' },
                 'sessions': { id: 'sessionsSection', title: 'Nueva Sesión', subtitle: 'Graba y transcribe sesiones en tiempo real', nav: 'navSessions' },
                 'calendar': { id: 'calendarSection', title: 'Agenda de Sesiones', subtitle: 'Programa y gestiona tus citas', nav: 'navCalendar' },
                 'reminders': { id: 'remindersSection', title: 'Recordatorios y Tareas', subtitle: 'Gestiona tus tareas pendientes', nav: 'navReminders' }
@@ -359,13 +398,18 @@
 
             if (sectionName === 'sessions') {
                 updatePatientSelectors();
+                updateLegajoSelectors();
             }
             if (sectionName === 'calendar') {
                 updatePatientSelectors();
+                updateLegajoSelectors();
                 renderAppointments();
             }
             if (sectionName === 'reminders') {
                 renderReminders();
+            }
+            if (sectionName === 'legajos') {
+                renderLegajos();
             }
         }
 
@@ -415,7 +459,7 @@
             document.getElementById('newPatientPhone').value = '';
         }
 
-        async function addPatient() {
+        function addPatient() {
             const name = document.getElementById('newPatientName').value.trim();
             const dni = document.getElementById('newPatientDNI').value.trim();
             const email = document.getElementById('newPatientEmail').value.trim();
@@ -432,26 +476,36 @@
             }
 
             if (patients.length >= 999) {
-                showToast('⚠️ Has alcanzado el límite máximo de 999 pacientes');
+                showToast('⚠️ Has alcanzado el límite de 999 pacientes');
                 return;
             }
 
             const newPatient = {
+                id: Date.now().toString(),
+                type: 'patient',
+                user_email: currentUser.email,
                 name: name,
                 dni: dni,
-                email: email,
-                phone: phone,
+                email: email || '',
+                phone: phone || '',
                 created_at: new Date().toISOString()
             };
 
-            const result = await window.dataSdk.create(newPatient);
-            
-            if (result.isOk) {
-                hideAddPatientForm();
-                showToast('✅ Paciente agregado exitosamente');
-            } else {
-                showToast('❌ Error al agregar paciente');
-            }
+            const addBtn = event.target;
+            addBtn.disabled = true;
+            addBtn.textContent = 'Guardando...';
+
+            window.dataSdk.create(newPatient).then(result => {
+                addBtn.disabled = false;
+                addBtn.innerHTML = '💾 Guardar Paciente';
+                
+                if (result.isOk) {
+                    hideAddPatientForm();
+                    showToast('✅ Paciente agregado exitosamente');
+                } else {
+                    showToast('❌ Error al guardar paciente');
+                }
+            });
         }
 
         function deletePatient(id) {
@@ -464,7 +518,7 @@
                 <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md">
                     <h3 class="text-2xl font-bold text-slate-900 mb-4">¿Eliminar paciente?</h3>
                     <p class="text-gray-600 mb-2"><strong>${escapeHtml(patientData.name)}</strong></p>
-                    <p class="text-gray-600 mb-6">Esta acción eliminará toda la carpeta del paciente.</p>
+                    <p class="text-gray-600 mb-6">Esta acción eliminar�� toda la carpeta del paciente.</p>
                     <div class="flex gap-3">
                         <button onclick="confirmDeletePatient('${id}')" class="flex-1 bg-red-500 hover:bg-red-600 text-white py-3 rounded-lg font-bold transition-all">
                             Eliminar
@@ -478,26 +532,26 @@
             document.body.appendChild(confirmDiv);
         }
 
-        async function confirmDeletePatient(id) {
-            const patientData = patients.find(p => p.id === id);
-            if (!patientData) return;
-
-            const result = await window.dataSdk.delete({
-                __backendId: id,
-                name: patientData.name,
-                dni: patientData.dni,
-                email: patientData.email,
-                phone: patientData.phone,
-                created_at: patientData.created_at
-            });
-
-            if (result.isOk) {
+        function confirmDeletePatient(id) {
+            const patientToDelete = allData.find(p => p.id === id && p.type === 'patient');
+            if (!patientToDelete) {
                 document.querySelector('.fixed.inset-0').remove();
-                showToast('🗑️ Paciente eliminado');
-            } else {
-                document.querySelector('.fixed.inset-0').remove();
-                showToast('❌ Error al eliminar paciente');
+                return;
             }
+
+            const deleteBtn = document.querySelector('.fixed.inset-0 button');
+            deleteBtn.disabled = true;
+            deleteBtn.textContent = 'Eliminando...';
+
+            window.dataSdk.delete(patientToDelete).then(result => {
+                document.querySelector('.fixed.inset-0').remove();
+                
+                if (result.isOk) {
+                    showToast('🗑️ Paciente eliminado');
+                } else {
+                    showToast('❌ Error al eliminar paciente');
+                }
+            });
         }
 
         function updatePatientSelectors() {
@@ -506,6 +560,148 @@
             
             const options = '<option value="">-- Seleccionar paciente --</option>' +
                 patients.map(p => `<option value="${p.id}">${escapeHtml(p.name)} (${escapeHtml(p.dni)})</option>`).join('');
+            
+            if (sessionSelect) sessionSelect.innerHTML = options;
+            if (appointmentSelect) appointmentSelect.innerHTML = options;
+        }
+
+        // ==================== GESTIÓN DE LEGAJOS ====================
+        function renderLegajos() {
+            const container = document.getElementById('legajosList');
+            if (legajos.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-center py-8">No hay legajos registrados. Agrega tu primer legajo.</p>';
+                return;
+            }
+
+            container.innerHTML = legajos.map(legajo => `
+                <div class="bg-gradient-to-r from-blue-50 to-cyan-50 p-6 rounded-xl border-2 border-blue-200 card-hover">
+                    <div class="flex justify-between items-start">
+                        <div class="flex-1">
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">📂 ${escapeHtml(legajo.name)}</h3>
+                            <div class="space-y-1">
+                                <p class="text-gray-700"><strong>Nº Legajo:</strong> ${escapeHtml(legajo.number)}</p>
+                                <p class="text-gray-700"><strong>Fiscal:</strong> ${escapeHtml(legajo.fiscal)}</p>
+                                <p class="text-gray-700"><strong>UFI:</strong> ${escapeHtml(legajo.ufi)}</p>
+                                <p class="text-gray-500 text-sm"><strong>Fecha de registro:</strong> ${new Date(legajo.created_at).toLocaleDateString('es-ES')}</p>
+                            </div>
+                        </div>
+                        <button onclick="deleteLegajo('${legajo.id}')" class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-bold transition-colors">
+                            🗑️
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showAddLegajoForm() {
+            document.getElementById('addLegajoForm').classList.remove('hidden');
+        }
+
+        function hideAddLegajoForm() {
+            document.getElementById('addLegajoForm').classList.add('hidden');
+            document.getElementById('newLegajoName').value = '';
+            document.getElementById('newLegajoNumber').value = '';
+            document.getElementById('newLegajoFiscal').value = '';
+            document.getElementById('newLegajoUFI').value = '';
+        }
+
+        function addLegajo() {
+            const name = document.getElementById('newLegajoName').value.trim();
+            const number = document.getElementById('newLegajoNumber').value.trim();
+            const fiscal = document.getElementById('newLegajoFiscal').value.trim();
+            const ufi = document.getElementById('newLegajoUFI').value.trim();
+
+            if (!name || !number || !fiscal || !ufi) {
+                showToast('⚠️ Completa todos los campos obligatorios');
+                return;
+            }
+
+            if (legajos.length >= 999) {
+                showToast('⚠️ Has alcanzado el límite de 999 legajos');
+                return;
+            }
+
+            const newLegajo = {
+                id: Date.now().toString(),
+                type: 'legajo',
+                user_email: currentUser.email,
+                name: name,
+                number: number,
+                fiscal: fiscal,
+                ufi: ufi,
+                created_at: new Date().toISOString()
+            };
+
+            const addBtn = event.target;
+            addBtn.disabled = true;
+            addBtn.textContent = 'Guardando...';
+
+            window.dataSdk.create(newLegajo).then(result => {
+                addBtn.disabled = false;
+                addBtn.innerHTML = '💾 Guardar Legajo';
+                
+                if (result.isOk) {
+                    hideAddLegajoForm();
+                    showToast('✅ Legajo agregado exitosamente');
+                } else {
+                    showToast('❌ Error al guardar legajo');
+                }
+            });
+        }
+
+        function deleteLegajo(id) {
+            const legajoData = legajos.find(l => l.id === id);
+            if (!legajoData) return;
+
+            const confirmDiv = document.createElement('div');
+            confirmDiv.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
+            confirmDiv.innerHTML = `
+                <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md">
+                    <h3 class="text-2xl font-bold text-slate-900 mb-4">¿Eliminar legajo?</h3>
+                    <p class="text-gray-600 mb-2"><strong>${escapeHtml(legajoData.name)}</strong></p>
+                    <p class="text-gray-600 mb-2">Nº Legajo: ${escapeHtml(legajoData.number)}</p>
+                    <p class="text-gray-600 mb-6">Esta acción eliminará todo el registro del legajo.</p>
+                    <div class="flex gap-3">
+                        <button onclick="confirmDeleteLegajo('${id}')" class="flex-1 bg-red-500 hover:bg-red-600 text-white py-3 rounded-lg font-bold transition-all">
+                            Eliminar
+                        </button>
+                        <button onclick="this.closest('.fixed').remove()" class="flex-1 bg-gray-500 hover:bg-gray-600 text-white py-3 rounded-lg font-bold transition-all">
+                            Cancelar
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(confirmDiv);
+        }
+
+        function confirmDeleteLegajo(id) {
+            const legajoToDelete = allData.find(l => l.id === id && l.type === 'legajo');
+            if (!legajoToDelete) {
+                document.querySelector('.fixed.inset-0').remove();
+                return;
+            }
+
+            const deleteBtn = document.querySelector('.fixed.inset-0 button');
+            deleteBtn.disabled = true;
+            deleteBtn.textContent = 'Eliminando...';
+
+            window.dataSdk.delete(legajoToDelete).then(result => {
+                document.querySelector('.fixed.inset-0').remove();
+                
+                if (result.isOk) {
+                    showToast('🗑️ Legajo eliminado');
+                } else {
+                    showToast('❌ Error al eliminar legajo');
+                }
+            });
+        }
+
+        function updateLegajoSelectors() {
+            const sessionSelect = document.getElementById('sessionLegajoSelect');
+            const appointmentSelect = document.getElementById('appointmentLegajoSelect');
+            
+            const options = '<option value="">-- Seleccionar legajo --</option>' +
+                legajos.map(l => `<option value="${l.id}">${escapeHtml(l.name)} (${escapeHtml(l.number)})</option>`).join('');
             
             if (sessionSelect) sessionSelect.innerHTML = options;
             if (appointmentSelect) appointmentSelect.innerHTML = options;
@@ -631,7 +827,7 @@
             const patient = patients.find(p => p.id === patientId);
             const sessionDate = document.getElementById('sessionDate').value;
 
-            showToast('💾 Sesión guardada. Usa los botones de descarga para obtener el audio y las notas.');
+            showToast('�� Sesión guardada. Usa los botones de descarga para obtener el audio y las notas.');
         }
 
         function downloadAudio() {
@@ -718,6 +914,7 @@
         function hideAddAppointmentForm() {
             document.getElementById('addAppointmentForm').classList.add('hidden');
             document.getElementById('appointmentPatientSelect').value = '';
+            document.getElementById('appointmentLegajoSelect').value = '';
             document.getElementById('appointmentDate').value = '';
             document.getElementById('appointmentTime').value = '';
             document.getElementById('appointmentDuration').value = '60';
@@ -725,31 +922,59 @@
 
         function addAppointment() {
             const patientId = document.getElementById('appointmentPatientSelect').value;
+            const legajoId = document.getElementById('appointmentLegajoSelect').value;
             const date = document.getElementById('appointmentDate').value;
             const time = document.getElementById('appointmentTime').value;
             const duration = document.getElementById('appointmentDuration').value;
 
-            if (!patientId || !date || !time) {
-                showToast('⚠️ Completa todos los campos obligatorios');
+            if (!date || !time) {
+                showToast('⚠️ Completa fecha y hora');
+                return;
+            }
+
+            if (!patientId && !legajoId) {
+                showToast('⚠️ Selecciona al menos un paciente o legajo');
+                return;
+            }
+
+            if (appointments.length >= 999) {
+                showToast('⚠️ Has alcanzado el límite de 999 citas');
                 return;
             }
 
             const patient = patients.find(p => p.id === patientId);
+            const legajo = legajos.find(l => l.id === legajoId);
+
             const appointment = {
                 id: Date.now().toString(),
-                patientId: patientId,
-                patientName: patient.name,
+                type: 'appointment',
+                user_email: currentUser.email,
+                patient_id: patientId || '',
+                patient_name: patient ? patient.name : '',
+                legajo_id: legajoId || '',
+                legajo_name: legajo ? legajo.name : '',
+                legajo_number: legajo ? legajo.number : '',
                 date: date,
                 time: time,
-                duration: duration || '60'
+                duration: duration || '60',
+                created_at: new Date().toISOString()
             };
 
-            appointments.push(appointment);
-            localStorage.setItem('psytape_appointments', JSON.stringify(appointments));
-            
-            hideAddAppointmentForm();
-            renderAppointments();
-            showToast('📅 Cita programada');
+            const addBtn = event.target;
+            addBtn.disabled = true;
+            addBtn.textContent = 'Guardando...';
+
+            window.dataSdk.create(appointment).then(result => {
+                addBtn.disabled = false;
+                addBtn.innerHTML = '📅 Guardar Cita';
+                
+                if (result.isOk) {
+                    hideAddAppointmentForm();
+                    showToast('📅 Cita programada');
+                } else {
+                    showToast('❌ Error al guardar cita');
+                }
+            });
         }
 
         function renderAppointments() {
@@ -765,28 +990,80 @@
                 return dateA - dateB;
             });
 
-            container.innerHTML = sortedAppointments.map(apt => `
-                <div class="bg-gradient-to-r from-blue-50 to-cyan-50 p-6 rounded-xl border-2 border-blue-200 card-hover">
-                    <div class="flex justify-between items-start">
-                        <div class="flex-1">
-                            <h3 class="text-xl font-bold text-gray-900 mb-2">📅 ${escapeHtml(apt.patientName)}</h3>
-                            <p class="text-gray-700"><strong>Fecha:</strong> ${new Date(apt.date).toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
-                            <p class="text-gray-700"><strong>Hora:</strong> ${apt.time}</p>
-                            <p class="text-gray-700"><strong>Duración:</strong> ${apt.duration} minutos</p>
+            container.innerHTML = sortedAppointments.map(apt => {
+                let titleText = '';
+                if (apt.patient_name && apt.legajo_name) {
+                    titleText = `${escapeHtml(apt.patient_name)} - ${escapeHtml(apt.legajo_name)}`;
+                } else if (apt.patient_name) {
+                    titleText = escapeHtml(apt.patient_name);
+                } else if (apt.legajo_name) {
+                    titleText = escapeHtml(apt.legajo_name);
+                } else {
+                    titleText = 'Cita';
+                }
+
+                return `
+                    <div class="bg-gradient-to-r from-blue-50 to-cyan-50 p-6 rounded-xl border-2 border-blue-200 card-hover">
+                        <div class="flex justify-between items-start">
+                            <div class="flex-1">
+                                <h3 class="text-xl font-bold text-gray-900 mb-2">📅 ${titleText}</h3>
+                                ${apt.legajo_number ? `<p class="text-gray-700"><strong>Legajo Nº:</strong> ${escapeHtml(apt.legajo_number)}</p>` : ''}
+                                <p class="text-gray-700"><strong>Fecha:</strong> ${new Date(apt.date).toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                                <p class="text-gray-700"><strong>Hora:</strong> ${apt.time}</p>
+                                <p class="text-gray-700"><strong>Duración:</strong> ${apt.duration} minutos</p>
+                            </div>
+                            <button onclick="deleteAppointment('${apt.id}')" class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-bold transition-colors">
+                                🗑️
+                            </button>
                         </div>
-                        <button onclick="deleteAppointment('${apt.id}')" class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-bold transition-colors">
-                            🗑️
-                        </button>
                     </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
         function deleteAppointment(id) {
-            appointments = appointments.filter(a => a.id !== id);
-            localStorage.setItem('psytape_appointments', JSON.stringify(appointments));
-            renderAppointments();
-            showToast('🗑️ Cita eliminada');
+            const aptToDelete = allData.find(a => a.id === id && a.type === 'appointment');
+            if (!aptToDelete) return;
+
+            const confirmDiv = document.createElement('div');
+            confirmDiv.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
+            confirmDiv.innerHTML = `
+                <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md">
+                    <h3 class="text-2xl font-bold text-slate-900 mb-4">¿Eliminar cita?</h3>
+                    <p class="text-gray-600 mb-6">Esta acción eliminará la cita programada.</p>
+                    <div class="flex gap-3">
+                        <button onclick="confirmDeleteAppointment('${id}')" class="flex-1 bg-red-500 hover:bg-red-600 text-white py-3 rounded-lg font-bold transition-all">
+                            Eliminar
+                        </button>
+                        <button onclick="this.closest('.fixed').remove()" class="flex-1 bg-gray-500 hover:bg-gray-600 text-white py-3 rounded-lg font-bold transition-all">
+                            Cancelar
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(confirmDiv);
+        }
+
+        function confirmDeleteAppointment(id) {
+            const aptToDelete = allData.find(a => a.id === id && a.type === 'appointment');
+            if (!aptToDelete) {
+                document.querySelector('.fixed.inset-0').remove();
+                return;
+            }
+
+            const deleteBtn = document.querySelector('.fixed.inset-0 button');
+            deleteBtn.disabled = true;
+            deleteBtn.textContent = 'Eliminando...';
+
+            window.dataSdk.delete(aptToDelete).then(result => {
+                document.querySelector('.fixed.inset-0').remove();
+                
+                if (result.isOk) {
+                    showToast('🗑️ Cita eliminada');
+                } else {
+                    showToast('❌ Error al eliminar cita');
+                }
+            });
         }
 
         // ==================== RECORDATORIOS ====================
@@ -878,19 +1155,35 @@
                 return;
             }
 
+            if (reminders.length >= 999) {
+                showToast('⚠️ Has alcanzado el límite de 999 recordatorios');
+                return;
+            }
+
             const reminder = {
                 id: Date.now().toString(),
+                type: 'reminder',
+                user_email: currentUser.email,
                 text: text,
-                createdAt: new Date().toISOString(),
+                created_at: new Date().toISOString(),
                 completed: false
             };
 
-            reminders.push(reminder);
-            localStorage.setItem('psytape_reminders', JSON.stringify(reminders));
-            
-            hideAddReminderForm();
-            renderReminders();
-            showToast('✅ Recordatorio guardado');
+            const saveBtn = event.target;
+            saveBtn.disabled = true;
+            saveBtn.textContent = 'Guardando...';
+
+            window.dataSdk.create(reminder).then(result => {
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = '💾 Guardar Recordatorio';
+                
+                if (result.isOk) {
+                    hideAddReminderForm();
+                    showToast('✅ Recordatorio guardado');
+                } else {
+                    showToast('❌ Error al guardar recordatorio');
+                }
+            });
         }
 
         function renderReminders() {
@@ -906,7 +1199,7 @@
                         <input type="checkbox" ${rem.completed ? 'checked' : ''} onchange="toggleReminder('${rem.id}')" class="w-6 h-6 text-yellow-600 mt-1 cursor-pointer">
                         <div class="flex-1">
                             <p class="text-gray-900 whitespace-pre-wrap ${rem.completed ? 'line-through' : ''}">${escapeHtml(rem.text)}</p>
-                            <p class="text-sm text-gray-500 mt-2">${new Date(rem.createdAt).toLocaleString('es-ES')}</p>
+                            <p class="text-sm text-gray-500 mt-2">${new Date(rem.created_at).toLocaleString('es-ES')}</p>
                         </div>
                         <button onclick="deleteReminder('${rem.id}')" class="px-3 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-bold transition-colors">
                             🗑️
@@ -917,32 +1210,29 @@
         }
 
         function toggleReminder(id) {
-            const reminder = reminders.find(r => r.id === id);
-            if (reminder) {
-                reminder.completed = !reminder.completed;
-                localStorage.setItem('psytape_reminders', JSON.stringify(reminders));
-                renderReminders();
-            }
+            const reminder = allData.find(r => r.id === id && r.type === 'reminder');
+            if (!reminder) return;
+
+            const updatedReminder = { ...reminder, completed: !reminder.completed };
+            
+            window.dataSdk.update(updatedReminder).then(result => {
+                if (!result.isOk) {
+                    showToast('❌ Error al actualizar recordatorio');
+                }
+            });
         }
 
         function deleteReminder(id) {
-            reminders = reminders.filter(r => r.id !== id);
-            localStorage.setItem('psytape_reminders', JSON.stringify(reminders));
-            renderReminders();
-            showToast('🗑️ Recordatorio eliminado');
-        }
+            const remToDelete = allData.find(r => r.id === id && r.type === 'reminder');
+            if (!remToDelete) return;
 
-        // ==================== PERSISTENCIA LOCAL ====================
-        function loadLocalData() {
-            const savedAppointments = localStorage.getItem('psytape_appointments');
-            if (savedAppointments) {
-                appointments = JSON.parse(savedAppointments);
-            }
-
-            const savedReminders = localStorage.getItem('psytape_reminders');
-            if (savedReminders) {
-                reminders = JSON.parse(savedReminders);
-            }
+            window.dataSdk.delete(remToDelete).then(result => {
+                if (result.isOk) {
+                    showToast('🗑️ Recordatorio eliminado');
+                } else {
+                    showToast('❌ Error al eliminar recordatorio');
+                }
+            });
         }
 
         // ==================== UTILIDADES ====================
@@ -971,5 +1261,5 @@
             return name.replace(/[^a-z0-9]/gi, '_').toLowerCase();
         }
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c591178534eb181',t:'MTc2OTY5MzI1OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c59391e71d0b181',t:'MTc2OTY5NDg4My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
