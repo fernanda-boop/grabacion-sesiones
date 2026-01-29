@@ -1,17 +1,12 @@
 <!doctype html>
-<html lang="es" class="h-full">
+<html lang="es">
  <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PsyTape - Grabadora Inteligente</title><!-- Supabase Client -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&amp;family=Bebas+Neue&amp;display=swap" rel="stylesheet">
+  <title>BARBER PRO - Sistema Profesional</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-        @font-face {
-            font-family: 'ITC Bauhaus';
-            src: local('ITC Bauhaus'), local('Bauhaus');
-        }
-
         * {
             margin: 0;
             padding: 0;
@@ -19,619 +14,507 @@
         }
 
         body {
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: 'Roboto', sans-serif;
             background: #cf4c23;
-            height: 100%;
-            color: #333;
-            box-sizing: border-box;
-        }
-
-        html, body {
-            height: 100%;
-            width: 100%;
-        }
-
-        .app-container {
-            width: 100%;
-            height: 100%;
-            overflow-y: auto;
-        }
-
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(207, 76, 35, 0.95);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .loading-overlay.hidden {
-            display: none;
-        }
-
-        .spinner {
-            width: 60px;
-            height: 60px;
-            border: 5px solid rgba(255, 255, 247, 0.3);
-            border-top-color: #e4d936;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .loading-text {
             color: #fffff7;
-            font-size: 20px;
-            font-weight: 600;
+            overflow-x: hidden;
         }
 
-        #welcomeScreen {
+        .screen {
+            display: none;
+            min-height: 100vh;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        /* AUTH SCREEN */
+        #authScreen {
             display: flex;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
             padding: 20px;
-            background: #cf4c23;
-        }
-
-        .welcome-card {
-            text-align: center;
-            max-width: 500px;
-            width: 100%;
-            animation: fadeIn 0.6s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .app-logo {
-            font-family: 'ITC Bauhaus', 'Bebas Neue', sans-serif;
-            font-size: 90px;
-            color: #e4d936;
-            margin-bottom: 25px;
-            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
-            font-weight: 400;
-            letter-spacing: 4px;
-        }
-
-        .logo-icons {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin-bottom: 50px;
-        }
-
-        .logo-icon {
-            font-size: 50px;
-            animation: float 3s ease-in-out infinite;
-        }
-
-        .logo-icon:nth-child(1) {
-            animation-delay: 0s;
-        }
-
-        .logo-icon:nth-child(2) {
-            animation-delay: 0.5s;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-        }
-
-        .welcome-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-            align-items: center;
-        }
-
-        .btn-welcome {
-            background: #fffff7;
-            color: #000000;
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 30px;
-            font-weight: 600;
-            padding: 20px 60px;
-            border: none;
-            border-radius: 0;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            min-width: 300px;
-        }
-
-        .btn-welcome:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 25px rgba(0,0,0,0.4);
-            background: #e4d936;
-        }
-
-        .btn-welcome:active {
-            transform: translateY(0);
-        }
-
-        .btn-welcome:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        #authScreen {
-            display: none;
-            min-height: 100vh;
-            padding: 40px 20px;
-            background: #cf4c23;
+            background: linear-gradient(135deg, #cf4c23 0%, #a33a1a 100%);
         }
 
         #authScreen.active {
             display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
-        .auth-card {
+        .auth-container {
             background: rgba(255, 255, 247, 0.05);
             border: 2px solid rgba(255, 255, 247, 0.2);
-            padding: 50px 40px;
-            max-width: 500px;
+            padding: 60px 50px;
+            max-width: 450px;
             width: 100%;
-            animation: slideIn 0.5s ease;
-        }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-30px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        .auth-card h2 {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 55px;
-            color: #e4d936;
-            margin-bottom: 40px;
             text-align: center;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            letter-spacing: 3px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .auth-logo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 70px;
+            color: #e4d936;
+            margin-bottom: 10px;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.4);
+            letter-spacing: 5px;
+        }
+
+        .auth-subtitle {
+            color: #fffff7;
+            font-size: 16px;
+            margin-bottom: 50px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .auth-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 40px;
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #fffff7;
+            background: transparent;
+            color: #fffff7;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .auth-tab.active {
+            background: #e4d936;
+            color: #000000;
+            border-color: #e4d936;
+        }
+
+        .auth-tab:hover:not(.active) {
+            background: rgba(255, 255, 247, 0.1);
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
         }
 
         .form-group {
             margin-bottom: 25px;
+            text-align: left;
         }
 
         .form-group label {
             display: block;
+            margin-bottom: 8px;
             color: #fffff7;
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 10px;
+            font-weight: 500;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .form-group input,
-        .form-group select {
+        .form-group input {
             width: 100%;
             padding: 15px;
-            background: #fffff7;
             border: 2px solid #fffff7;
-            border-radius: 0;
+            background: rgba(255, 255, 247, 0.1);
+            color: #fffff7;
             font-size: 16px;
-            color: #000000;
-            font-family: 'Space Grotesk', sans-serif;
             transition: all 0.3s ease;
         }
 
-        .form-group input:focus,
-        .form-group select:focus {
+        .form-group input:focus {
             outline: none;
             border-color: #e4d936;
-            box-shadow: 0 0 0 3px rgba(228, 217, 54, 0.3);
+            background: rgba(255, 255, 247, 0.15);
+            box-shadow: 0 0 0 3px rgba(228, 217, 54, 0.2);
         }
 
-        .verification-hint {
-            background: rgba(228, 217, 54, 0.2);
-            border: 2px solid #e4d936;
-            color: #fffff7;
-            padding: 15px;
-            margin-bottom: 25px;
-            text-align: center;
-            font-weight: 600;
-            font-size: 18px;
+        .form-group input::placeholder {
+            color: rgba(255, 255, 247, 0.5);
         }
 
-        .btn-auth {
+        .auth-button {
             width: 100%;
-            background: #fffff7;
-            color: #000000;
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 24px;
-            font-weight: 600;
             padding: 18px;
             border: none;
-            border-radius: 0;
+            background: #e4d936;
+            color: #000000;
+            font-weight: 700;
+            font-size: 18px;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin-top: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
 
-        .btn-auth:hover:not(:disabled) {
-            background: #e4d936;
+        .auth-button:hover {
+            background: #f5ea3d;
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
         }
 
-        .btn-auth:active {
+        .auth-button:active {
             transform: translateY(0);
         }
 
-        .btn-auth:disabled {
-            opacity: 0.5;
+        .auth-button:disabled {
+            background: #666;
             cursor: not-allowed;
+            opacity: 0.6;
         }
 
-        .btn-auth.secondary {
-            background: transparent;
-            border: 2px solid #fffff7;
-            color: #fffff7;
-            margin-top: 15px;
-        }
-
-        .btn-auth.secondary:hover {
-            background: rgba(255, 255, 247, 0.1);
-            border-color: #e4d936;
-            color: #e4d936;
-        }
-
-        .error-message {
-            background: rgba(220, 38, 38, 0.2);
-            border: 2px solid #dc2626;
-            color: #fffff7;
+        .auth-message {
+            margin-top: 20px;
             padding: 15px;
-            margin-bottom: 20px;
-            text-align: center;
-            font-weight: 600;
-            animation: shake 0.5s ease;
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
-        }
-
-        .success-message {
-            background: rgba(16, 185, 129, 0.2);
-            border: 2px solid #10b981;
-            color: #fffff7;
-            padding: 15px;
-            margin-bottom: 20px;
-            text-align: center;
-            font-weight: 600;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        #pinSetupScreen {
+            border-radius: 0;
             display: none;
-            min-height: 100vh;
-            padding: 20px;
+            font-weight: 500;
+        }
+
+        .auth-message.success {
+            background: rgba(34, 197, 94, 0.2);
+            border: 2px solid #22c55e;
+            color: #fffff7;
+        }
+
+        .auth-message.error {
+            background: rgba(239, 68, 68, 0.2);
+            border: 2px solid #ef4444;
+            color: #fffff7;
+        }
+
+        /* MAIN APP */
+        #mainScreen {
             background: #cf4c23;
         }
 
-        #pinSetupScreen.active {
+        header {
+            background: #000000;
+            padding: 20px 40px;
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
         }
 
-        .pin-card {
-            background: rgba(255, 255, 247, 0.05);
-            border: 2px solid rgba(255, 255, 247, 0.2);
-            padding: 50px 40px;
-            max-width: 500px;
-            width: 100%;
-            text-align: center;
-        }
-
-        .pin-card h2 {
+        header h1 {
             font-family: 'Bebas Neue', sans-serif;
-            font-size: 50px;
+            font-size: 2.5rem;
             color: #e4d936;
-            margin-bottom: 20px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
             letter-spacing: 3px;
         }
 
-        .pin-subtitle {
-            color: #fffff7;
-            font-size: 18px;
-            margin-bottom: 40px;
-        }
-
-        .pin-input-container {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin-bottom: 30px;
-        }
-
-        .pin-digit {
-            width: 70px;
-            height: 80px;
-            border: 3px solid #fffff7;
-            border-radius: 0;
-            background: rgba(255, 255, 247, 0.1);
-            font-size: 2.5rem;
-            text-align: center;
-            font-weight: 700;
-            color: #e4d936;
-            transition: all 0.3s ease;
-        }
-
-        .pin-digit:focus {
-            outline: none;
-            border-color: #e4d936;
-            box-shadow: 0 0 0 4px rgba(228, 217, 54, 0.3);
-            background: rgba(255, 255, 247, 0.2);
-        }
-
-        .pin-digit.filled {
-            background: #e4d936;
-            color: #000000;
-            border-color: #e4d936;
-        }
-
-        .numpad {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        .numpad-btn {
-            height: 70px;
-            border: none;
-            border-radius: 0;
-            font-size: 2rem;
-            font-weight: 700;
-            background: #fffff7;
-            color: #000000;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
-        }
-
-        .numpad-btn:hover {
-            background: #e4d936;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
-        }
-
-        .numpad-btn:active {
-            transform: translateY(0);
-        }
-
-        .numpad-btn.clear {
-            background: #dc2626;
-            color: white;
-        }
-
-        .numpad-btn.clear:hover {
-            background: #b91c1c;
-        }
-
-        #loginScreen {
-            display: none;
-            min-height: 100vh;
-            padding: 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-
-        #loginScreen.active {
+        .user-info {
             display: flex;
             align-items: center;
-            justify-content: center;
-        }
-
-        .login-card {
-            background: white;
-            border-radius: 25px;
-            padding: 50px 40px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            max-width: 450px;
-            width: 100%;
-            text-align: center;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .lock-icon {
-            font-size: 5rem;
-            margin-bottom: 20px;
-            animation: lockPulse 2s ease-in-out infinite;
-        }
-
-        @keyframes lockPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        .login-card h1 {
-            color: #667eea;
-            font-size: 2rem;
-            margin-bottom: 10px;
-        }
-
-        .login-subtitle {
-            color: #6b7280;
-            margin-bottom: 40px;
-            font-size: 1rem;
-        }
-
-        #mainApp {
-            display: none;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-        }
-
-        #mainApp.active {
-            display: block;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
             gap: 20px;
         }
 
-        .header-content {
-            text-align: center;
-            flex: 1;
-            color: white;
+        .user-name {
+            font-weight: 700;
+            color: #fffff7;
         }
 
-        header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-        }
-
-        .subtitle {
-            font-size: 1.1rem;
-            opacity: 0.9;
-        }
-
-        .security-controls {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 600;
+        .logout-btn {
+            padding: 10px 25px;
+            background: #cf4c23;
+            border: 2px solid #fffff7;
+            color: #fffff7;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
+        .logout-btn:hover {
+            background: #e4d936;
+            color: #000000;
+            border-color: #e4d936;
         }
 
-        .btn-lock {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            border: 2px solid white;
-            -webkit-backdrop-filter: blur(10px);
-            backdrop-filter: blur(10px);
+        .tabs {
+            display: flex;
+            background: #000000;
+            border-bottom: 3px solid #e4d936;
         }
 
-        .btn-lock:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
+        .tab-btn {
+            flex: 1;
+            padding: 20px;
+            background: transparent;
+            border: none;
+            color: #fffff7;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-bottom: 4px solid transparent;
         }
 
-        .card {
-            background: white;
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            margin-bottom: 30px;
+        .tab-btn:hover {
+            background: rgba(228, 217, 54, 0.1);
         }
 
-        .card h2 {
+        .tab-btn.active {
+            background: #cf4c23;
+            border-bottom-color: #e4d936;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 40px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* APPOINTMENTS */
+        .appointment-form {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            margin-bottom: 40px;
+            border: 2px solid rgba(255, 255, 247, 0.2);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
             margin-bottom: 20px;
-            color: #667eea;
-            font-size: 1.5rem;
         }
 
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #1f2937;
-            color: white;
-            padding: 15px 30px;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            z-index: 2000;
-            animation: slideUp 0.3s ease;
+        .form-row input,
+        .form-row select,
+        .form-row textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #fffff7;
+            background: rgba(255, 255, 247, 0.1);
+            color: #fffff7;
+            font-size: 16px;
+            font-family: 'Roboto', sans-serif;
         }
 
-        .toast.success {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        .form-row input:focus,
+        .form-row select:focus,
+        .form-row textarea:focus {
+            outline: none;
+            border-color: #e4d936;
+            background: rgba(255, 255, 247, 0.15);
         }
 
-        .toast.error {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        .form-row textarea {
+            resize: vertical;
+            min-height: 100px;
         }
 
-        .toast.info {
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: #e4d936;
+            border: none;
+            color: #000000;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
 
-        @keyframes slideUp {
-            from {
-                transform: translateX(-50%) translateY(100px);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(-50%) translateY(0);
-                opacity: 1;
-            }
+        .submit-btn:hover {
+            background: #f5ea3d;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
         }
 
+        .appointments-list {
+            display: grid;
+            gap: 20px;
+        }
+
+        .appointment-card {
+            background: rgba(0, 0, 0, 0.4);
+            border: 2px solid rgba(255, 255, 247, 0.2);
+            padding: 25px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 20px;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .appointment-card:hover {
+            border-color: #e4d936;
+            box-shadow: 0 4px 15px rgba(228, 217, 54, 0.2);
+        }
+
+        .appointment-info h3 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 28px;
+            color: #e4d936;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        .appointment-info p {
+            margin: 8px 0;
+            font-size: 16px;
+            color: #fffff7;
+        }
+
+        .appointment-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            padding: 12px 20px;
+            border: 2px solid #fffff7;
+            background: transparent;
+            color: #fffff7;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-size: 14px;
+        }
+
+        .action-btn:hover {
+            background: #fffff7;
+            color: #000000;
+        }
+
+        .action-btn.delete {
+            border-color: #ef4444;
+            color: #ef4444;
+        }
+
+        .action-btn.delete:hover {
+            background: #ef4444;
+            color: #fffff7;
+        }
+
+        /* CLIENTS */
+        .clients-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .client-card {
+            background: rgba(0, 0, 0, 0.4);
+            border: 2px solid rgba(255, 255, 247, 0.2);
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .client-card:hover {
+            border-color: #e4d936;
+            box-shadow: 0 4px 15px rgba(228, 217, 54, 0.2);
+        }
+
+        .client-card h3 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 26px;
+            color: #e4d936;
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+        }
+
+        .client-card p {
+            margin: 8px 0;
+            color: #fffff7;
+        }
+
+        /* SERVICES */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .service-card {
+            background: rgba(0, 0, 0, 0.4);
+            border: 2px solid rgba(255, 255, 247, 0.2);
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .service-card:hover {
+            border-color: #e4d936;
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(228, 217, 54, 0.3);
+        }
+
+        .service-card h3 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 30px;
+            color: #e4d936;
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+        }
+
+        .service-price {
+            font-size: 36px;
+            font-weight: 700;
+            color: #fffff7;
+            margin: 20px 0;
+        }
+
+        .service-duration {
+            color: rgba(255, 255, 247, 0.8);
+            font-size: 16px;
+        }
+
+        /* RESPONSIVE */
         @media (max-width: 768px) {
-            .app-logo {
-                font-size: 55px;
-            }
-
-            .btn-welcome {
-                font-size: 24px;
-                padding: 15px 40px;
-                min-width: 250px;
-            }
-
-            .auth-card h2 {
-                font-size: 35px;
-            }
-
-            .pin-digit {
-                width: 60px;
-                height: 70px;
-                font-size: 2rem;
+            header {
+                flex-direction: column;
+                gap: 15px;
+                padding: 20px;
             }
 
             header h1 {
                 font-size: 1.8rem;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab-content {
+                padding: 20px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .appointment-card {
+                grid-template-columns: 1fr;
+            }
+
+            .appointment-actions {
+                justify-content: flex-start;
             }
         }
     </style>
@@ -640,604 +523,381 @@
   <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
   <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
  </head>
- <body>
-  <div id="loadingOverlay" class="loading-overlay">
-   <div class="spinner"></div>
-   <div class="loading-text">
-    Cargando PsyTape...
+ <body><!-- AUTH SCREEN -->
+  <div id="authScreen" class="screen active">
+   <div class="auth-container">
+    <h1 class="auth-logo">BARBER PRO</h1>
+    <p class="auth-subtitle">Sistema Profesional</p>
+    <div class="auth-tabs"><button class="auth-tab active" onclick="switchAuthTab('login')">Iniciar Sesión</button> <button class="auth-tab" onclick="switchAuthTab('register')">Registrarse</button>
+    </div><!-- LOGIN FORM -->
+    <form id="loginForm" class="auth-form active" onsubmit="handleLogin(event)">
+     <div class="form-group"><label for="loginEmail">Email</label> <input type="email" id="loginEmail" placeholder="tu@email.com" required>
+     </div>
+     <div class="form-group"><label for="loginPassword">Contraseña</label> <input type="password" id="loginPassword" placeholder="Tu contraseña" required>
+     </div><button type="submit" class="auth-button">Iniciar Sesión</button>
+     <div id="loginMessage" class="auth-message"></div>
+    </form><!-- REGISTER FORM -->
+    <form id="registerForm" class="auth-form" onsubmit="handleRegister(event)">
+     <div class="form-group"><label for="registerName">Nombre Completo</label> <input type="text" id="registerName" placeholder="Tu nombre" required>
+     </div>
+     <div class="form-group"><label for="registerEmail">Email</label> <input type="email" id="registerEmail" placeholder="tu@email.com" required>
+     </div>
+     <div class="form-group"><label for="registerPassword">Contraseña</label> <input type="password" id="registerPassword" placeholder="Mínimo 6 caracteres" required minlength="6">
+     </div>
+     <div class="form-group"><label for="registerPhone">Teléfono</label> <input type="tel" id="registerPhone" placeholder="Tu teléfono" required>
+     </div><button type="submit" class="auth-button">Registrarse</button>
+     <div id="registerMessage" class="auth-message"></div>
+    </form>
    </div>
-  </div>
-  <div class="app-container">
-   <div id="welcomeScreen">
-    <div class="welcome-card">
-     <h1 class="app-logo">PsyTape</h1>
-     <div class="logo-icons">
-      <div class="logo-icon">
-       🎙️
-      </div>
-      <div class="logo-icon">
-       🧠
-      </div>
-     </div>
-     <div class="welcome-buttons"><button class="btn-welcome" id="loginBtn" onclick="showLoginForm()">Login</button> <button class="btn-welcome" id="registrationBtn" onclick="showRegistrationForm()">Registration</button>
-     </div>
+  </div><!-- MAIN APP SCREEN -->
+  <div id="mainScreen" class="screen">
+   <header>
+    <h1>BARBER PRO</h1>
+    <div class="user-info"><span class="user-name" id="userName">Usuario</span> <button class="logout-btn" onclick="handleLogout()">Cerrar Sesión</button>
     </div>
-   </div>
-   <div id="authScreen">
-    <div class="auth-card">
-     <h2 id="authTitle">Registration</h2>
-     <div id="authErrorMessage" class="error-message hidden"></div>
-     <div id="authSuccessMessage" class="success-message hidden"></div>
-     <form id="registrationForm" class="hidden">
-      <div class="form-group"><label for="regName">Nombre Completo</label> <input type="text" id="regName" required placeholder="Juan Pérez García">
+   </header>
+   <div class="tabs"><button class="tab-btn active" onclick="switchTab('appointments')">Citas</button> <button class="tab-btn" onclick="switchTab('clients')">Clientes</button> <button class="tab-btn" onclick="switchTab('services')">Servicios</button> <button class="tab-btn" onclick="switchTab('stats')">Estadísticas</button>
+   </div><!-- APPOINTMENTS TAB -->
+   <div id="appointmentsTab" class="tab-content active">
+    <div class="appointment-form">
+     <h2 style="font-family: 'Bebas Neue', sans-serif; font-size: 32px; color: #e4d936; margin-bottom: 25px; letter-spacing: 2px;">NUEVA CITA</h2>
+     <form onsubmit="addAppointment(event)">
+      <div class="form-row"><input type="text" id="clientName" placeholder="Nombre del Cliente" required> <input type="tel" id="clientPhone" placeholder="Teléfono" required>
       </div>
-      <div class="form-group"><label for="regEmail">Email</label> <input type="email" id="regEmail" required placeholder="tu@email.com">
+      <div class="form-row"><input type="date" id="appointmentDate" required> <input type="time" id="appointmentTime" required>
       </div>
-      <div class="form-group"><label for="regPassword">Contraseña</label> <input type="password" id="regPassword" required placeholder="Mínimo 6 caracteres">
+      <div class="form-row"><select id="serviceType" required> <option value="">Seleccionar Servicio</option> <option value="Corte Clásico">Corte Clásico - $15</option> <option value="Corte + Barba">Corte + Barba - $25</option> <option value="Afeitado Tradicional">Afeitado Tradicional - $20</option> <option value="Diseño de Barba">Diseño de Barba - $18</option> </select>
       </div>
-      <div class="form-group"><label for="regCountry">País</label> <select id="regCountry" required> <option value="">Selecciona tu país</option> <option value="Argentina">Argentina</option> <option value="Bolivia">Bolivia</option> <option value="Chile">Chile</option> <option value="Colombia">Colombia</option> <option value="Costa Rica">Costa Rica</option> <option value="Cuba">Cuba</option> <option value="Ecuador">Ecuador</option> <option value="El Salvador">El Salvador</option> <option value="España">España</option> <option value="Guatemala">Guatemala</option> <option value="Honduras">Honduras</option> <option value="México">México</option> <option value="Nicaragua">Nicaragua</option> <option value="Panamá">Panamá</option> <option value="Paraguay">Paraguay</option> <option value="Perú">Perú</option> <option value="Puerto Rico">Puerto Rico</option> <option value="República Dominicana">República Dominicana</option> <option value="Uruguay">Uruguay</option> <option value="Venezuela">Venezuela</option> <option value="Otro">Otro</option> </select>
-      </div>
-      <div class="verification-hint">
-       Por favor escribe: <strong>PSYTAPE2024</strong>
-      </div>
-      <div class="form-group"><label for="regVerification">Código de Verificación</label> <input type="text" id="regVerification" required placeholder="PSYTAPE2024">
-      </div><button type="submit" class="btn-auth" id="registerSubmitBtn">Registrarse</button> <button type="button" class="btn-auth secondary" onclick="showWelcome()">Volver</button>
+      <div class="form-row"><textarea id="appointmentNotes" placeholder="Notas adicionales (opcional)"></textarea>
+      </div><button type="submit" class="submit-btn">Agendar Cita</button>
      </form>
-     <form id="loginForm" class="hidden">
-      <div class="form-group"><label for="loginEmail">Email</label> <input type="email" id="loginEmail" required placeholder="tu@email.com">
-      </div>
-      <div class="form-group"><label for="loginPassword">Contraseña</label> <input type="password" id="loginPassword" required placeholder="Tu contraseña">
-      </div><button type="submit" class="btn-auth" id="loginSubmitBtn">Ingresar</button> <button type="button" class="btn-auth secondary" onclick="showWelcome()">Volver</button>
-     </form>
     </div>
-   </div>
-   <div id="pinSetupScreen">
-    <div class="pin-card">
-     <h2>Crear PIN de Seguridad</h2>
-     <p class="pin-subtitle">Crea un PIN de 4 dígitos para proteger tu información</p>
-     <div id="pinErrorMessage" class="error-message hidden"></div>
-     <div id="pinSuccessMessage" class="success-message hidden"></div>
-     <div class="pin-input-container"><input type="password" maxlength="1" class="pin-digit" id="pinDigit1" readonly> <input type="password" maxlength="1" class="pin-digit" id="pinDigit2" readonly> <input type="password" maxlength="1" class="pin-digit" id="pinDigit3" readonly> <input type="password" maxlength="1" class="pin-digit" id="pinDigit4" readonly>
-     </div>
-     <div class="numpad"><button class="numpad-btn" onclick="enterPinDigit('1')">1</button> <button class="numpad-btn" onclick="enterPinDigit('2')">2</button> <button class="numpad-btn" onclick="enterPinDigit('3')">3</button> <button class="numpad-btn" onclick="enterPinDigit('4')">4</button> <button class="numpad-btn" onclick="enterPinDigit('5')">5</button> <button class="numpad-btn" onclick="enterPinDigit('6')">6</button> <button class="numpad-btn" onclick="enterPinDigit('7')">7</button> <button class="numpad-btn" onclick="enterPinDigit('8')">8</button> <button class="numpad-btn" onclick="enterPinDigit('9')">9</button> <button class="numpad-btn clear" onclick="clearPinDigits()">✕</button> <button class="numpad-btn" onclick="enterPinDigit('0')">0</button> <button class="numpad-btn" onclick="deletePinDigit()">⌫</button>
-     </div><button class="btn-auth" id="savePinBtn" onclick="savePinAndContinue()">Guardar PIN</button>
+    <h2 style="font-family: 'Bebas Neue', sans-serif; font-size: 32px; color: #e4d936; margin-bottom: 25px; letter-spacing: 2px;">CITAS AGENDADAS</h2>
+    <div id="appointmentsList" class="appointments-list"><!-- Appointments will be loaded here -->
     </div>
-   </div>
-   <div id="loginScreen">
-    <div class="login-card">
-     <div class="lock-icon">
-      🎙️
-     </div>
-     <h1>PsyTape</h1>
-     <p class="login-subtitle">Ingresa tu PIN para continuar</p>
-     <div id="loginPinError" class="error-message hidden"></div>
-     <div class="pin-input-container"><input type="password" maxlength="1" class="pin-digit" id="loginPin1" readonly style="border-color: #667eea; background: #f3f4f6;"> <input type="password" maxlength="1" class="pin-digit" id="loginPin2" readonly style="border-color: #667eea; background: #f3f4f6;"> <input type="password" maxlength="1" class="pin-digit" id="loginPin3" readonly style="border-color: #667eea; background: #f3f4f6;"> <input type="password" maxlength="1" class="pin-digit" id="loginPin4" readonly style="border-color: #667eea; background: #f3f4f6;">
-     </div>
-     <div class="numpad"><button class="numpad-btn" onclick="enterLoginPin('1')" style="background: #667eea; color: white;">1</button> <button class="numpad-btn" onclick="enterLoginPin('2')" style="background: #667eea; color: white;">2</button> <button class="numpad-btn" onclick="enterLoginPin('3')" style="background: #667eea; color: white;">3</button> <button class="numpad-btn" onclick="enterLoginPin('4')" style="background: #667eea; color: white;">4</button> <button class="numpad-btn" onclick="enterLoginPin('5')" style="background: #667eea; color: white;">5</button> <button class="numpad-btn" onclick="enterLoginPin('6')" style="background: #667eea; color: white;">6</button> <button class="numpad-btn" onclick="enterLoginPin('7')" style="background: #667eea; color: white;">7</button> <button class="numpad-btn" onclick="enterLoginPin('8')" style="background: #667eea; color: white;">8</button> <button class="numpad-btn" onclick="enterLoginPin('9')" style="background: #667eea; color: white;">9</button> <button class="numpad-btn clear" onclick="clearLoginPin()">✕</button> <button class="numpad-btn" onclick="enterLoginPin('0')" style="background: #667eea; color: white;">0</button> <button class="numpad-btn" onclick="deleteLoginPin()" style="background: #667eea; color: white;">⌫</button>
-     </div><button class="btn-auth" onclick="verifyLoginPin()" style="background: #667eea; color: white; margin-top: 20px;">🔓 Ingresar</button>
+   </div><!-- CLIENTS TAB -->
+   <div id="clientsTab" class="tab-content">
+    <h2 style="font-family: 'Bebas Neue', sans-serif; font-size: 32px; color: #e4d936; margin-bottom: 25px; letter-spacing: 2px;">CLIENTES REGISTRADOS</h2>
+    <div id="clientsList" class="clients-grid"><!-- Clients will be loaded here -->
     </div>
-   </div>
-   <div id="mainApp">
-    <div class="container">
-     <header>
-      <div class="security-controls"><button class="btn btn-lock" onclick="showMainView()"> <span>🏠</span> Inicio </button> <button class="btn btn-lock" onclick="lockApp()"> <span>🔒</span> Bloquear </button> <button class="btn btn-lock" onclick="logoutUser()"> <span>🚪</span> Cerrar Sesión </button>
-      </div>
-      <div class="header-content">
-       <h1>🎙️ PsyTape</h1>
-       <p class="subtitle">Menos notas, más empatía. Graba, transcribe y conecta.</p>
-      </div>
-      <div style="width: 200px;"></div>
-     </header>
-     <div class="card">
-      <h2>¡Bienvenido/a <span id="userName"></span>!</h2>
-      <p style="color: #6b7280; margin-bottom: 20px;">Tu asistente inteligente para la gestión de sesiones terapéuticas está listo para usar.</p>
-      <p style="color: #374151; font-size: 1.1rem; line-height: 1.8;">🎯 <strong>Comienza por:</strong><br><br>
-        1️⃣ Agregar tus pacientes<br>
-        2️⃣ Grabar sesiones con transcripción automática<br>
-        3️⃣ Organizar tu agenda semanal<br>
-        4️⃣ Gestionar notas clínicas de forma segura</p>
+   </div><!-- SERVICES TAB -->
+   <div id="servicesTab" class="tab-content">
+    <h2 style="font-family: 'Bebas Neue', sans-serif; font-size: 32px; color: #e4d936; margin-bottom: 25px; letter-spacing: 2px;">SERVICIOS DISPONIBLES</h2>
+    <div class="services-grid">
+     <div class="service-card">
+      <h3>CORTE CLÁSICO</h3>
+      <p class="service-price">$15</p>
+      <p class="service-duration">30 minutos</p>
+     </div>
+     <div class="service-card">
+      <h3>CORTE + BARBA</h3>
+      <p class="service-price">$25</p>
+      <p class="service-duration">45 minutos</p>
+     </div>
+     <div class="service-card">
+      <h3>AFEITADO TRADICIONAL</h3>
+      <p class="service-price">$20</p>
+      <p class="service-duration">30 minutos</p>
+     </div>
+     <div class="service-card">
+      <h3>DISEÑO DE BARBA</h3>
+      <p class="service-price">$18</p>
+      <p class="service-duration">25 minutos</p>
+     </div>
+    </div>
+   </div><!-- STATS TAB -->
+   <div id="statsTab" class="tab-content">
+    <h2 style="font-family: 'Bebas Neue', sans-serif; font-size: 32px; color: #e4d936; margin-bottom: 25px; letter-spacing: 2px;">ESTADÍSTICAS</h2>
+    <div class="services-grid">
+     <div class="service-card">
+      <h3>CITAS HOY</h3>
+      <p class="service-price" id="statsToday">0</p>
+     </div>
+     <div class="service-card">
+      <h3>TOTAL CLIENTES</h3>
+      <p class="service-price" id="statsClients">0</p>
+     </div>
+     <div class="service-card">
+      <h3>INGRESOS MENSUAL</h3>
+      <p class="service-price" id="statsRevenue">$0</p>
+     </div>
+     <div class="service-card">
+      <h3>CITAS TOTALES</h3>
+      <p class="service-price" id="statsTotal">0</p>
      </div>
     </div>
    </div>
   </div>
   <script>
-        // ========== CONFIGURACIÓN DE SUPABASE ==========
-        const SUPABASE_URL = 'https://ayaxxcawzthhjvxnbokn.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF5YXh4Y2F3enRoaGp2eG5ib2tuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk2NTE0ODcsImV4cCI6MjA4NTIyNzQ4N30.EI1bJyDF4K1Y2fnBfKieNCjhG_WcyXR7yCs_hN2LF5U';
+        // SUPABASE CONFIGURATION
+        const SUPABASE_URL = 'https://uqagzbkuqmjsctglkstg.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVxYWd6Ymt1cW1qc2N0Z2xrc3RnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzcyMzYyNjksImV4cCI6MjA1MjgxMjI2OX0.ztKf2fkUrGBjTikvtWIyHI-fWcx4xPy-q88Zwo3AjFM';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        let supabaseClient;
         let currentUser = null;
 
-        // ========== INICIALIZACIÓN ==========
-        async function initApp() {
-            try {
-                showLoading();
-                
-                console.log('🔄 Iniciando aplicación...');
-                console.log('🔗 Supabase URL:', SUPABASE_URL);
-                
-                // Inicializar Supabase
-                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-                console.log('✅ Cliente Supabase creado');
-                
-                // Verificar sesión
-                const { data: { session }, error: sessionError } = await supabaseClient.auth.getSession();
-                
-                if (sessionError) {
-                    console.error('❌ Error obteniendo sesión:', sessionError);
-                    showWelcome();
-                    hideLoading();
-                    return;
-                }
-                
-                console.log('✅ Sesión obtenida:', session ? 'Usuario logueado' : 'Sin sesión');
-                
-                if (session) {
-                    currentUser = session.user;
-                    const hasPin = localStorage.getItem(`pin_${currentUser.id}`);
-                    
-                    if (hasPin) {
-                        showLoginPinScreen();
-                    } else {
-                        await loadUserProfile();
-                        showMainApp();
-                    }
-                } else {
-                    showWelcome();
-                }
-                
-                hideLoading();
-                
-            } catch (error) {
-                console.error('❌ Error fatal en initApp:', error);
-                hideLoading();
-                showWelcome();
-                showToast('Error al iniciar la aplicación', 'error');
+        // CHECK SESSION ON LOAD
+        async function checkSession() {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) {
+                currentUser = session.user;
+                await loadUserData();
+                showScreen('mainScreen');
             }
         }
 
-        async function loadUserProfile() {
-            const { data, error } = await supabaseClient
-                .from('users')
+        // AUTH TAB SWITCHING
+        function switchAuthTab(tab) {
+            document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+            
+            if (tab === 'login') {
+                document.querySelectorAll('.auth-tab')[0].classList.add('active');
+                document.getElementById('loginForm').classList.add('active');
+            } else {
+                document.querySelectorAll('.auth-tab')[1].classList.add('active');
+                document.getElementById('registerForm').classList.add('active');
+            }
+        }
+
+        // HANDLE LOGIN
+        async function handleLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const messageDiv = document.getElementById('loginMessage');
+            const button = event.target.querySelector('button');
+
+            button.disabled = true;
+            button.textContent = 'INICIANDO...';
+
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email: email,
+                password: password
+            });
+
+            if (error) {
+                messageDiv.textContent = 'Error: ' + error.message;
+                messageDiv.className = 'auth-message error';
+                messageDiv.style.display = 'block';
+                button.disabled = false;
+                button.textContent = 'INICIAR SESIÓN';
+            } else {
+                currentUser = data.user;
+                await loadUserData();
+                showScreen('mainScreen');
+            }
+        }
+
+        // HANDLE REGISTER
+        async function handleRegister(event) {
+            event.preventDefault();
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const phone = document.getElementById('registerPhone').value;
+            const messageDiv = document.getElementById('registerMessage');
+            const button = event.target.querySelector('button');
+
+            button.disabled = true;
+            button.textContent = 'REGISTRANDO...';
+
+            const { data, error } = await supabase.auth.signUp({
+                email: email,
+                password: password,
+                options: {
+                    data: {
+                        full_name: name,
+                        phone: phone
+                    }
+                }
+            });
+
+            if (error) {
+                messageDiv.textContent = 'Error: ' + error.message;
+                messageDiv.className = 'auth-message error';
+                messageDiv.style.display = 'block';
+                button.disabled = false;
+                button.textContent = 'REGISTRARSE';
+            } else {
+                // Create user profile in users table
+                const { error: profileError } = await supabase
+                    .from('users')
+                    .insert([
+                        {
+                            id: data.user.id,
+                            email: email,
+                            full_name: name,
+                            phone: phone
+                        }
+                    ]);
+
+                messageDiv.textContent = '¡Registro exitoso! Verifica tu email.';
+                messageDiv.className = 'auth-message success';
+                messageDiv.style.display = 'block';
+                
+                setTimeout(() => {
+                    switchAuthTab('login');
+                }, 2000);
+            }
+        }
+
+        // HANDLE LOGOUT
+        async function handleLogout() {
+            await supabase.auth.signOut();
+            currentUser = null;
+            showScreen('authScreen');
+        }
+
+        // LOAD USER DATA
+        async function loadUserData() {
+            if (currentUser) {
+                document.getElementById('userName').textContent = currentUser.user_metadata.full_name || currentUser.email;
+                await loadAppointments();
+                await loadClients();
+                await updateStats();
+            }
+        }
+
+        // SCREEN SWITCHING
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        // TAB SWITCHING
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tab + 'Tab').classList.add('active');
+            
+            if (tab === 'clients') {
+                loadClients();
+            } else if (tab === 'stats') {
+                updateStats();
+            }
+        }
+
+        // ADD APPOINTMENT
+        async function addAppointment(event) {
+            event.preventDefault();
+            
+            const appointment = {
+                user_id: currentUser.id,
+                client_name: document.getElementById('clientName').value,
+                client_phone: document.getElementById('clientPhone').value,
+                appointment_date: document.getElementById('appointmentDate').value,
+                appointment_time: document.getElementById('appointmentTime').value,
+                service_type: document.getElementById('serviceType').value,
+                notes: document.getElementById('appointmentNotes').value,
+                status: 'scheduled'
+            };
+
+            const { data, error } = await supabase
+                .from('appointments')
+                .insert([appointment]);
+
+            if (!error) {
+                event.target.reset();
+                await loadAppointments();
+                await loadClients();
+                await updateStats();
+            }
+        }
+
+        // LOAD APPOINTMENTS
+        async function loadAppointments() {
+            const { data, error } = await supabase
+                .from('appointments')
                 .select('*')
                 .eq('user_id', currentUser.id)
-                .single();
+                .order('appointment_date', { ascending: true })
+                .order('appointment_time', { ascending: true });
 
             if (data) {
-                document.getElementById('userName').textContent = data.name;
+                const list = document.getElementById('appointmentsList');
+                list.innerHTML = data.map(apt => `
+                    <div class="appointment-card">
+                        <div class="appointment-info">
+                            <h3>${apt.client_name}</h3>
+                            <p>📞 ${apt.client_phone}</p>
+                            <p>📅 ${apt.appointment_date} a las ${apt.appointment_time}</p>
+                            <p>✂️ ${apt.service_type}</p>
+                            ${apt.notes ? `<p>📝 ${apt.notes}</p>` : ''}
+                        </div>
+                        <div class="appointment-actions">
+                            <button class="action-btn delete" onclick="deleteAppointment(${apt.id})">Eliminar</button>
+                        </div>
+                    </div>
+                `).join('');
             }
         }
 
-        // ========== LOADING ==========
-        function showLoading() {
-            document.getElementById('loadingOverlay').classList.remove('hidden');
-        }
-
-        function hideLoading() {
-            document.getElementById('loadingOverlay').classList.add('hidden');
-        }
-
-        // ========== NAVEGACIÓN ==========
-        function showWelcome() {
-            hideAllScreens();
-            document.getElementById('welcomeScreen').style.display = 'flex';
-        }
-
-        function showRegistrationForm() {
-            hideAllScreens();
-            document.getElementById('authScreen').classList.add('active');
-            document.getElementById('authTitle').textContent = 'Registration';
-            document.getElementById('registrationForm').classList.remove('hidden');
-            document.getElementById('loginForm').classList.add('hidden');
-            clearAuthMessages();
-        }
-
-        function showLoginForm() {
-            hideAllScreens();
-            document.getElementById('authScreen').classList.add('active');
-            document.getElementById('authTitle').textContent = 'Login';
-            document.getElementById('loginForm').classList.remove('hidden');
-            document.getElementById('registrationForm').classList.add('hidden');
-            clearAuthMessages();
-        }
-
-        function showPinSetup() {
-            hideAllScreens();
-            document.getElementById('pinSetupScreen').classList.add('active');
-            clearPinDigits();
-            clearPinMessages();
-        }
-
-        function showLoginPinScreen() {
-            hideAllScreens();
-            document.getElementById('loginScreen').classList.add('active');
-            clearLoginPin();
-        }
-
-        function showMainApp() {
-            hideAllScreens();
-            document.getElementById('mainApp').classList.add('active');
-        }
-
-        function showMainView() {
-            showToast('Vista principal cargada', 'success');
-        }
-
-        function hideAllScreens() {
-            document.getElementById('welcomeScreen').style.display = 'none';
-            document.getElementById('authScreen').classList.remove('active');
-            document.getElementById('pinSetupScreen').classList.remove('active');
-            document.getElementById('loginScreen').classList.remove('active');
-            document.getElementById('mainApp').classList.remove('active');
-        }
-
-        // ========== REGISTRO ==========
-        document.getElementById('registrationForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const submitBtn = document.getElementById('registerSubmitBtn');
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Registrando...';
-            
-            const name = document.getElementById('regName').value.trim();
-            const email = document.getElementById('regEmail').value.trim().toLowerCase();
-            const password = document.getElementById('regPassword').value;
-            const country = document.getElementById('regCountry').value;
-            const verification = document.getElementById('regVerification').value.trim().toUpperCase();
-
-            if (password.length < 6) {
-                showAuthError('La contraseña debe tener al menos 6 caracteres');
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Registrarse';
-                return;
+        // DELETE APPOINTMENT
+        async function deleteAppointment(id) {
+            if (confirm('¿Eliminar esta cita?')) {
+                await supabase
+                    .from('appointments')
+                    .delete()
+                    .eq('id', id);
+                
+                await loadAppointments();
+                await updateStats();
             }
-
-            if (verification !== 'PSYTAPE2024') {
-                showAuthError('Código de verificación incorrecto');
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Registrarse';
-                return;
-            }
-
-            // Registro en Supabase Auth
-            const { data: authData, error: authError } = await supabaseClient.auth.signUp({
-                email: email,
-                password: password,
-            });
-
-            if (authError) {
-                showAuthError(authError.message);
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Registrarse';
-                return;
-            }
-
-            currentUser = authData.user;
-
-            // Guardar perfil en la tabla users
-            const { error: dbError } = await supabaseClient
-                .from('users')
-                .insert([{
-                    user_id: currentUser.id,
-                    name: name,
-                    email: email,
-                    country: country,
-                    pin: '',
-                }]);
-
-            if (dbError) {
-                showAuthError('Error al guardar perfil: ' + dbError.message);
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Registrarse';
-                return;
-            }
-
-            showAuthSuccess('Registro exitoso. Ahora crea tu PIN de seguridad');
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'Registrarse';
-            
-            setTimeout(() => {
-                showPinSetup();
-            }, 1500);
-        });
-
-        // ========== LOGIN ==========
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const submitBtn = document.getElementById('loginSubmitBtn');
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Verificando...';
-            
-            const email = document.getElementById('loginEmail').value.trim().toLowerCase();
-            const password = document.getElementById('loginPassword').value;
-
-            const { data, error } = await supabaseClient.auth.signInWithPassword({
-                email: email,
-                password: password,
-            });
-
-            if (error) {
-                showAuthError('Email o contraseña incorrectos');
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Ingresar';
-                return;
-            }
-
-            currentUser = data.user;
-            await loadUserProfile();
-
-            showAuthSuccess('Login exitoso. Redirigiendo...');
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'Ingresar';
-            
-            setTimeout(() => {
-                showLoginPinScreen();
-            }, 1000);
-        });
-
-        // ========== PIN SETUP ==========
-        function enterPinDigit(digit) {
-            const pins = [
-                document.getElementById('pinDigit1'),
-                document.getElementById('pinDigit2'),
-                document.getElementById('pinDigit3'),
-                document.getElementById('pinDigit4')
-            ];
-
-            for (let i = 0; i < pins.length; i++) {
-                if (!pins[i].value) {
-                    pins[i].value = digit;
-                    pins[i].classList.add('filled');
-                    break;
-                }
-            }
-            clearPinMessages();
         }
 
-        function deletePinDigit() {
-            const pins = [
-                document.getElementById('pinDigit4'),
-                document.getElementById('pinDigit3'),
-                document.getElementById('pinDigit2'),
-                document.getElementById('pinDigit1')
-            ];
-
-            for (let i = 0; i < pins.length; i++) {
-                if (pins[i].value) {
-                    pins[i].value = '';
-                    pins[i].classList.remove('filled');
-                    break;
-                }
-            }
-            clearPinMessages();
-        }
-
-        function clearPinDigits() {
-            const pins = [
-                document.getElementById('pinDigit1'),
-                document.getElementById('pinDigit2'),
-                document.getElementById('pinDigit3'),
-                document.getElementById('pinDigit4')
-            ];
-
-            pins.forEach(pin => {
-                pin.value = '';
-                pin.classList.remove('filled');
-            });
-            clearPinMessages();
-        }
-
-        function getCurrentPin() {
-            return document.getElementById('pinDigit1').value +
-                   document.getElementById('pinDigit2').value +
-                   document.getElementById('pinDigit3').value +
-                   document.getElementById('pinDigit4').value;
-        }
-
-        async function savePinAndContinue() {
-            const pin = getCurrentPin();
-
-            if (pin.length !== 4) {
-                showPinError('Por favor ingresa 4 dígitos');
-                return;
-            }
-
-            const saveBtn = document.getElementById('savePinBtn');
-            saveBtn.disabled = true;
-            saveBtn.textContent = 'Guardando...';
-
-            // Actualizar PIN en la base de datos
-            const { error } = await supabaseClient
-                .from('users')
-                .update({ pin: pin })
+        // LOAD CLIENTS
+        async function loadClients() {
+            const { data, error } = await supabase
+                .from('appointments')
+                .select('client_name, client_phone')
                 .eq('user_id', currentUser.id);
 
-            if (error) {
-                showPinError('Error al guardar PIN');
-                saveBtn.disabled = false;
-                saveBtn.textContent = 'Guardar PIN';
-                return;
-            }
-
-            // Guardar PIN localmente
-            localStorage.setItem(`pin_${currentUser.id}`, pin);
-
-            showPinSuccess('PIN creado exitosamente');
-            setTimeout(() => {
-                showMainApp();
-                showToast('¡Bienvenido a PsyTape! 🎉', 'success');
-            }, 1000);
-
-            saveBtn.disabled = false;
-            saveBtn.textContent = 'Guardar PIN';
-        }
-
-        // ========== LOGIN CON PIN ==========
-        function enterLoginPin(digit) {
-            const pins = [
-                document.getElementById('loginPin1'),
-                document.getElementById('loginPin2'),
-                document.getElementById('loginPin3'),
-                document.getElementById('loginPin4')
-            ];
-
-            for (let i = 0; i < pins.length; i++) {
-                if (!pins[i].value) {
-                    pins[i].value = digit;
-                    pins[i].classList.add('filled');
-                    break;
-                }
-            }
-            hideLoginPinError();
-        }
-
-        function deleteLoginPin() {
-            const pins = [
-                document.getElementById('loginPin4'),
-                document.getElementById('loginPin3'),
-                document.getElementById('loginPin2'),
-                document.getElementById('loginPin1')
-            ];
-
-            for (let i = 0; i < pins.length; i++) {
-                if (pins[i].value) {
-                    pins[i].value = '';
-                    pins[i].classList.remove('filled');
-                    break;
-                }
-            }
-            hideLoginPinError();
-        }
-
-        function clearLoginPin() {
-            const pins = [
-                document.getElementById('loginPin1'),
-                document.getElementById('loginPin2'),
-                document.getElementById('loginPin3'),
-                document.getElementById('loginPin4')
-            ];
-
-            pins.forEach(pin => {
-                pin.value = '';
-                pin.classList.remove('filled');
-            });
-            hideLoginPinError();
-        }
-
-        function getLoginPin() {
-            return document.getElementById('loginPin1').value +
-                   document.getElementById('loginPin2').value +
-                   document.getElementById('loginPin3').value +
-                   document.getElementById('loginPin4').value;
-        }
-
-        async function verifyLoginPin() {
-            const enteredPin = getLoginPin();
-            const storedPin = localStorage.getItem(`pin_${currentUser.id}`);
-
-            if (enteredPin.length !== 4) {
-                showLoginPinError('Por favor ingresa 4 dígitos');
-                return;
-            }
-
-            if (enteredPin === storedPin) {
-                await loadUserProfile();
-                showMainApp();
-                showToast('Acceso concedido 🔓', 'success');
-            } else {
-                showLoginPinError('PIN incorrecto');
-                clearLoginPin();
+            if (data) {
+                // Remove duplicates
+                const uniqueClients = [...new Map(data.map(item => [item.client_phone, item])).values()];
+                
+                const list = document.getElementById('clientsList');
+                list.innerHTML = uniqueClients.map(client => `
+                    <div class="client-card">
+                        <h3>${client.client_name}</h3>
+                        <p>📞 ${client.client_phone}</p>
+                    </div>
+                `).join('');
             }
         }
 
-        // ========== CERRAR SESIÓN ==========
-        function lockApp() {
-            showLoginPinScreen();
-            showToast('Aplicación bloqueada', 'info');
-        }
+        // UPDATE STATS
+        async function updateStats() {
+            const { data: appointments } = await supabase
+                .from('appointments')
+                .select('*')
+                .eq('user_id', currentUser.id);
 
-        async function logoutUser() {
-            await supabaseClient.auth.signOut();
-            currentUser = null;
-            localStorage.clear();
-            showWelcome();
-            showToast('Sesión cerrada correctamente', 'info');
-        }
+            if (appointments) {
+                const today = new Date().toISOString().split('T')[0];
+                const todayAppointments = appointments.filter(apt => apt.appointment_date === today);
+                
+                const uniqueClients = [...new Set(appointments.map(apt => apt.client_phone))];
+                
+                const revenue = appointments.reduce((sum, apt) => {
+                    const price = parseInt(apt.service_type.match(/\$(\d+)/)?.[1] || 0);
+                    return sum + price;
+                }, 0);
 
-        // ========== MENSAJES ==========
-        function showAuthError(message) {
-            const errorDiv = document.getElementById('authErrorMessage');
-            errorDiv.textContent = message;
-            errorDiv.classList.remove('hidden');
-            setTimeout(() => errorDiv.classList.add('hidden'), 4000);
-        }
-
-        function showAuthSuccess(message) {
-            const successDiv = document.getElementById('authSuccessMessage');
-            successDiv.textContent = message;
-            successDiv.classList.remove('hidden');
-            setTimeout(() => successDiv.classList.add('hidden'), 4000);
-        }
-
-        function clearAuthMessages() {
-            document.getElementById('authErrorMessage').classList.add('hidden');
-            document.getElementById('authSuccessMessage').classList.add('hidden');
-        }
-
-        function showPinError(message) {
-            const errorDiv = document.getElementById('pinErrorMessage');
-            errorDiv.textContent = message;
-            errorDiv.classList.remove('hidden');
-            setTimeout(() => errorDiv.classList.add('hidden'), 3000);
-        }
-
-        function showPinSuccess(message) {
-            const successDiv = document.getElementById('pinSuccessMessage');
-            successDiv.textContent = message;
-            successDiv.classList.remove('hidden');
-            setTimeout(() => successDiv.classList.add('hidden'), 3000);
-        }
-
-        function clearPinMessages() {
-            document.getElementById('pinErrorMessage').classList.add('hidden');
-            document.getElementById('pinSuccessMessage').classList.add('hidden');
-        }
-
-        function showLoginPinError(message) {
-            const errorDiv = document.getElementById('loginPinError');
-            errorDiv.textContent = message;
-            errorDiv.classList.remove('hidden');
-            setTimeout(() => errorDiv.classList.add('hidden'), 3000);
-        }
-
-        function hideLoginPinError() {
-            document.getElementById('loginPinError').classList.add('hidden');
-        }
-
-        function showToast(message, type = 'success') {
-            const toast = document.createElement('div');
-            toast.className = 'toast ' + type;
-            toast.textContent = message;
-            document.body.appendChild(toast);
-
-            setTimeout(() => {
-                toast.remove();
-            }, 3000);
-        }
-
-        // ========== INICIAR APP ==========
-        window.addEventListener('load', initApp);
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                if (document.getElementById('loginScreen').classList.contains('active')) {
-                    verifyLoginPin();
-                } else if (document.getElementById('pinSetupScreen').classList.contains('active')) {
-                    savePinAndContinue();
-                }
+                document.getElementById('statsToday').textContent = todayAppointments.length;
+                document.getElementById('statsClients').textContent = uniqueClients.length;
+                document.getElementById('statsRevenue').textContent = '$' + revenue;
+                document.getElementById('statsTotal').textContent = appointments.length;
             }
-        });
+        }
+
+        // INITIALIZE
+        checkSession();
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c5642326688e75c',t:'MTc2OTY2Mzc5OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c571770650d9b23',t:'MTc2OTY3MjUzMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
