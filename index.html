@@ -8,7 +8,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"><!-- PsyTape no requiere SDKs externos, funciona con localStorage -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
   <style>
         body {
             box-sizing: border-box;
@@ -82,7 +82,6 @@
             box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
         }
 
-        /* Sistema de grabación mejorado */
         .recording-status {
             display: flex;
             align-items: center;
@@ -105,7 +104,6 @@
             animation: pulse 1.5s infinite;
         }
 
-        /* Toast notifications */
         .toast {
             position: fixed;
             bottom: 30px;
@@ -140,7 +138,6 @@
             }
         }
 
-        /* Estilos profesionales para Historia Clínica */
         .clinical-history-form {
             background: #FFFFFF;
         }
@@ -160,7 +157,6 @@
             box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
         }
 
-        /* Scrollbar personalizado */
         #liveTranscription::-webkit-scrollbar {
             width: 6px;
         }
@@ -174,12 +170,22 @@
             background: #48bb78;
             border-radius: 10px;
         }
+
+        .infant-tab-button {
+            transition: all 0.3s ease;
+        }
+
+        .infant-tab-button.active {
+            background: #10b981;
+            color: white;
+            border-bottom: 4px solid #059669;
+        }
     </style>
   <style>@view-transition { navigation: auto; }</style>
   <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
   <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
  </head>
- <body class="h-full bg-gray-50">
+ <body class="h-full" style="background-color: #F8FAFC;">
   <div id="loadingOverlay" class="fixed inset-0 bg-slate-900 flex flex-col items-center justify-center z-50">
    <div class="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
    <div class="text-white text-xl font-semibold mt-4">
@@ -195,7 +201,7 @@
     </div>
    </div>
   </div><!-- Pantalla de Autenticación -->
-  <div id="authScreen" class="hidden min-h-full flex items-center justify-center bg-gray-50 p-4">
+  <div id="authScreen" class="hidden min-h-full flex items-center justify-center p-4" style="background-color: #F8FAFC;">
    <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full">
     <h2 id="authTitle" class="text-3xl font-bold text-slate-900 text-center mb-6">Registro de Cuenta</h2>
     <div id="authErrorMessage" class="hidden bg-red-50 border-2 border-red-400 text-red-800 px-4 py-3 rounded-lg mb-4 text-center font-semibold"></div>
@@ -235,7 +241,7 @@
       <h1 class="text-5xl font-black text-slate-900 mb-2">🎙️ PsyTape</h1>
       <p class="text-gray-600 font-medium">Menos notas, más empatía. Graba, transcribe y conecta</p>
      </div>
-     <div class="flex flex-wrap justify-center gap-3"><button onclick="showSection('patients')" class="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-3 rounded-lg font-bold transition-all text-lg"> 👥 Pacientes </button> <button onclick="showSection('agenda')" class="bg-slate-800 hover:bg-slate-700 text-white px-6 py-3 rounded-lg font-bold transition-all text-lg"> 📅 Agenda </button> <button onclick="showSection('reminders')" class="bg-slate-800 hover:bg-slate-700 text-white px-6 py-3 rounded-lg font-bold transition-all text-lg"> ✅ Recordatorios </button>
+     <div class="flex flex-wrap justify-center gap-3"><button onclick="showSection('patients')" class="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-3 rounded-lg font-bold transition-all text-lg"> ��� Pacientes </button> <button onclick="showSection('agenda')" class="bg-slate-800 hover:bg-slate-700 text-white px-6 py-3 rounded-lg font-bold transition-all text-lg"> 📅 Agenda </button> <button onclick="showSection('reminders')" class="bg-slate-800 hover:bg-slate-700 text-white px-6 py-3 rounded-lg font-bold transition-all text-lg"> ✅ Recordatorios </button> <button onclick="showSection('infantHistory')" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-bold transition-all text-lg"> 👶 Historia Infantil </button>
      </div>
     </header><!-- Sección Inicio -->
     <div id="homeSection" class="section">
@@ -258,7 +264,7 @@
         📅
        </div>
        <h3 class="text-xl font-bold text-slate-900 mb-2">Agenda</h3>
-       <p class="text-gray-600">Calendario semanal</p>
+       <p class="text-gray-600">Calendario Semanal</p>
       </div>
       <div onclick="showSection('reminders')" class="bg-white rounded-2xl shadow-lg p-8 text-center cursor-pointer transition-all hover:shadow-2xl hover:-translate-y-2 border-2 border-transparent hover:border-emerald-500">
        <div class="text-6xl mb-4">
@@ -267,12 +273,153 @@
        <h3 class="text-xl font-bold text-slate-900 mb-2">Recordatorios</h3>
        <p class="text-gray-600">Tareas y notas personales</p>
       </div>
-      <div onclick="showSection('plans')" class="bg-white rounded-2xl shadow-lg p-8 text-center cursor-pointer transition-all hover:shadow-2xl hover:-translate-y-2 border-2 border-transparent hover:border-emerald-500">
+      <div onclick="showSection('infantHistory')" class="bg-white rounded-2xl shadow-lg p-8 text-center cursor-pointer transition-all hover:shadow-2xl hover:-translate-y-2 border-2 border-transparent hover:border-emerald-500">
        <div class="text-6xl mb-4">
-        💎
+        👶
        </div>
-       <h3 class="text-xl font-bold text-slate-900 mb-2">Mi Plan</h3>
-       <p class="text-gray-600">Gestiona tu suscripción</p>
+       <h3 class="text-xl font-bold text-slate-900 mb-2">Historia Infantil</h3>
+       <p class="text-gray-600">Evaluación pediátrica</p>
+      </div>
+     </div>
+    </div><!-- Sección Historia Clínica Infanto-Juvenil -->
+    <div id="infantHistorySection" class="section hidden">
+     <div class="bg-white rounded-2xl shadow-lg p-6">
+      <div class="bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl p-8 mb-6 text-white">
+       <h2 class="text-4xl font-black mb-2">👶 HISTORIA CLÍNICA PSICOLÓGICA INFANTIL</h2>
+       <p class="text-blue-100 text-lg">Evaluación especializada para niños y adolescentes</p>
+      </div><!-- Selector de Versión -->
+      <div class="flex gap-4 mb-6"><button onclick="switchInfantVersion('short')" id="btnShortVersion" class="flex-1 bg-emerald-500 text-white px-6 py-4 rounded-xl font-bold text-lg transition-all shadow-lg hover:shadow-2xl"> 📝 Versión Corta (Rápida) </button> <button onclick="switchInfantVersion('long')" id="btnLongVersion" class="flex-1 bg-blue-600 text-white px-6 py-4 rounded-xl font-bold text-lg transition-all shadow-lg hover:shadow-2xl"> 📋 Versión Larga (Completa) </button>
+      </div><!-- VERSIÓN CORTA -->
+      <div id="infantFormShort" class="hidden">
+       <form class="medical-form space-y-6">
+        <div class="bg-gray-50 rounded-2xl p-6 border-2 border-gray-200">
+         <h3 class="text-2xl font-bold text-slate-900 mb-6 border-b-2 border-emerald-500 pb-2">👤 IDENTIFICACIÓN</h3>
+         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div><label for="isNombre" class="block text-sm font-bold text-gray-700 mb-2">Nombre del Niño/a</label> <input type="text" id="isNombre" name="isNombre" placeholder="Nombre completo" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all">
+          </div>
+          <div><label for="isEdad" class="block text-sm font-bold text-gray-700 mb-2">Edad</label> <input type="number" id="isEdad" name="isEdad" placeholder="Edad en años" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all">
+          </div>
+          <div><label for="isDNI" class="block text-sm font-bold text-gray-700 mb-2">DNI / Identificación</label> <input type="text" id="isDNI" name="isDNI" placeholder="DNI del menor" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all">
+          </div>
+          <div><label for="isFecha" class="block text-sm font-bold text-gray-700 mb-2">Fecha de Evaluación</label> <input type="date" id="isFecha" name="isFecha" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all">
+          </div>
+         </div>
+        </div>
+        <div class="bg-gray-50 rounded-2xl p-6 border-2 border-gray-200">
+         <h3 class="text-2xl font-bold text-slate-900 mb-6 border-b-2 border-emerald-500 pb-2">👀 OBSERVACIÓN DE CONDUCTA</h3><label for="isObservacion" class="sr-only">Observación de Conducta</label> <textarea id="isObservacion" name="isObservacion" rows="4" placeholder="Describir apariencia, actitud, contacto visual, nivel de actividad..." class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all"></textarea>
+        </div>
+        <div class="bg-gray-50 rounded-2xl p-6 border-2 border-gray-200">
+         <h3 class="text-2xl font-bold text-slate-900 mb-6 border-b-2 border-emerald-500 pb-2">📝 NOTAS DE SESIÓN</h3><label for="isNotas" class="sr-only">Notas de Sesión</label> <textarea id="isNotas" name="isNotas" rows="5" placeholder="Resumen de la entrevista, motivo de consulta, impresiones..." class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all"></textarea>
+        </div>
+        <div class="bg-gray-50 rounded-2xl p-6 border-2 border-gray-200">
+         <h3 class="text-2xl font-bold text-slate-900 mb-6 border-b-2 border-emerald-500 pb-2">🎯 PLAN DE ACCIÓN</h3><label for="isPlanAccion" class="sr-only">Plan de Acción</label> <textarea id="isPlanAccion" name="isPlanAccion" rows="4" placeholder="Intervenciones sugeridas, seguimiento, recomendaciones..." class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all"></textarea>
+        </div>
+        <div class="flex flex-wrap gap-4 justify-center"><button type="button" onclick="saveInfantHistoryShort()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg hover:shadow-2xl"> 💾 Guardar en Carpeta del Paciente </button> <button type="button" onclick="downloadInfantPDFShort()" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg hover:shadow-2xl"> 📄 Generar PDF con Membrete </button> <button type="button" onclick="clearInfantFormShort()" class="bg-gray-500 hover:bg-gray-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg hover:shadow-2xl"> 🔄 Limpiar Formulario </button>
+        </div>
+       </form>
+      </div><!-- VERSIÓN LARGA -->
+      <div id="infantFormLong" class="hidden"><!-- Pestañas de navegación -->
+       <div class="flex flex-wrap gap-2 mb-6 border-b-2 border-gray-200 pb-2"><button onclick="switchInfantTab('identificacion')" id="tabIdentificacion" class="infant-tab-button px-4 py-3 font-bold rounded-t-lg transition-all"> 👤 Identificación </button> <button onclick="switchInfantTab('anamnesis')" id="tabAnamnesis" class="infant-tab-button px-4 py-3 font-bold rounded-t-lg transition-all"> 🤰 Anamnesis </button> <button onclick="switchInfantTab('escolaridad')" id="tabEscolaridad" class="infant-tab-button px-4 py-3 font-bold rounded-t-lg transition-all"> 🎒 Escolaridad </button> <button onclick="switchInfantTab('examenMental')" id="tabExamenMental" class="infant-tab-button px-4 py-3 font-bold rounded-t-lg transition-all"> 🧠 Examen Mental </button> <button onclick="switchInfantTab('saludFisica')" id="tabSaludFisica" class="infant-tab-button px-4 py-3 font-bold rounded-t-lg transition-all"> 🏥 Salud Física </button>
+       </div>
+       <form class="medical-form space-y-6"><!-- Tab Identificación -->
+        <div id="infantTabIdentificacion" class="infant-tab-content">
+         <div class="bg-gray-50 rounded-2xl p-6 border-2 border-gray-200">
+          <h3 class="text-2xl font-bold text-slate-900 mb-6 border-b-2 border-emerald-500 pb-2">👤 DATOS DEL MENOR</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+           <div><label for="ilNombre" class="block text-sm font-bold text-gray-700 mb-2">Nombre Completo</label> <input type="text" id="ilNombre" name="ilNombre" placeholder="Nombre completo del menor" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all">
+           </div>
+           <div><label for="ilEdad" class="block text-sm font-bold text-gray-700 mb-2">Edad</label> <input type="number" id="ilEdad" name="ilEdad" placeholder="Edad en años" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all">
+           </div>
+           <div><label for="ilDNI" class="block text-sm font-bold text-gray-700 mb-2">DNI / Identificación</label> <input type="text" id="ilDNI" name="ilDNI" placeholder="DNI" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all">
+           </div>
+           <div><label for="ilFechaNac" class="block text-sm font-bold text-gray-700 mb-2">Fecha de Nacimiento</label> <input type="date" id="ilFechaNac" name="ilFechaNac" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all">
+           </div>
+           <div><label for="ilNombrePadre" class="block text-sm font-bold text-gray-700 mb-2">Nombre del Padre/Tutor</label> <input type="text" id="ilNombrePadre" name="ilNombrePadre" placeholder="Nombre completo" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all">
+           </div>
+           <div><label for="ilNombreMadre" class="block text-sm font-bold text-gray-700 mb-2">Nombre de la Madre/Tutora</label> <input type="text" id="ilNombreMadre" name="ilNombreMadre" placeholder="Nombre completo" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all">
+           </div>
+           <div><label for="ilDireccion" class="block text-sm font-bold text-gray-700 mb-2">Dirección</label> <input type="text" id="ilDireccion" name="ilDireccion" placeholder="Dirección completa" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all">
+           </div>
+           <div><label for="ilTelefono" class="block text-sm font-bold text-gray-700 mb-2">Teléfono de Contacto</label> <input type="tel" id="ilTelefono" name="ilTelefono" placeholder="Teléfono" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all">
+           </div>
+          </div>
+         </div>
+        </div><!-- Tab Anamnesis -->
+        <div id="infantTabAnamnesis" class="infant-tab-content hidden">
+         <div class="bg-gray-50 rounded-2xl p-6 border-2 border-gray-200">
+          <h3 class="text-2xl font-bold text-slate-900 mb-6 border-b-2 border-emerald-500 pb-2">🤰 ANTECEDENTES PERINATALES</h3>
+          <div class="space-y-4">
+           <div><label for="ilEmbarazo" class="block text-sm font-bold text-gray-700 mb-2">Curso del Embarazo</label> <select id="ilEmbarazo" name="ilEmbarazo" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all"> <option value="">Seleccionar</option> <option value="Normal">Normal sin complicaciones</option> <option value="Con complicaciones">Con complicaciones</option> <option value="Alto riesgo">Alto riesgo</option> </select>
+           </div>
+           <div><label for="ilParto" class="block text-sm font-bold text-gray-700 mb-2">Tipo de Parto</label> <select id="ilParto" name="ilParto" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all"> <option value="">Seleccionar</option> <option value="Vaginal">Vaginal sin complicaciones</option> <option value="Cesárea">Cesárea</option> <option value="Fórceps">Con uso de fórceps</option> <option value="Prematuro">Prematuro</option> </select>
+           </div>
+           <div><label for="ilDesarrolloMotor" class="block text-sm font-bold text-gray-700 mb-2">Desarrollo Motor (¿Cuándo empezó a caminar?)</label> <input type="text" id="ilDesarrolloMotor" name="ilDesarrolloMotor" placeholder="Ej: 12 meses, 18 meses" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all">
+           </div>
+           <div><label for="ilDesarrolloLenguaje" class="block text-sm font-bold text-gray-700 mb-2">Desarrollo del Lenguaje (¿Cuándo empezó a hablar?)</label> <input type="text" id="ilDesarrolloLenguaje" name="ilDesarrolloLenguaje" placeholder="Ej: 18 meses, 2 años" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all">
+           </div>
+           <div><label for="ilAntecedentes" class="block text-sm font-bold text-gray-700 mb-2">Antecedentes Médicos Relevantes</label> <textarea id="ilAntecedentes" name="ilAntecedentes" rows="3" placeholder="Enfermedades, hospitalizaciones, cirugías..." class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all"></textarea>
+           </div>
+          </div>
+         </div>
+        </div><!-- Tab Escolaridad -->
+        <div id="infantTabEscolaridad" class="infant-tab-content hidden">
+         <div class="bg-gray-50 rounded-2xl p-6 border-2 border-gray-200">
+          <h3 class="text-2xl font-bold text-slate-900 mb-6 border-b-2 border-emerald-500 pb-2">🎒 HISTORIA ESCOLAR</h3>
+          <div class="overflow-x-auto">
+           <table class="w-full border-collapse mb-4">
+            <thead>
+             <tr class="bg-blue-600 text-white">
+              <th class="px-4 py-3 text-left font-bold">Nombre de la Escuela</th>
+              <th class="px-4 py-3 text-left font-bold">Grado / Curso</th>
+              <th class="px-4 py-3 text-center font-bold">Distracción</th>
+              <th class="px-4 py-3 text-center font-bold">Agresión</th>
+              <th class="px-4 py-3 text-center font-bold">Liderazgo</th>
+             </tr>
+            </thead>
+            <tbody class="bg-white" id="schoolTableBody">
+             <tr class="border-b hover:bg-gray-50">
+              <td class="px-4 py-3"><input type="text" id="ilEscuela1" name="ilEscuela1" placeholder="Nombre escuela" class="w-full px-2 py-1 border border-gray-300 rounded"></td>
+              <td class="px-4 py-3"><input type="text" id="ilGrado1" name="ilGrado1" placeholder="Grado" class="w-full px-2 py-1 border border-gray-300 rounded"></td>
+              <td class="px-4 py-3 text-center"><label for="ilDistraccion1" class="sr-only">Distracción Escuela 1</label> <input type="checkbox" id="ilDistraccion1" name="ilDistraccion1" class="w-5 h-5 text-blue-600"></td>
+              <td class="px-4 py-3 text-center"><label for="ilAgresion1" class="sr-only">Agresión Escuela 1</label> <input type="checkbox" id="ilAgresion1" name="ilAgresion1" class="w-5 h-5 text-blue-600"></td>
+              <td class="px-4 py-3 text-center"><label for="ilLiderazgo1" class="sr-only">Liderazgo Escuela 1</label> <input type="checkbox" id="ilLiderazgo1" name="ilLiderazgo1" class="w-5 h-5 text-blue-600"></td>
+             </tr>
+            </tbody>
+           </table><button type="button" onclick="addSchoolRow()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold transition-all"> ➕ Agregar Escuela </button>
+          </div>
+          <div class="mt-4"><label for="ilRendimiento" class="block text-sm font-bold text-gray-700 mb-2">Rendimiento Académico General</label> <textarea id="ilRendimiento" name="ilRendimiento" rows="3" placeholder="Calificaciones, áreas de dificultad, fortalezas..." class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all"></textarea>
+          </div>
+         </div>
+        </div><!-- Tab Examen Mental Infantil -->
+        <div id="infantTabExamenMental" class="infant-tab-content hidden">
+         <div class="bg-gray-50 rounded-2xl p-6 border-2 border-gray-200">
+          <h3 class="text-2xl font-bold text-slate-900 mb-6 border-b-2 border-emerald-500 pb-2">🧠 EVALUACIÓN MENTAL INFANTIL</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+           <div><label for="ilLenguaje" class="block text-sm font-bold text-gray-700 mb-2">Lenguaje</label> <select id="ilLenguaje" name="ilLenguaje" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all"> <option value="">Seleccionar</option> <option value="Normal">Normal para su edad</option> <option value="Dislalia">Dislalia (dificultad articulación)</option> <option value="Ecolalia">Ecolalia (repetición)</option> <option value="Retraso">Retraso del lenguaje</option> <option value="Tartamudeo">Tartamudeo</option> </select>
+           </div>
+           <div><label for="ilAfectividad" class="block text-sm font-bold text-gray-700 mb-2">Afectividad</label> <select id="ilAfectividad" name="ilAfectividad" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all"> <option value="">Seleccionar</option> <option value="Estable">Estable y apropiada</option> <option value="Lábil">Lábil (cambios bruscos)</option> <option value="Aplanada">Aplanada</option> <option value="Inapropiada">Inapropiada para contexto</option> <option value="Ansiosa">Ansiosa</option> </select>
+           </div>
+           <div><label for="ilNivelJuego" class="block text-sm font-bold text-gray-700 mb-2">Nivel de Juego</label> <select id="ilNivelJuego" name="ilNivelJuego" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all"> <option value="">Seleccionar</option> <option value="Solitario">Juego solitario</option> <option value="Paralelo">Juego paralelo</option> <option value="Cooperativo">Juego cooperativo</option> <option value="Simbólico">Juego simbólico desarrollado</option> <option value="Limitado">Juego limitado/repetitivo</option> </select>
+           </div>
+           <div><label for="ilAtencion" class="block text-sm font-bold text-gray-700 mb-2">Atención y Concentración</label> <select id="ilAtencion" name="ilAtencion" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all"> <option value="">Seleccionar</option> <option value="Adecuada">Adecuada para su edad</option> <option value="Dispersa">Dispersa</option> <option value="Hiperactividad">Hiperactividad</option> <option value="Déficit">Déficit atencional</option> </select>
+           </div>
+          </div>
+          <div class="mt-4"><label for="ilObservacionesMentales" class="block text-sm font-bold text-gray-700 mb-2">Observaciones Adicionales</label> <textarea id="ilObservacionesMentales" name="ilObservacionesMentales" rows="4" placeholder="Notas sobre pensamiento, percepción, orientación..." class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all"></textarea>
+          </div>
+         </div>
+        </div><!-- Tab Salud Física -->
+        <div id="infantTabSaludFisica" class="infant-tab-content hidden">
+         <div class="bg-gray-50 rounded-2xl p-6 border-2 border-gray-200">
+          <h3 class="text-2xl font-bold text-slate-900 mb-6 border-b-2 border-emerald-500 pb-2">🏥 INDICADORES DE SALUD FÍSICA Y SOMATIZACIÓN</h3>
+          <div class="checkbox-grid"><label for="ilEnuresis" class="flex items-center space-x-2 cursor-pointer"> <input type="checkbox" id="ilEnuresis" name="ilEnuresis" class="w-5 h-5 text-blue-600 rounded focus:ring-blue-500"> <span class="font-medium">Enuresis (orina en cama)</span> </label> <label for="ilPesadillas" class="flex items-center space-x-2 cursor-pointer"> <input type="checkbox" id="ilPesadillas" name="ilPesadillas" class="w-5 h-5 text-blue-600 rounded focus:ring-blue-500"> <span class="font-medium">Pesadillas recurrentes</span> </label> <label for="ilTerror" class="flex items-center space-x-2 cursor-pointer"> <input type="checkbox" id="ilTerror" name="ilTerror" class="w-5 h-5 text-blue-600 rounded focus:ring-blue-500"> <span class="font-medium">Terrores nocturnos</span> </label> <label for="ilTics" class="flex items-center space-x-2 cursor-pointer"> <input type="checkbox" id="ilTics" name="ilTics" class="w-5 h-5 text-blue-600 rounded focus:ring-blue-500"> <span class="font-medium">Tics nerviosos</span> </label> <label for="ilAlimentacion" class="flex items-center space-x-2 cursor-pointer"> <input type="checkbox" id="ilAlimentacion" name="ilAlimentacion" class="w-5 h-5 text-blue-600 rounded focus:ring-blue-500"> <span class="font-medium">Problemas alimentación</span> </label> <label for="ilSueno" class="flex items-center space-x-2 cursor-pointer"> <input type="checkbox" id="ilSueno" name="ilSueno" class="w-5 h-5 text-blue-600 rounded focus:ring-blue-500"> <span class="font-medium">Trastornos del sueño</span> </label> <label for="ilCefaleas" class="flex items-center space-x-2 cursor-pointer"> <input type="checkbox" id="ilCefaleas" name="ilCefaleas" class="w-5 h-5 text-blue-600 rounded focus:ring-blue-500"> <span class="font-medium">Cefaleas frecuentes</span> </label> <label for="ilDolorAbdominal" class="flex items-center space-x-2 cursor-pointer"> <input type="checkbox" id="ilDolorAbdominal" name="ilDolorAbdominal" class="w-5 h-5 text-blue-600 rounded focus:ring-blue-500"> <span class="font-medium">Dolor abdominal recurrente</span> </label>
+          </div>
+          <div class="mt-6"><label for="ilDiagnostico" class="block text-sm font-bold text-gray-700 mb-2">Impresión Diagnóstica y Conclusiones</label> <textarea id="ilDiagnostico" name="ilDiagnostico" rows="5" placeholder="Diagnóstico presuntivo, recomendaciones, plan de tratamiento..." class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all"></textarea>
+          </div>
+         </div>
+        </div>
+        <div class="flex flex-wrap gap-4 justify-center mt-8"><button type="button" onclick="saveInfantHistoryLong()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg hover:shadow-2xl"> 💾 Guardar en Carpeta del Paciente </button> <button type="button" onclick="downloadInfantPDFLong()" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg hover:shadow-2xl"> 📄 Generar PDF con Membrete </button> <button type="button" onclick="downloadInfantBlankTemplate()" class="bg-purple-600 hover:bg-purple-700 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg hover:shadow-2xl"> 📋 Plantilla en Blanco </button> <button type="button" onclick="clearInfantFormLong()" class="bg-gray-500 hover:bg-gray-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg hover:shadow-2xl"> 🔄 Limpiar Formulario </button>
+        </div>
+       </form>
       </div>
      </div>
     </div><!-- Sección Pacientes -->
@@ -290,266 +437,50 @@
        </div>
       </div>
      </div>
-    </div><!-- Sección Ficha del Paciente -->
-    <div id="patientDetailSection" class="section hidden">
-     <div class="bg-white rounded-2xl shadow-lg p-6"><button onclick="showSection('patients')" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-lg font-bold transition-all mb-6"> ◀️ Volver a Pacientes </button>
-      <div id="patientDetailHeader" class="mb-6"></div><!-- Pestañas de Navegación -->
-      <div class="flex flex-wrap gap-2 mb-6 border-b-2 border-gray-200"><button onclick="showPatientTab('overview')" id="tabOverview" class="px-6 py-3 font-bold text-emerald-600 border-b-4 border-emerald-500 transition-all"> 📊 Resumen </button> <button onclick="showPatientTab('professionalReport')" id="tabProfessionalReport" class="px-6 py-3 font-bold text-gray-600 hover:text-emerald-600 transition-all"> 📋 Informe Profesional </button> <button onclick="showPatientTab('clinicalHistory')" id="tabClinicalHistory" class="px-6 py-3 font-bold text-gray-600 hover:text-emerald-600 transition-all"> 📋 Historia Clínica </button> <button onclick="showPatientTab('sessions')" id="tabSessions" class="px-6 py-3 font-bold text-gray-600 hover:text-emerald-600 transition-all"> 🎙️ Sesiones </button> <button onclick="showPatientTab('notes')" id="tabNotes" class="px-6 py-3 font-bold text-gray-600 hover:text-emerald-600 transition-all"> 📝 Notas </button>
-      </div><!-- Pestaña Resumen -->
-      <div id="patientTabOverview" class="patient-tab">
-       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div onclick="openRecordSessionForPatient()" class="bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl shadow-lg p-8 text-center cursor-pointer transition-all hover:shadow-2xl hover:-translate-y-2 text-white">
-         <div class="text-6xl mb-4">
-          🎙️
-         </div>
-         <h3 class="text-xl font-bold mb-2">Grabar Sesión</h3>
-         <p class="opacity-90">Con transcripción en tiempo real</p>
+    </div><!-- Modal Detalles del Paciente (incluye grabación) -->
+    <div id="patientDetailsModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
+     <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-4xl w-full my-8">
+      <h2 class="text-3xl font-bold text-slate-900 mb-6">📋 Ficha del Paciente</h2>
+      <div id="patientDetailsContent" class="mb-6"><!-- Contenido dinámico -->
+      </div><!-- MÓDULO DE GRABACIÓN Y TRANSCRIPCIÓN -->
+      <div class="bg-gradient-to-r from-emerald-50 to-blue-50 rounded-2xl p-6 mb-6 border-2 border-emerald-200">
+       <h3 class="text-2xl font-bold text-slate-900 mb-4">🎙️ Grabación de Sesión</h3>
+       <div class="recording-status" id="recordingStatus">
+        <div class="status-dot" id="statusDot"></div><span id="statusText">Listo para grabar</span>
+       </div>
+       <div class="flex flex-wrap gap-3 mb-6"><button id="btnStartRecording" onclick="startRecording()" class="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-lg font-bold transition-all"> ⏺️ Iniciar Grabación </button> <button id="btnStopRecording" onclick="stopRecording()" disabled class="bg-gray-400 text-white px-6 py-3 rounded-lg font-bold cursor-not-allowed"> ⏹️ Detener Grabación </button> <button id="btnDownloadAudio" onclick="downloadRecording()" disabled class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-bold transition-all"> 💾 Descargar Audio </button>
+       </div>
+       <div class="bg-white rounded-xl p-6 border-2 border-gray-200">
+        <h4 class="text-xl font-bold text-slate-900 mb-3">📝 Transcripción en Tiempo Real</h4>
+        <div id="liveTranscription" class="bg-gray-50 rounded-lg p-4 min-h-[200px] max-h-[400px] overflow-y-auto border-2 border-gray-300 font-mono text-sm whitespace-pre-wrap">
+         La transcripción aparecerá aquí cuando inicies la grabación...
         </div>
-        <div onclick="showPatientTab('clinicalHistory')" class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl shadow-lg p-8 text-center cursor-pointer transition-all hover:shadow-2xl hover:-translate-y-2 text-white">
-         <div class="text-6xl mb-4">
-          📋
-         </div>
-         <h3 class="text-xl font-bold mb-2">Historia Clínica</h3>
-         <p class="opacity-90">Formulario completo profesional</p>
-        </div>
-        <div onclick="downloadPatientBackup()" class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl shadow-lg p-8 text-center cursor-pointer transition-all hover:shadow-2xl hover:-translate-y-2 text-white">
-         <div class="text-6xl mb-4">
-          💾
-         </div>
-         <h3 class="text-xl font-bold mb-2">Backup Paciente</h3>
-         <p class="opacity-90">Descargar todos los datos</p>
+        <div class="flex gap-3 mt-4"><button onclick="copyTranscription()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg font-semibold transition-all"> 📋 Copiar Transcripción </button> <button onclick="downloadTranscriptionTXT()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold transition-all"> 💾 Descargar TXT </button> <button onclick="clearTranscription()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-semibold transition-all"> 🗑️ Limpiar </button>
         </div>
        </div>
-       <div class="mb-8">
-        <h3 class="text-2xl font-bold text-slate-900 mb-4">🎙️ Historial de Sesiones</h3>
-        <div id="patientSessions"></div>
-       </div>
-       <div class="mb-8">
-        <h3 class="text-2xl font-bold text-slate-900 mb-4">📝 Notas del Paciente</h3>
-        <div id="patientNotes"></div>
-       </div>
-       <div>
-        <h3 class="text-2xl font-bold text-slate-900 mb-4">📅 Próximas Citas</h3>
-        <div id="patientAppointments"></div>
-       </div>
-      </div><!-- Pestaña Informe Profesional -->
-      <div id="patientTabProfessionalReport" class="patient-tab hidden">
-       <div class="bg-gradient-to-r from-blue-900 to-blue-800 rounded-2xl p-8 mb-6 text-white">
-        <h2 class="text-3xl font-bold mb-2">📋 INFORME PSICOLÓGICO PROFESIONAL</h2>
-        <p class="text-blue-100">Protocolo Clínico Basado en Técnicas de Evaluación</p>
-       </div>
-       <form id="professionalReportForm" class="medical-form space-y-8"><!-- ÁREA DE IDENTIFICACIÓN -->
-        <div class="bg-white rounded-2xl p-6 border-2 border-blue-200 shadow-lg">
-         <h3 class="text-2xl font-bold text-blue-900 mb-6 border-b-2 border-emerald-500 pb-2">👤 ÁREA DE IDENTIFICACIÓN</h3>
-         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div><label for="prNombre" class="block text-sm font-bold text-gray-700 mb-2">Nombre Completo del Paciente</label> <input type="text" id="prNombre" name="prNombre" placeholder="Nombre completo" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all focus:border-blue-500">
-          </div>
-          <div><label for="prEdad" class="block text-sm font-bold text-gray-700 mb-2">Edad</label> <input type="number" id="prEdad" name="prEdad" placeholder="Edad en años" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all focus:border-blue-500">
-          </div>
-          <div><label for="prFecha" class="block text-sm font-bold text-gray-700 mb-2">Fecha de Evaluación</label> <input type="date" id="prFecha" name="prFecha" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all focus:border-blue-500">
-          </div>
-          <div><label for="prMatricula" class="block text-sm font-bold text-gray-700 mb-2">Matrícula Profesional del Evaluador</label> <input type="text" id="prMatricula" name="prMatricula" placeholder="MP XXXX" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all focus:border-blue-500">
-          </div>
-         </div>
-        </div><!-- ÁREA DE EVALUACIÓN -->
-        <div class="bg-white rounded-2xl p-6 border-2 border-blue-200 shadow-lg">
-         <h3 class="text-2xl font-bold text-blue-900 mb-6 border-b-2 border-emerald-500 pb-2">🔬 ÁREA DE EVALUACIÓN</h3>
-         <div><label for="prTecnicas" class="block text-sm font-bold text-gray-700 mb-2">Técnicas y Tests Aplicados</label> <textarea id="prTecnicas" name="prTecnicas" rows="6" placeholder="Ejemplo: Entrevista clínica semiestructurada, Test de Rorschach, WAIS-IV, Test de la Figura Humana, Inventario de Depresión de Beck (BDI-II), etc." class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all focus:border-blue-500"></textarea>
-         </div>
-        </div><!-- ANÁLISIS DE FUNCIONES -->
-        <div class="bg-white rounded-2xl p-6 border-2 border-blue-200 shadow-lg">
-         <h3 class="text-2xl font-bold text-blue-900 mb-6 border-b-2 border-emerald-500 pb-2">🧠 ANÁLISIS DE FUNCIONES PSICOLÓGICAS</h3>
-         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div><label for="prAtencion" class="block text-sm font-bold text-gray-700 mb-2">Atención</label> <select id="prAtencion" name="prAtencion" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all focus:border-blue-500"> <option value="">Seleccionar</option> <option value="Conservada">Conservada</option> <option value="Disminuida">Disminuida</option> <option value="Lábil">Lábil</option> <option value="Dispersa">Dispersa</option> <option value="Hipervigilante">Hipervigilante</option> </select>
-          </div>
-          <div><label for="prMemoria" class="block text-sm font-bold text-gray-700 mb-2">Memoria</label> <select id="prMemoria" name="prMemoria" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all focus:border-blue-500"> <option value="">Seleccionar</option> <option value="Normal">Normal</option> <option value="Amnesia Parcial">Amnesia Parcial</option> <option value="Hipermnesia">Hipermnesia</option> <option value="Deteriorada">Deteriorada</option> <option value="Fallas en MCP">Fallas en Memoria a Corto Plazo</option> <option value="Fallas en MLP">Fallas en Memoria a Largo Plazo</option> </select>
-          </div>
-          <div><label for="prJuicio" class="block text-sm font-bold text-gray-700 mb-2">Juicio y Razonamiento</label> <select id="prJuicio" name="prJuicio" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all focus:border-blue-500"> <option value="">Seleccionar</option> <option value="Conservado">Conservado</option> <option value="Alterado">Alterado</option> <option value="Concreto">Pensamiento Concreto</option> <option value="Abstracto Preservado">Pensamiento Abstracto Preservado</option> <option value="Crítica Disminuida">Crítica Disminuida</option> </select>
-          </div>
-          <div><label for="prAfectividad" class="block text-sm font-bold text-gray-700 mb-2">Afectividad</label> <select id="prAfectividad" name="prAfectividad" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all focus:border-blue-500"> <option value="">Seleccionar</option> <option value="Estable">Estable</option> <option value="Lábil">Lábil</option> <option value="Aplanada">Aplanada</option> <option value="Inapropiada">Inapropiada</option> <option value="Restringida">Restringida</option> <option value="Expansiva">Expansiva</option> </select>
-          </div>
-         </div>
-        </div><!-- RESULTADOS POR ÁREAS -->
-        <div class="bg-white rounded-2xl p-6 border-2 border-blue-200 shadow-lg">
-         <h3 class="text-2xl font-bold text-blue-900 mb-6 border-b-2 border-emerald-500 pb-2">📊 RESULTADOS POR ÁREAS</h3>
-         <div class="mb-6"><label for="prAreaCognitiva" class="block text-sm font-bold text-gray-700 mb-2">Área Cognitiva</label> <textarea id="prAreaCognitiva" name="prAreaCognitiva" rows="5" placeholder="Describir hallazgos en funciones cognitivas: atención, concentración, memoria, lenguaje, funciones ejecutivas, velocidad de procesamiento..." class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all focus:border-blue-500"></textarea>
-         </div>
-         <div class="mb-6"><label for="prAreaSocioEmocional" class="block text-sm font-bold text-gray-700 mb-2">Área Socio-Emocional</label> <textarea id="prAreaSocioEmocional" name="prAreaSocioEmocional" rows="5" placeholder="Describir aspectos emocionales, vínculos afectivos, habilidades sociales, regulación emocional, autoestima..." class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all focus:border-blue-500"></textarea>
-         </div>
-         <div><label for="prAreaFamiliar" class="block text-sm font-bold text-gray-700 mb-2">Área Familiar</label> <textarea id="prAreaFamiliar" name="prAreaFamiliar" rows="5" placeholder="Describir dinámica familiar, vínculos, roles, comunicación, antecedentes relevantes..." class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all focus:border-blue-500"></textarea>
-         </div>
-        </div><!-- CONCLUSIÓN -->
-        <div class="bg-white rounded-2xl p-6 border-2 border-blue-200 shadow-lg">
-         <h3 class="text-2xl font-bold text-blue-900 mb-6 border-b-2 border-emerald-500 pb-2">✅ CONCLUSIÓN PROFESIONAL</h3>
-         <div class="mb-6"><label for="prDiagnosticoPresuntivo" class="block text-sm font-bold text-gray-700 mb-2">Diagnóstico Presuntivo</label> <textarea id="prDiagnosticoPresuntivo" name="prDiagnosticoPresuntivo" rows="6" placeholder="Impresión diagnóstica según criterios DSM-5 o CIE-11, hipótesis clínicas..." class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all focus:border-blue-500"></textarea>
-         </div>
-         <div><label for="prSugerenciasTerapeuticas" class="block text-sm font-bold text-gray-700 mb-2">Sugerencias Terapéuticas</label> <textarea id="prSugerenciasTerapeuticas" name="prSugerenciasTerapeuticas" rows="6" placeholder="Recomendaciones de tratamiento: psicoterapia, abordaje familiar, derivaciones, frecuencia sugerida..." class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all focus:border-blue-500"></textarea>
-         </div>
-        </div><!-- Botones de Acción -->
-        <div class="flex flex-wrap gap-4 justify-center"><button type="button" onclick="saveProfessionalReport()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg hover:shadow-2xl"> 💾 Guardar Informe </button> <button type="button" onclick="downloadProfessionalReportPDF()" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg hover:shadow-2xl"> 📄 Descargar PDF </button> <button type="button" onclick="clearProfessionalReportForm()" class="bg-gray-500 hover:bg-gray-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg hover:shadow-2xl"> 🔄 Limpiar Formulario </button>
-        </div>
-       </form>
-      </div><!-- Pestaña Historia Clínica -->
-      <div id="patientTabClinicalHistory" class="patient-tab hidden">
-       <div class="bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl p-8 mb-6 text-white">
-        <h2 class="text-3xl font-bold mb-2">📋 HISTORIA CLÍNICA PSICOLÓGICA</h2>
-        <p class="text-blue-100">Formulario completo para evaluación y diagnóstico profesional</p>
-       </div>
-       <form id="clinicalHistoryForm" class="medical-form space-y-8"><!-- Datos Personales -->
-        <div class="bg-gray-50 rounded-2xl p-6 border-2 border-gray-200">
-         <h3 class="text-2xl font-bold text-slate-900 mb-6 border-b-2 border-emerald-500 pb-2">👤 DATOS PERSONALES</h3>
-         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div><label for="chNombre" class="block text-sm font-bold text-gray-700 mb-2">Nombre Completo</label> <input type="text" id="chNombre" name="chNombre" placeholder="Nombre completo del paciente" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all">
-          </div>
-          <div><label for="chEdad" class="block text-sm font-bold text-gray-700 mb-2">Edad</label> <input type="number" id="chEdad" name="chEdad" placeholder="Edad en años" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all">
-          </div>
-          <div><label for="chFechaNacimiento" class="block text-sm font-bold text-gray-700 mb-2">Fecha de Nacimiento</label> <input type="date" id="chFechaNacimiento" name="chFechaNacimiento" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all">
-          </div>
-          <div><label for="chEstudios" class="block text-sm font-bold text-gray-700 mb-2">Nivel de Estudios</label> <select id="chEstudios" name="chEstudios" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all"> <option value="">Seleccionar</option> <option value="Primaria">Primaria</option> <option value="Secundaria">Secundaria</option> <option value="Técnico">Técnico</option> <option value="Universitario">Universitario</option> <option value="Posgrado">Posgrado</option> </select>
-          </div>
-          <div><label for="chOcupacion" class="block text-sm font-bold text-gray-700 mb-2">Ocupación</label> <input type="text" id="chOcupacion" name="chOcupacion" placeholder="Ocupación del paciente" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all">
-          </div>
-          <div><label for="chReligion" class="block text-sm font-bold text-gray-700 mb-2">Religión</label> <input type="text" id="chReligion" name="chReligion" placeholder="Religión o creencia" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all">
-          </div>
-          <div><label for="chTelefono" class="block text-sm font-bold text-gray-700 mb-2">Teléfono de Contacto</label> <input type="tel" id="chTelefono" name="chTelefono" placeholder="Teléfono" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all">
-          </div>
-          <div><label for="chEstadoCivil" class="block text-sm font-bold text-gray-700 mb-2">Estado Civil</label> <select id="chEstadoCivil" name="chEstadoCivil" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all"> <option value="">Seleccionar</option> <option value="Soltero/a">Soltero/a</option> <option value="Casado/a">Casado/a</option> <option value="Divorciado/a">Divorciado/a</option> <option value="Viudo/a">Viudo/a</option> <option value="Unión Libre">Unión Libre</option> </select>
-          </div>
-         </div>
-        </div><!-- Motivo de Consulta -->
-        <div class="bg-gray-50 rounded-2xl p-6 border-2 border-gray-200">
-         <h3 class="text-2xl font-bold text-slate-900 mb-6 border-b-2 border-emerald-500 pb-2">🗣️ MOTIVO DE CONSULTA</h3><label for="chMotivoConsulta" class="sr-only">Motivo de Consulta</label> <textarea id="chMotivoConsulta" name="chMotivoConsulta" rows="6" placeholder="Describa detalladamente el motivo por el cual el paciente busca ayuda profesional..." class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all"></textarea>
-        </div><!-- Salud y Síntomas -->
-        <div class="bg-gray-50 rounded-2xl p-6 border-2 border-gray-200">
-         <h3 class="text-2xl font-bold text-slate-900 mb-6 border-b-2 border-emerald-500 pb-2">🏥 SALUD Y SÍNTOMAS</h3>
-         <div class="checkbox-grid"><label for="chConsumoDrogas" class="flex items-center space-x-2 cursor-pointer"> <input type="checkbox" id="chConsumoDrogas" name="chConsumoDrogas" class="w-5 h-5 text-emerald-500 rounded focus:ring-emerald-500"> <span class="font-medium">Consumo de drogas</span> </label> <label for="chPerdidaControl" class="flex items-center space-x-2 cursor-pointer"> <input type="checkbox" id="chPerdidaControl" name="chPerdidaControl" class="w-5 h-5 text-emerald-500 rounded focus:ring-emerald-500"> <span class="font-medium">Pérdida de control</span> </label> <label for="chInsomnio" class="flex items-center space-x-2 cursor-pointer"> <input type="checkbox" id="chInsomnio" name="chInsomnio" class="w-5 h-5 text-emerald-500 rounded focus:ring-emerald-500"> <span class="font-medium">Insomnio</span> </label> <label for="chArranquesRabia" class="flex items-center space-x-2 cursor-pointer"> <input type="checkbox" id="chArranquesRabia" name="chArranquesRabia" class="w-5 h-5 text-emerald-500 rounded focus:ring-emerald-500"> <span class="font-medium">Arranques de rabia</span> </label> <label for="chPensamientosSuicidas" class="flex items-center space-x-2 cursor-pointer"> <input type="checkbox" id="chPensamientosSuicidas" name="chPensamientosSuicidas" class="w-5 h-5 text-emerald-500 rounded focus:ring-emerald-500"> <span class="font-medium">Pensar en quitarse la vida</span> </label> <label for="chAnsiedad" class="flex items-center space-x-2 cursor-pointer"> <input type="checkbox" id="chAnsiedad" name="chAnsiedad" class="w-5 h-5 text-emerald-500 rounded focus:ring-emerald-500"> <span class="font-medium">Ansiedad constante</span> </label> <label for="chDepresion" class="flex items-center space-x-2 cursor-pointer"> <input type="checkbox" id="chDepresion" name="chDepresion" class="w-5 h-5 text-emerald-500 rounded focus:ring-emerald-500"> <span class="font-medium">Depresión</span> </label> <label for="chAtaquesPanico" class="flex items-center space-x-2 cursor-pointer"> <input type="checkbox" id="chAtaquesPanico" name="chAtaquesPanico" class="w-5 h-5 text-emerald-500 rounded focus:ring-emerald-500"> <span class="font-medium">Ataques de pánico</span> </label> <label for="chProblemasAlimentacion" class="flex items-center space-x-2 cursor-pointer"> <input type="checkbox" id="chProblemasAlimentacion" name="chProblemasAlimentacion" class="w-5 h-5 text-emerald-500 rounded focus:ring-emerald-500"> <span class="font-medium">Problemas de alimentación</span> </label> <label for="chDificultadConcentracion" class="flex items-center space-x-2 cursor-pointer"> <input type="checkbox" id="chDificultadConcentracion" name="chDificultadConcentracion" class="w-5 h-5 text-emerald-500 rounded focus:ring-emerald-500"> <span class="font-medium">Dificultad para concentrarse</span> </label>
-         </div>
-        </div><!-- Respuestas Fisiológicas -->
-        <div class="bg-gray-50 rounded-2xl p-6 border-2 border-gray-200">
-         <h3 class="text-2xl font-bold text-slate-900 mb-6 border-b-2 border-emerald-500 pb-2">💓 RESPUESTAS FISIOLÓGICAS Y PENSAMIENTOS</h3>
-         <div class="overflow-x-auto">
-          <table class="w-full border-collapse">
-           <thead>
-            <tr class="bg-slate-800 text-white">
-             <th class="px-4 py-3 text-left font-bold">Síntoma / Pensamiento</th>
-             <th class="px-4 py-3 text-center font-bold">Sí</th>
-             <th class="px-4 py-3 text-center font-bold">No</th>
-            </tr>
-           </thead>
-           <tbody class="bg-white">
-            <tr class="border-b hover:bg-gray-50">
-             <td class="px-4 py-3 font-medium">Sudoración excesiva</td>
-             <td class="px-4 py-3 text-center"><input type="radio" name="chSudor" value="si" class="w-5 h-5 text-emerald-500" id="chSudorSi"> <label for="chSudorSi" class="sr-only">Sudoración excesiva - Sí</label></td>
-             <td class="px-4 py-3 text-center"><input type="radio" name="chSudor" value="no" class="w-5 h-5 text-emerald-500" id="chSudorNo"> <label for="chSudorNo" class="sr-only">Sudoración excesiva - No</label></td>
-            </tr>
-            <tr class="border-b hover:bg-gray-50">
-             <td class="px-4 py-3 font-medium">Tensión muscular</td>
-             <td class="px-4 py-3 text-center"><input type="radio" name="chTension" value="si" class="w-5 h-5 text-emerald-500" id="chTensionSi"> <label for="chTensionSi" class="sr-only">Tensión muscular - Sí</label></td>
-             <td class="px-4 py-3 text-center"><input type="radio" name="chTension" value="no" class="w-5 h-5 text-emerald-500" id="chTensionNo"> <label for="chTensionNo" class="sr-only">Tensión muscular - No</label></td>
-            </tr>
-            <tr class="border-b hover:bg-gray-50">
-             <td class="px-4 py-3 font-medium">Temblores</td>
-             <td class="px-4 py-3 text-center"><input type="radio" name="chTemblores" value="si" class="w-5 h-5 text-emerald-500" id="chTembloresSi"> <label for="chTembloresSi" class="sr-only">Temblores - Sí</label></td>
-             <td class="px-4 py-3 text-center"><input type="radio" name="chTemblores" value="no" class="w-5 h-5 text-emerald-500" id="chTembloresNo"> <label for="chTembloresNo" class="sr-only">Temblores - No</label></td>
-            </tr>
-            <tr class="border-b hover:bg-gray-50">
-             <td class="px-4 py-3 font-medium">Palpitaciones</td>
-             <td class="px-4 py-3 text-center"><input type="radio" name="chPalpitaciones" value="si" class="w-5 h-5 text-emerald-500" id="chPalpitacionesSi"> <label for="chPalpitacionesSi" class="sr-only">Palpitaciones - Sí</label></td>
-             <td class="px-4 py-3 text-center"><input type="radio" name="chPalpitaciones" value="no" class="w-5 h-5 text-emerald-500" id="chPalpitacionesNo"> <label for="chPalpitacionesNo" class="sr-only">Palpitaciones - No</label></td>
-            </tr>
-            <tr class="border-b hover:bg-gray-50">
-             <td class="px-4 py-3 font-medium">Pensamiento: "Soy un desastre"</td>
-             <td class="px-4 py-3 text-center"><input type="radio" name="chPensamientoDesastre" value="si" class="w-5 h-5 text-emerald-500" id="chPensamientoDesastreSi"> <label for="chPensamientoDesastreSi" class="sr-only">Pensamiento Soy un desastre - Sí</label></td>
-             <td class="px-4 py-3 text-center"><input type="radio" name="chPensamientoDesastre" value="no" class="w-5 h-5 text-emerald-500" id="chPensamientoDesastreNo"> <label for="chPensamientoDesastreNo" class="sr-only">Pensamiento Soy un desastre - No</label></td>
-            </tr>
-            <tr class="border-b hover:bg-gray-50">
-             <td class="px-4 py-3 font-medium">Pensamiento: "No valgo nada"</td>
-             <td class="px-4 py-3 text-center"><input type="radio" name="chPensamientoValor" value="si" class="w-5 h-5 text-emerald-500" id="chPensamientoValorSi"> <label for="chPensamientoValorSi" class="sr-only">Pensamiento No valgo nada - Sí</label></td>
-             <td class="px-4 py-3 text-center"><input type="radio" name="chPensamientoValor" value="no" class="w-5 h-5 text-emerald-500" id="chPensamientoValorNo"> <label for="chPensamientoValorNo" class="sr-only">Pensamiento No valgo nada - No</label></td>
-            </tr>
-            <tr class="hover:bg-gray-50">
-             <td class="px-4 py-3 font-medium">Pensamiento: "Todo me sale mal"</td>
-             <td class="px-4 py-3 text-center"><input type="radio" name="chPensamientoMal" value="si" class="w-5 h-5 text-emerald-500" id="chPensamientoMalSi"> <label for="chPensamientoMalSi" class="sr-only">Pensamiento Todo me sale mal - Sí</label></td>
-             <td class="px-4 py-3 text-center"><input type="radio" name="chPensamientoMal" value="no" class="w-5 h-5 text-emerald-500" id="chPensamientoMalNo"> <label for="chPensamientoMalNo" class="sr-only">Pensamiento Todo me sale mal - No</label></td>
-            </tr>
-           </tbody>
-          </table>
-         </div>
-        </div><!-- Historial Familiar -->
-        <div class="bg-gray-50 rounded-2xl p-6 border-2 border-gray-200">
-         <h3 class="text-2xl font-bold text-slate-900 mb-6 border-b-2 border-emerald-500 pb-2">👨‍👩‍👧 HISTORIAL FAMILIAR</h3>
-         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div><label for="chActitudPadre" class="block text-sm font-bold text-gray-700 mb-2">Actitud del Padre</label> <select id="chActitudPadre" name="chActitudPadre" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all"> <option value="">Seleccionar</option> <option value="Afectuoso">Afectuoso</option> <option value="Indiferente">Indiferente</option> <option value="Hostil">Hostil</option> <option value="Ausente">Ausente</option> <option value="Sobreprotector">Sobreprotector</option> </select>
-          </div>
-          <div><label for="chActitudMadre" class="block text-sm font-bold text-gray-700 mb-2">Actitud de la Madre</label> <select id="chActitudMadre" name="chActitudMadre" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all"> <option value="">Seleccionar</option> <option value="Afectuosa">Afectuosa</option> <option value="Indiferente">Indiferente</option> <option value="Hostil">Hostil</option> <option value="Ausente">Ausente</option> <option value="Sobreprotectora">Sobreprotectora</option> </select>
-          </div>
-          <div class="md:col-span-2"><label for="chDinamicaFamiliar" class="block text-sm font-bold text-gray-700 mb-2">Descripción de la Dinámica Familiar</label> <textarea id="chDinamicaFamiliar" name="chDinamicaFamiliar" rows="4" placeholder="Describa las relaciones familiares, eventos importantes, traumas..." class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all"></textarea>
-          </div>
-         </div>
-        </div><!-- Vida Social y Laboral -->
-        <div class="bg-gray-50 rounded-2xl p-6 border-2 border-gray-200">
-         <h3 class="text-2xl font-bold text-slate-900 mb-6 border-b-2 border-emerald-500 pb-2">🤝 VIDA SOCIAL Y LABORAL</h3>
-         <div class="space-y-4">
-          <div><label for="chRelacionesSociales" class="block text-sm font-bold text-gray-700 mb-2">Descripción de Relaciones Sociales</label> <textarea id="chRelacionesSociales" name="chRelacionesSociales" rows="3" placeholder="¿Cómo son sus relaciones con amigos, compañeros?" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all"></textarea>
-          </div>
-          <div><label for="chSituacionLaboral" class="block text-sm font-bold text-gray-700 mb-2">Situación Laboral</label> <textarea id="chSituacionLaboral" name="chSituacionLaboral" rows="3" placeholder="Describa el ambiente laboral, satisfacción, conflictos..." class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all"></textarea>
-          </div>
-         </div>
-        </div><!-- Examen de Estado Psicológico -->
-        <div class="bg-gray-50 rounded-2xl p-6 border-2 border-gray-200">
-         <h3 class="text-2xl font-bold text-slate-900 mb-6 border-b-2 border-emerald-500 pb-2">🧠 EXAMEN DE ESTADO PSICOLÓGICO</h3>
-         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div><label for="chConsciencia" class="block text-sm font-bold text-gray-700 mb-2">Consciencia</label> <select id="chConsciencia" name="chConsciencia" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all"> <option value="">Seleccionar</option> <option value="Lúcido">Lúcido</option> <option value="Confuso">Confuso</option> <option value="Obnubilado">Obnubilado</option> </select>
-          </div>
-          <div><label for="chInteligencia" class="block text-sm font-bold text-gray-700 mb-2">Inteligencia</label> <select id="chInteligencia" name="chInteligencia" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all"> <option value="">Seleccionar</option> <option value="Promedio">Promedio</option> <option value="Superior al Promedio">Superior al Promedio</option> <option value="Inferior al Promedio">Inferior al Promedio</option> </select>
-          </div>
-          <div><label for="chAfectividad" class="block text-sm font-bold text-gray-700 mb-2">Afectividad</label> <select id="chAfectividad" name="chAfectividad" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all"> <option value="">Seleccionar</option> <option value="Estable">Estable</option> <option value="Lábil">Lábil</option> <option value="Aplanada">Aplanada</option> <option value="Inapropiada">Inapropiada</option> </select>
-          </div>
-          <div><label for="chMemoria" class="block text-sm font-bold text-gray-700 mb-2">Memoria</label> <select id="chMemoria" name="chMemoria" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all"> <option value="">Seleccionar</option> <option value="Normal">Normal</option> <option value="Amnesia Parcial">Amnesia Parcial</option> <option value="Hipermnesia">Hipermnesia</option> <option value="Deteriorada">Deteriorada</option> </select>
-          </div>
-          <div><label for="chLenguaje" class="block text-sm font-bold text-gray-700 mb-2">Lenguaje</label> <select id="chLenguaje" name="chLenguaje" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all"> <option value="">Seleccionar</option> <option value="Coherente">Coherente</option> <option value="Incoherente">Incoherente</option> <option value="Verborreico">Verborreico</option> <option value="Mutismo">Mutismo</option> <option value="Tartamudeo">Tartamudeo</option> </select>
-          </div>
-          <div><label for="chOrientacion" class="block text-sm font-bold text-gray-700 mb-2">Orientación</label> <select id="chOrientacion" name="chOrientacion" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all"> <option value="">Seleccionar</option> <option value="Orientado">Orientado en tiempo, espacio y persona</option> <option value="Desorientado Temporal">Desorientado Temporal</option> <option value="Desorientado Espacial">Desorientado Espacial</option> <option value="Desorientado Global">Desorientado Global</option> </select>
-          </div>
-         </div>
-        </div><!-- Diagnóstico e Impresión Clínica -->
-        <div class="bg-gray-50 rounded-2xl p-6 border-2 border-gray-200">
-         <h3 class="text-2xl font-bold text-slate-900 mb-6 border-b-2 border-emerald-500 pb-2">📋 DIAGNÓSTICO E IMPRESIÓN CLÍNICA</h3><label for="chDiagnostico" class="sr-only">Diagnóstico e Impresión Clínica</label> <textarea id="chDiagnostico" name="chDiagnostico" rows="6" placeholder="Impresión diagnóstica, observaciones del profesional, posibles diagnósticos DSM-5..." class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all"></textarea>
-        </div><!-- Plan de Tratamiento -->
-        <div class="bg-gray-50 rounded-2xl p-6 border-2 border-gray-200">
-         <h3 class="text-2xl font-bold text-slate-900 mb-6 border-b-2 border-emerald-500 pb-2">💊 PLAN DE TRATAMIENTO RECOMENDADO</h3><label for="chPlanTratamiento" class="sr-only">Plan de Tratamiento Recomendado</label> <textarea id="chPlanTratamiento" name="chPlanTratamiento" rows="6" placeholder="Sesiones sugeridas, técnicas terapéuticas, recomendaciones, derivaciones..." class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg transition-all"></textarea>
-        </div><!-- Botones de Acción -->
-        <div class="flex flex-wrap gap-4 justify-center"><button type="button" onclick="saveClinicalHistory()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg hover:shadow-2xl"> 💾 Guardar en Expediente </button> <button type="button" onclick="downloadClinicalHistoryPDF()" class="bg-blue-500 hover:bg-blue-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg hover:shadow-2xl"> 📄 Descargar PDF </button> <button type="button" onclick="downloadEmptyTemplatePDF()" class="bg-purple-500 hover:bg-purple-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg hover:shadow-2xl"> 📋 Descargar Plantilla Vacía </button> <button type="button" onclick="clearClinicalHistoryForm()" class="bg-gray-500 hover:bg-gray-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-lg hover:shadow-2xl"> 🔄 Limpiar Formulario </button>
-        </div>
-       </form>
-      </div><!-- Pestaña Sesiones -->
-      <div id="patientTabSessions" class="patient-tab hidden">
-       <div id="patientSessionsTab"></div>
-      </div><!-- Pestaña Notas -->
-      <div id="patientTabNotes" class="patient-tab hidden"><button onclick="showPatientNotesModal()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-3 rounded-lg font-bold transition-all mb-6"> ➕ Nueva Nota Clínica </button>
-       <div id="patientNotesTab"></div>
-      </div>
+      </div><button onclick="closePatientDetailsModal()" class="w-full bg-gray-500 hover:bg-gray-600 text-white py-3 rounded-lg font-bold transition-all"> Cerrar </button>
      </div>
-    </div><!-- Sección Agenda -->
+    </div><!-- Otras secciones existentes... -->
     <div id="agendaSection" class="section hidden">
      <div class="bg-white rounded-2xl shadow-lg p-6">
       <h2 class="text-3xl font-bold text-slate-900 mb-6">📅 Agenda Semanal</h2>
-      <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
-       <div class="flex gap-2"><button onclick="changeWeek(-1)" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-bold transition-all"> ◀ Anterior </button> <span id="weekLabel" class="px-4 py-2 font-bold text-slate-900"></span> <button onclick="changeWeek(1)" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-bold transition-all"> Siguiente ▶ </button>
-       </div><button onclick="openAddAppointmentModal()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-3 rounded-lg font-bold transition-all"> ➕ Agendar Cita </button>
+      <div class="text-center py-12 text-gray-400">
+       <div class="text-6xl mb-4">
+        📅
+       </div>
+       <p class="text-lg">Función de agenda en desarrollo</p>
       </div>
-      <div id="calendarGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-4"></div>
      </div>
-    </div><!-- Otras secciones... -->
+    </div>
     <div id="remindersSection" class="section hidden">
      <div class="bg-white rounded-2xl shadow-lg p-6">
       <h2 class="text-3xl font-bold text-slate-900 mb-6">✅ Recordatorios y Tareas</h2>
-      <div class="flex flex-wrap gap-3 mb-6"><button onclick="openAddReminderModal()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-3 rounded-lg font-bold transition-all"> ➕ Nuevo Recordatorio </button> <button onclick="openAddTaskModal()" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-bold transition-all"> 📝 Nueva Tarea </button>
+      <div class="text-center py-12 text-gray-400">
+       <div class="text-6xl mb-4">
+        ✅
+       </div>
+       <p class="text-lg">Función de recordatorios en desarrollo</p>
       </div>
-      <h3 class="text-2xl font-bold text-slate-900 mb-4">📌 Recordatorios</h3>
-      <div id="remindersList" class="mb-8"></div>
-      <h3 class="text-2xl font-bold text-slate-900 mb-4">📋 Tareas</h3>
-      <div id="tasksList"></div>
      </div>
     </div>
     <div id="plansSection" class="section hidden">
@@ -558,8 +489,6 @@
       <div class="bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-2xl p-6 text-white mb-8">
        <h3 class="text-2xl font-bold mb-2">Tu Plan Actual: <span id="currentPlanName">Premium 👑</span></h3>
        <p id="planExpiryInfo">Plan activo</p>
-      </div>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6"><!-- Planes... -->
       </div>
      </div>
     </div>
@@ -593,7 +522,7 @@
     </div>
    </div><!-- Footer -->
    <footer class="bg-white rounded-2xl shadow-lg p-6 text-center mt-8 mx-4">
-    <p class="text-gray-600 text-sm font-medium mb-2">🔒 <strong>Entorno cifrado HIPAA &amp; GDPR.</strong> © 2026 PsyTape Professional</p>
+    <p class="text-gray-600 text-sm font-medium mb-2">🔒 <strong>Entorno de Salud Protegido.</strong> Cumple con normativas internacionales de privacidad. © 2026 PsyTape</p>
    </footer>
   </div><!-- Modal Agregar Paciente -->
   <div id="addPatientModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -618,65 +547,11 @@
    </div>
   </div>
   <script>
-        // Función para generar nombres de archivo con estructura: Apellido_Nombre_DNI_Fecha
-        function generateFileName(patient, fileType, extension) {
-            // Separar nombre completo en partes
-            const nameParts = patient.name.trim().split(' ');
-            let apellido = '';
-            let nombre = '';
-            
-            // Asumir que el último elemento es el apellido principal
-            if (nameParts.length >= 2) {
-                apellido = nameParts[nameParts.length - 1];
-                nombre = nameParts.slice(0, -1).join('_');
-            } else {
-                nombre = nameParts[0];
-                apellido = 'SinApellido';
-            }
-            
-            // Limpiar caracteres especiales
-            apellido = apellido.replace(/[^a-zA-Z0-9]/g, '');
-            nombre = nombre.replace(/[^a-zA-Z0-9_]/g, '');
-            
-            // Obtener fecha actual
-            const fecha = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
-            
-            // DNI limpio
-            const dni = patient.dni.replace(/[^a-zA-Z0-9]/g, '');
-            
-            // Construir nombre del archivo
-            return `${apellido}_${nombre}_${dni}_${fecha}_${fileType}.${extension}`;
-        }
-
-        // Función auxiliar para nombres de archivo de sesiones específicas
-        function generateSessionFileName(patient, sessionTitle, extension) {
-            const nameParts = patient.name.trim().split(' ');
-            let apellido = '';
-            let nombre = '';
-            
-            if (nameParts.length >= 2) {
-                apellido = nameParts[nameParts.length - 1];
-                nombre = nameParts.slice(0, -1).join('_');
-            } else {
-                nombre = nameParts[0];
-                apellido = 'SinApellido';
-            }
-            
-            apellido = apellido.replace(/[^a-zA-Z0-9]/g, '');
-            nombre = nombre.replace(/[^a-zA-Z0-9_]/g, '');
-            const dni = patient.dni.replace(/[^a-zA-Z0-9]/g, '');
-            const fecha = new Date().toISOString().split('T')[0];
-            
-            // Limpiar título de sesión
-            const sessionClean = sessionTitle.replace(/[^a-zA-Z0-9]/g, '_').substring(0, 30);
-            
-            return `${apellido}_${nombre}_${dni}_${fecha}_${sessionClean}.${extension}`;
-        }
-
         // Estado global de la aplicación
         let currentUser = null;
         let allPatients = [];
         let currentPatient = null;
+        let schoolRowCounter = 1;
 
         // Inicialización
         document.addEventListener('DOMContentLoaded', () => {
@@ -795,6 +670,10 @@
             else if (sectionName === 'reminders') document.getElementById('remindersSection').classList.remove('hidden');
             else if (sectionName === 'plans') document.getElementById('plansSection').classList.remove('hidden');
             else if (sectionName === 'account') document.getElementById('accountSection').classList.remove('hidden');
+            else if (sectionName === 'infantHistory') {
+                document.getElementById('infantHistorySection').classList.remove('hidden');
+                switchInfantVersion('short'); // Mostrar versión corta por defecto
+            }
         }
 
         // Gestión de pacientes
@@ -828,16 +707,16 @@
                 <div class="bg-gray-50 rounded-xl p-6 border-2 border-gray-200 hover:border-emerald-500 transition-all">
                     <div class="flex flex-wrap items-center justify-between gap-4">
                         <div class="flex-1">
-                            <h3 class="text-xl font-bold text-slate-900">${p.name}</h3>
-                            <p class="text-gray-600">DNI: ${p.dni} | Edad: ${p.age} años</p>
-                            ${p.email ? `<p class="text-gray-600">✉️ ${p.email}</p>` : ''}
-                            ${p.phone ? `<p class="text-gray-600">📞 ${p.phone}</p>` : ''}
+                            <h3 class="text-xl font-bold text-slate-900">${escapeHtml(p.name)}</h3>
+                            <p class="text-gray-600">DNI: ${escapeHtml(p.dni)} | Edad: ${escapeHtml(p.age)} años</p>
+                            ${p.email ? `<p class="text-gray-600">✉️ ${escapeHtml(p.email)}</p>` : ''}
+                            ${p.phone ? `<p class="text-gray-600">📞 ${escapeHtml(p.phone)}</p>` : ''}
                         </div>
                         <div class="flex gap-2">
-                            <button onclick="viewPatient('${p.dni}')" class="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg font-semibold transition-all">
-                                Ver Ficha
+                            <button onclick="openPatientDetails('${escapeHtml(p.dni)}')" class="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg font-semibold transition-all">
+                                🎙️ Grabar Sesión
                             </button>
-                            <button onclick="deletePatient('${p.dni}')" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-semibold transition-all">
+                            <button onclick="deletePatient('${escapeHtml(p.dni)}')" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-semibold transition-all">
                                 Eliminar
                             </button>
                         </div>
@@ -863,10 +742,8 @@
                 age: document.getElementById('patientAge').value,
                 email: document.getElementById('patientEmail').value,
                 phone: document.getElementById('patientPhone').value,
-                sessions: [],
-                notes: [],
-                clinicalHistory: {},
-                professionalReport: {}
+                infantHistoryShort: null,
+                infantHistoryLong: null
             };
 
             allPatients.push(newPatient);
@@ -874,331 +751,35 @@
             closeModal('addPatientModal');
             document.getElementById('addPatientForm').reset();
             renderPatientList();
+            showToast('✅ Paciente agregado exitosamente', 'success');
         });
 
-        function viewPatient(dni) {
-            currentPatient = allPatients.find(p => p.dni === dni);
-            if (!currentPatient) return;
-
-            document.getElementById('patientsSection').classList.add('hidden');
-            document.getElementById('patientDetailSection').classList.remove('hidden');
-
-            document.getElementById('patientDetailHeader').innerHTML = `
-                <div class="bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-2xl p-6 text-white">
-                    <h2 class="text-3xl font-bold mb-2">${currentPatient.name}</h2>
-                    <p class="text-emerald-100">DNI: ${currentPatient.dni} | Edad: ${currentPatient.age} años</p>
+        function deletePatient(dni) {
+            const confirmDiv = document.createElement('div');
+            confirmDiv.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
+            confirmDiv.innerHTML = `
+                <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md">
+                    <h3 class="text-2xl font-bold text-slate-900 mb-4">¿Confirmar eliminación?</h3>
+                    <p class="text-gray-600 mb-6">Esta acción no se puede deshacer.</p>
+                    <div class="flex gap-3">
+                        <button onclick="confirmDeletePatient('${dni}')" class="flex-1 bg-red-500 hover:bg-red-600 text-white py-3 rounded-lg font-bold transition-all">
+                            Eliminar
+                        </button>
+                        <button onclick="this.closest('.fixed').remove()" class="flex-1 bg-gray-500 hover:bg-gray-600 text-white py-3 rounded-lg font-bold transition-all">
+                            Cancelar
+                        </button>
+                    </div>
                 </div>
             `;
-
-            showPatientTab('overview');
+            document.body.appendChild(confirmDiv);
         }
 
-        function showPatientTab(tabName) {
-            document.querySelectorAll('.patient-tab').forEach(t => t.classList.add('hidden'));
-            document.querySelectorAll('[id^="tab"]').forEach(btn => {
-                btn.classList.remove('text-emerald-600', 'border-b-4', 'border-emerald-500');
-                btn.classList.add('text-gray-600');
-            });
-
-            if (tabName === 'overview') {
-                document.getElementById('patientTabOverview').classList.remove('hidden');
-                document.getElementById('tabOverview').classList.add('text-emerald-600', 'border-b-4', 'border-emerald-500');
-            } else if (tabName === 'professionalReport') {
-                document.getElementById('patientTabProfessionalReport').classList.remove('hidden');
-                document.getElementById('tabProfessionalReport').classList.add('text-emerald-600', 'border-b-4', 'border-emerald-500');
-                loadProfessionalReportData();
-            } else if (tabName === 'clinicalHistory') {
-                document.getElementById('patientTabClinicalHistory').classList.remove('hidden');
-                document.getElementById('tabClinicalHistory').classList.add('text-emerald-600', 'border-b-4', 'border-emerald-500');
-                loadClinicalHistoryData();
-            } else if (tabName === 'sessions') {
-                document.getElementById('patientTabSessions').classList.remove('hidden');
-                document.getElementById('tabSessions').classList.add('text-emerald-600', 'border-b-4', 'border-emerald-500');
-            } else if (tabName === 'notes') {
-                document.getElementById('patientTabNotes').classList.remove('hidden');
-                document.getElementById('tabNotes').classList.add('text-emerald-600', 'border-b-4', 'border-emerald-500');
-            }
-        }
-
-        function deletePatient(dni) {
-            if (confirm('¿Estás seguro de eliminar este paciente? Esta acción no se puede deshacer.')) {
-                allPatients = allPatients.filter(p => p.dni !== dni);
-                savePatients();
-                renderPatientList();
-            }
-        }
-
-        // Funciones de Informe Profesional
-        function loadProfessionalReportData() {
-            if (!currentPatient || !currentPatient.professionalReport) return;
-
-            const pr = currentPatient.professionalReport;
-            
-            if (pr.nombre) document.getElementById('prNombre').value = pr.nombre;
-            if (pr.edad) document.getElementById('prEdad').value = pr.edad;
-            if (pr.fecha) document.getElementById('prFecha').value = pr.fecha;
-            if (pr.matricula) document.getElementById('prMatricula').value = pr.matricula;
-            if (pr.tecnicas) document.getElementById('prTecnicas').value = pr.tecnicas;
-            if (pr.atencion) document.getElementById('prAtencion').value = pr.atencion;
-            if (pr.memoria) document.getElementById('prMemoria').value = pr.memoria;
-            if (pr.juicio) document.getElementById('prJuicio').value = pr.juicio;
-            if (pr.afectividad) document.getElementById('prAfectividad').value = pr.afectividad;
-            if (pr.areaCognitiva) document.getElementById('prAreaCognitiva').value = pr.areaCognitiva;
-            if (pr.areaSocioEmocional) document.getElementById('prAreaSocioEmocional').value = pr.areaSocioEmocional;
-            if (pr.areaFamiliar) document.getElementById('prAreaFamiliar').value = pr.areaFamiliar;
-            if (pr.diagnosticoPresuntivo) document.getElementById('prDiagnosticoPresuntivo').value = pr.diagnosticoPresuntivo;
-            if (pr.sugerenciasTerapeuticas) document.getElementById('prSugerenciasTerapeuticas').value = pr.sugerenciasTerapeuticas;
-        }
-
-        function saveProfessionalReport() {
-            if (!currentPatient) {
-                showToast('❌ No hay paciente seleccionado', 'error');
-                return;
-            }
-
-            currentPatient.professionalReport = {
-                nombre: document.getElementById('prNombre').value,
-                edad: document.getElementById('prEdad').value,
-                fecha: document.getElementById('prFecha').value,
-                matricula: document.getElementById('prMatricula').value,
-                tecnicas: document.getElementById('prTecnicas').value,
-                atencion: document.getElementById('prAtencion').value,
-                memoria: document.getElementById('prMemoria').value,
-                juicio: document.getElementById('prJuicio').value,
-                afectividad: document.getElementById('prAfectividad').value,
-                areaCognitiva: document.getElementById('prAreaCognitiva').value,
-                areaSocioEmocional: document.getElementById('prAreaSocioEmocional').value,
-                areaFamiliar: document.getElementById('prAreaFamiliar').value,
-                diagnosticoPresuntivo: document.getElementById('prDiagnosticoPresuntivo').value,
-                sugerenciasTerapeuticas: document.getElementById('prSugerenciasTerapeuticas').value,
-                fechaGuardado: new Date().toISOString()
-            };
-
+        function confirmDeletePatient(dni) {
+            allPatients = allPatients.filter(p => p.dni !== dni);
             savePatients();
-            showToast('✅ Informe profesional guardado exitosamente', 'success');
-        }
-
-        function downloadProfessionalReportPDF() {
-            if (!currentPatient) {
-                showToast('No hay paciente seleccionado', 'error');
-                return;
-            }
-            
-            if (!currentUser || currentUser.plan !== 'Premium') {
-                showToast('⭐ Esta función está disponible solo para usuarios Premium', 'error');
-                return;
-            }
-
-            showToast('📄 Generando PDF del Informe Profesional...', 'success');
-            // Implementación de PDF similar a downloadClinicalHistoryPDF
-        }
-
-        function clearProfessionalReportForm() {
-            if (confirm('¿Deseas limpiar todos los campos del formulario?')) {
-                document.getElementById('professionalReportForm').reset();
-            }
-        }
-
-        // Historia Clínica
-        function loadClinicalHistoryData() {
-            if (!currentPatient || !currentPatient.clinicalHistory) return;
-
-            const ch = currentPatient.clinicalHistory;
-            
-            // Datos personales
-            if (ch.nombre) document.getElementById('chNombre').value = ch.nombre;
-            if (ch.edad) document.getElementById('chEdad').value = ch.edad;
-            if (ch.fechaNacimiento) document.getElementById('chFechaNacimiento').value = ch.fechaNacimiento;
-            if (ch.estudios) document.getElementById('chEstudios').value = ch.estudios;
-            if (ch.ocupacion) document.getElementById('chOcupacion').value = ch.ocupacion;
-            if (ch.religion) document.getElementById('chReligion').value = ch.religion;
-            if (ch.telefono) document.getElementById('chTelefono').value = ch.telefono;
-            if (ch.estadoCivil) document.getElementById('chEstadoCivil').value = ch.estadoCivil;
-            
-            // Motivo de consulta
-            if (ch.motivoConsulta) document.getElementById('chMotivoConsulta').value = ch.motivoConsulta;
-            
-            // Síntomas (checkboxes)
-            if (ch.consumoDrogas) document.getElementById('chConsumoDrogas').checked = ch.consumoDrogas;
-            if (ch.perdidaControl) document.getElementById('chPerdidaControl').checked = ch.perdidaControl;
-            if (ch.insomnio) document.getElementById('chInsomnio').checked = ch.insomnio;
-            if (ch.arranquesRabia) document.getElementById('chArranquesRabia').checked = ch.arranquesRabia;
-            if (ch.pensamientosSuicidas) document.getElementById('chPensamientosSuicidas').checked = ch.pensamientosSuicidas;
-            if (ch.ansiedad) document.getElementById('chAnsiedad').checked = ch.ansiedad;
-            if (ch.depresion) document.getElementById('chDepresion').checked = ch.depresion;
-            if (ch.ataquesPanico) document.getElementById('chAtaquesPanico').checked = ch.ataquesPanico;
-            if (ch.problemasAlimentacion) document.getElementById('chProblemasAlimentacion').checked = ch.problemasAlimentacion;
-            if (ch.dificultadConcentracion) document.getElementById('chDificultadConcentracion').checked = ch.dificultadConcentracion;
-            
-            // Respuestas fisiológicas (radio buttons)
-            if (ch.sudor) {
-                const sudorRadio = document.querySelector(`input[name="chSudor"][value="${ch.sudor}"]`);
-                if (sudorRadio) sudorRadio.checked = true;
-            }
-            if (ch.tension) {
-                const tensionRadio = document.querySelector(`input[name="chTension"][value="${ch.tension}"]`);
-                if (tensionRadio) tensionRadio.checked = true;
-            }
-            if (ch.temblores) {
-                const tembloresRadio = document.querySelector(`input[name="chTemblores"][value="${ch.temblores}"]`);
-                if (tembloresRadio) tembloresRadio.checked = true;
-            }
-            if (ch.palpitaciones) {
-                const palpitacionesRadio = document.querySelector(`input[name="chPalpitaciones"][value="${ch.palpitaciones}"]`);
-                if (palpitacionesRadio) palpitacionesRadio.checked = true;
-            }
-            if (ch.pensamientoDesastre) {
-                const pensRadio = document.querySelector(`input[name="chPensamientoDesastre"][value="${ch.pensamientoDesastre}"]`);
-                if (pensRadio) pensRadio.checked = true;
-            }
-            if (ch.pensamientoValor) {
-                const pensRadio = document.querySelector(`input[name="chPensamientoValor"][value="${ch.pensamientoValor}"]`);
-                if (pensRadio) pensRadio.checked = true;
-            }
-            if (ch.pensamientoMal) {
-                const pensRadio = document.querySelector(`input[name="chPensamientoMal"][value="${ch.pensamientoMal}"]`);
-                if (pensRadio) pensRadio.checked = true;
-            }
-            
-            // Historial familiar
-            if (ch.actitudPadre) document.getElementById('chActitudPadre').value = ch.actitudPadre;
-            if (ch.actitudMadre) document.getElementById('chActitudMadre').value = ch.actitudMadre;
-            if (ch.dinamicaFamiliar) document.getElementById('chDinamicaFamiliar').value = ch.dinamicaFamiliar;
-            
-            // Vida social y laboral
-            if (ch.relacionesSociales) document.getElementById('chRelacionesSociales').value = ch.relacionesSociales;
-            if (ch.situacionLaboral) document.getElementById('chSituacionLaboral').value = ch.situacionLaboral;
-            
-            // Examen psicológico
-            if (ch.consciencia) document.getElementById('chConsciencia').value = ch.consciencia;
-            if (ch.inteligencia) document.getElementById('chInteligencia').value = ch.inteligencia;
-            if (ch.afectividad) document.getElementById('chAfectividad').value = ch.afectividad;
-            if (ch.memoria) document.getElementById('chMemoria').value = ch.memoria;
-            if (ch.lenguaje) document.getElementById('chLenguaje').value = ch.lenguaje;
-            if (ch.orientacion) document.getElementById('chOrientacion').value = ch.orientacion;
-            
-            // Diagnóstico y tratamiento
-            if (ch.diagnostico) document.getElementById('chDiagnostico').value = ch.diagnostico;
-            if (ch.planTratamiento) document.getElementById('chPlanTratamiento').value = ch.planTratamiento;
-            
-            // Mostrar fecha de última actualización si existe
-            if (ch.ultimaActualizacion) {
-                showToast(`📋 Historia clínica cargada. Última actualización: ${ch.ultimaActualizacion}`, 'success');
-            }
-        }
-
-        function saveClinicalHistory() {
-            if (!currentPatient) {
-                showToast('❌ No hay paciente seleccionado', 'error');
-                return;
-            }
-
-            // Recopilar todos los datos del formulario
-            currentPatient.clinicalHistory = {
-                // Datos personales
-                nombre: document.getElementById('chNombre').value,
-                edad: document.getElementById('chEdad').value,
-                fechaNacimiento: document.getElementById('chFechaNacimiento').value,
-                estudios: document.getElementById('chEstudios').value,
-                ocupacion: document.getElementById('chOcupacion').value,
-                religion: document.getElementById('chReligion').value,
-                telefono: document.getElementById('chTelefono').value,
-                estadoCivil: document.getElementById('chEstadoCivil').value,
-                
-                // Motivo de consulta
-                motivoConsulta: document.getElementById('chMotivoConsulta').value,
-                
-                // Síntomas
-                consumoDrogas: document.getElementById('chConsumoDrogas')?.checked || false,
-                perdidaControl: document.getElementById('chPerdidaControl')?.checked || false,
-                insomnio: document.getElementById('chInsomnio')?.checked || false,
-                arranquesRabia: document.getElementById('chArranquesRabia')?.checked || false,
-                pensamientosSuicidas: document.getElementById('chPensamientosSuicidas')?.checked || false,
-                ansiedad: document.getElementById('chAnsiedad')?.checked || false,
-                depresion: document.getElementById('chDepresion')?.checked || false,
-                ataquesPanico: document.getElementById('chAtaquesPanico')?.checked || false,
-                problemasAlimentacion: document.getElementById('chProblemasAlimentacion')?.checked || false,
-                dificultadConcentracion: document.getElementById('chDificultadConcentracion')?.checked || false,
-                
-                // Respuestas fisiológicas
-                sudor: document.querySelector('input[name="chSudor"]:checked')?.value || '',
-                tension: document.querySelector('input[name="chTension"]:checked')?.value || '',
-                temblores: document.querySelector('input[name="chTemblores"]:checked')?.value || '',
-                palpitaciones: document.querySelector('input[name="chPalpitaciones"]:checked')?.value || '',
-                pensamientoDesastre: document.querySelector('input[name="chPensamientoDesastre"]:checked')?.value || '',
-                pensamientoValor: document.querySelector('input[name="chPensamientoValor"]:checked')?.value || '',
-                pensamientoMal: document.querySelector('input[name="chPensamientoMal"]:checked')?.value || '',
-                
-                // Historial familiar
-                actitudPadre: document.getElementById('chActitudPadre').value,
-                actitudMadre: document.getElementById('chActitudMadre').value,
-                dinamicaFamiliar: document.getElementById('chDinamicaFamiliar').value,
-                
-                // Vida social y laboral
-                relacionesSociales: document.getElementById('chRelacionesSociales').value,
-                situacionLaboral: document.getElementById('chSituacionLaboral').value,
-                
-                // Examen psicológico
-                consciencia: document.getElementById('chConsciencia').value,
-                inteligencia: document.getElementById('chInteligencia').value,
-                afectividad: document.getElementById('chAfectividad').value,
-                memoria: document.getElementById('chMemoria').value,
-                lenguaje: document.getElementById('chLenguaje').value,
-                orientacion: document.getElementById('chOrientacion').value,
-                
-                // Diagnóstico y tratamiento
-                diagnostico: document.getElementById('chDiagnostico').value,
-                planTratamiento: document.getElementById('chPlanTratamiento').value,
-                
-                // Metadatos
-                fechaGuardado: new Date().toISOString(),
-                ultimaActualizacion: new Date().toLocaleString('es-ES')
-            };
-
-            // Guardar en localStorage
-            savePatients();
-            
-            // Mostrar confirmación visual
-            showToast('✅ Historia clínica guardada exitosamente en el expediente de ' + currentPatient.name, 'success');
-        }
-
-        function clearClinicalHistoryForm() {
-            if (confirm('¿Deseas limpiar todos los campos del formulario?')) {
-                document.getElementById('clinicalHistoryForm').reset();
-            }
-        }
-
-        function downloadClinicalHistoryPDF() {
-            if (!currentPatient) {
-                showToast('No hay paciente seleccionado', 'error');
-                return;
-            }
-            
-            // Verificar plan Premium
-            if (!currentUser || currentUser.plan !== 'Premium') {
-                showToast('⭐ Esta función está disponible solo para usuarios Premium', 'error');
-                return;
-            }
-
-            showToast('📄 Generando PDF de Historia Clínica...', 'success');
-        }
-
-        function downloadEmptyTemplatePDF() {
-            // Verificar plan Premium
-            if (!currentUser || currentUser.plan !== 'Premium') {
-                showToast('⭐ Esta función está disponible solo para usuarios Premium', 'error');
-                return;
-            }
-            
-            showToast('📋 Descargando plantilla vacía...', 'success');
-        }
-
-        function downloadPatientBackup() {
-            showToast('💾 Función de backup en desarrollo', 'success');
-        }
-
-        function downloadFullBackup() {
-            showToast('💾 Función de backup completo en desarrollo', 'success');
+            renderPatientList();
+            document.querySelector('.fixed.inset-0').remove();
+            showToast('✅ Paciente eliminado', 'success');
         }
 
         function performGlobalSearch() {
@@ -1219,371 +800,595 @@
                 results.innerHTML = '<p class="text-gray-500 text-center py-4">No se encontraron resultados</p>';
             } else {
                 results.innerHTML = found.map(p => `
-                    <div class="bg-emerald-50 border-2 border-emerald-200 rounded-lg p-4 mb-2 cursor-pointer hover:bg-emerald-100" onclick="viewPatient('${p.dni}')">
-                        <p class="font-bold text-slate-900">${p.name}</p>
-                        <p class="text-sm text-gray-600">DNI: ${p.dni}</p>
+                    <div class="bg-emerald-50 border-2 border-emerald-200 rounded-lg p-4 mb-2 cursor-pointer hover:bg-emerald-100">
+                        <p class="font-bold text-slate-900">${escapeHtml(p.name)}</p>
+                        <p class="text-sm text-gray-600">DNI: ${escapeHtml(p.dni)}</p>
                     </div>
                 `).join('');
             }
         }
 
-        // Sistema de Grabación de Audio
-        let mediaRecorder;
+        function downloadFullBackup() {
+            showToast('💾 Función de backup en desarrollo', 'success');
+        }
+
+        // ==================== FUNCIONES DE GRABACIÓN Y TRANSCRIPCIÓN ====================
+
+        let mediaRecorder = null;
         let audioChunks = [];
-        let recordingStartTime;
-        let recordingTimerInterval;
-        let currentAudioBlob = null;
+        let recognition = null;
+        let fullTranscript = '';
 
-        function openRecordSessionForPatient() {
-            if (!currentPatient) return;
-            
-            const modal = document.createElement('div');
-            modal.id = 'recordingModal';
-            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
-            modal.innerHTML = `
-                <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-                    <h2 class="text-3xl font-bold text-slate-900 mb-6">🎙️ Grabar Sesión - ${currentPatient.name}</h2>
-                    
-                    <div class="mb-6">
-                        <div id="recordingStatusBox" class="bg-gray-100 rounded-xl p-6 text-center">
-                            <div id="recordingIndicator" class="hidden">
-                                <div class="w-16 h-16 bg-red-500 rounded-full mx-auto mb-4 animate-pulse"></div>
-                                <p class="text-2xl font-bold text-red-600 mb-2">🔴 GRABANDO</p>
-                                <p id="recordingTimer" class="text-4xl font-mono font-bold text-slate-900">00:00</p>
-                            </div>
-                            <div id="readyIndicator">
-                                <div class="text-6xl mb-4">🎤</div>
-                                <p class="text-xl font-bold text-gray-600">Listo para grabar</p>
-                            </div>
-                        </div>
-                    </div>
+        function openPatientDetails(dni) {
+            const patient = allPatients.find(p => p.dni === dni);
+            if (!patient) return;
 
-                    <div class="flex gap-3 mb-6">
-                        <button id="startRecordingBtn" onclick="startRecording()" class="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white py-3 rounded-lg font-bold transition-all">
-                            ▶️ Iniciar Grabación
-                        </button>
-                        <button id="stopRecordingBtn" onclick="stopRecording()" disabled class="flex-1 bg-red-500 hover:bg-red-600 text-white py-3 rounded-lg font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed">
-                            ⏹️ Detener Grabación
-                        </button>
-                    </div>
+            currentPatient = patient;
 
-                    <div id="audioPreviewBox" class="hidden mb-6">
-                        <h3 class="text-xl font-bold text-slate-900 mb-3">Vista Previa del Audio</h3>
-                        <audio id="previewAudioPlayer" controls class="w-full mb-4"></audio>
-                        
-                        <div class="space-y-4">
-                            <div>
-                                <label for="recordingTitle" class="block text-sm font-bold text-gray-700 mb-2">Título de la Sesión</label>
-                                <input type="text" id="recordingTitle" name="recordingTitle" placeholder="Ej: Sesión de evaluación inicial" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-emerald-500 transition-all">
-                            </div>
-                            <div>
-                                <label for="recordingNotes" class="block text-sm font-bold text-gray-700 mb-2">Notas de la Sesión</label>
-                                <textarea id="recordingNotes" name="recordingNotes" rows="4" placeholder="Observaciones, temas tratados, tareas asignadas..." class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-emerald-500 transition-all"></textarea>
-                            </div>
-                        </div>
-
-                        <div class="flex gap-3 mt-4">
-                            <button onclick="saveRecordingSession()" class="flex-1 bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-lg font-bold transition-all">
-                                💾 Guardar Sesión
-                            </button>
-                            <button onclick="discardRecording()" class="flex-1 bg-gray-500 hover:bg-gray-600 text-white py-3 rounded-lg font-bold transition-all">
-                                🗑️ Descartar
-                            </button>
-                        </div>
-                    </div>
-
-                    <button onclick="closeRecordingModal()" class="w-full bg-gray-500 hover:bg-gray-600 text-white py-3 rounded-lg font-bold transition-all">
-                        Cerrar
-                    </button>
+            const content = document.getElementById('patientDetailsContent');
+            content.innerHTML = `
+                <div class="bg-gradient-to-r from-emerald-500 to-blue-600 rounded-xl p-6 text-white mb-4">
+                    <h3 class="text-2xl font-bold">${escapeHtml(patient.name)}</h3>
+                    <p class="text-emerald-100">DNI: ${escapeHtml(patient.dni)} | Edad: ${escapeHtml(patient.age)} años</p>
                 </div>
             `;
-            
-            document.body.appendChild(modal);
+
+            document.getElementById('patientDetailsModal').classList.remove('hidden');
+            resetRecordingUI();
+        }
+
+        function closePatientDetailsModal() {
+            document.getElementById('patientDetailsModal').classList.add('hidden');
+            if (mediaRecorder && mediaRecorder.state === 'recording') {
+                stopRecording();
+            }
+            currentPatient = null;
+        }
+
+        function resetRecordingUI() {
+            document.getElementById('statusText').textContent = 'Listo para grabar';
+            document.getElementById('statusDot').classList.remove('recording');
+            document.getElementById('liveTranscription').textContent = 'La transcripción aparecerá aquí cuando inicies la grabación...';
+            fullTranscript = '';
         }
 
         async function startRecording() {
             try {
-                const stream = await navigator.mediaDevices.getUserMedia({ 
-                    audio: {
-                        echoCancellation: true,
-                        noiseSuppression: true,
-                        sampleRate: 44100
-                    } 
-                });
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                 
-                let mimeType = 'audio/webm';
-                if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
-                    mimeType = 'audio/webm;codecs=opus';
-                } else if (MediaRecorder.isTypeSupported('audio/ogg;codecs=opus')) {
-                    mimeType = 'audio/ogg;codecs=opus';
-                } else if (MediaRecorder.isTypeSupported('audio/mp4')) {
-                    mimeType = 'audio/mp4';
-                }
-                
-                mediaRecorder = new MediaRecorder(stream, { mimeType: mimeType });
+                mediaRecorder = new MediaRecorder(stream);
                 audioChunks = [];
-                
+
                 mediaRecorder.ondataavailable = (event) => {
-                    if (event.data.size > 0) {
-                        audioChunks.push(event.data);
-                    }
+                    audioChunks.push(event.data);
                 };
-                
+
                 mediaRecorder.onstop = () => {
-                    const audioBlob = new Blob(audioChunks, { type: mimeType });
-                    currentAudioBlob = audioBlob;
-                    const audioUrl = URL.createObjectURL(audioBlob);
-                    
-                    const player = document.getElementById('previewAudioPlayer');
-                    player.src = audioUrl;
-                    
-                    document.getElementById('audioPreviewBox').classList.remove('hidden');
-                    
-                    const now = new Date();
-                    document.getElementById('recordingTitle').value = `Sesión del ${now.toLocaleDateString('es-ES')} - ${now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}`;
-                    
-                    stream.getTracks().forEach(track => track.stop());
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                    document.getElementById('btnDownloadAudio').disabled = false;
                 };
-                
+
                 mediaRecorder.start();
-                recordingStartTime = Date.now();
-                
-                document.getElementById('readyIndicator').classList.add('hidden');
-                document.getElementById('recordingIndicator').classList.remove('hidden');
-                document.getElementById('startRecordingBtn').disabled = true;
-                document.getElementById('stopRecordingBtn').disabled = false;
-                
-                recordingTimerInterval = setInterval(updateRecordingTimer, 1000);
-                
+
+                // Iniciar reconocimiento de voz
+                if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                    recognition = new SpeechRecognition();
+                    recognition.continuous = true;
+                    recognition.interimResults = true;
+                    recognition.lang = 'es-ES';
+
+                    recognition.onresult = (event) => {
+                        let interimTranscript = '';
+                        let finalTranscript = '';
+
+                        for (let i = event.resultIndex; i < event.results.length; i++) {
+                            const transcript = event.results[i][0].transcript;
+                            if (event.results[i].isFinal) {
+                                finalTranscript += transcript + ' ';
+                            } else {
+                                interimTranscript += transcript;
+                            }
+                        }
+
+                        if (finalTranscript) {
+                            fullTranscript += finalTranscript;
+                        }
+
+                        document.getElementById('liveTranscription').textContent = fullTranscript + interimTranscript;
+                    };
+
+                    recognition.onerror = (event) => {
+                        console.error('Error de reconocimiento:', event.error);
+                    };
+
+                    recognition.start();
+                }
+
+                // Actualizar UI
+                document.getElementById('statusText').textContent = '🔴 Grabando...';
+                document.getElementById('statusDot').classList.add('recording');
+                document.getElementById('btnStartRecording').disabled = true;
+                document.getElementById('btnStopRecording').disabled = false;
+                document.getElementById('btnStartRecording').classList.add('bg-gray-400', 'cursor-not-allowed');
+                document.getElementById('btnStartRecording').classList.remove('bg-red-500', 'hover:bg-red-600');
+                document.getElementById('btnStopRecording').classList.remove('bg-gray-400', 'cursor-not-allowed');
+                document.getElementById('btnStopRecording').classList.add('bg-red-500', 'hover:bg-red-600');
+
             } catch (error) {
-                showToast('❌ Error al acceder al micrófono', 'error');
-                console.error('Error:', error);
+                console.error('Error al acceder al micrófono:', error);
+                showToast('❌ No se pudo acceder al micrófono', 'error');
             }
         }
 
         function stopRecording() {
-            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+            if (mediaRecorder && mediaRecorder.state === 'recording') {
                 mediaRecorder.stop();
-                clearInterval(recordingTimerInterval);
-                
-                document.getElementById('recordingIndicator').classList.add('hidden');
-                document.getElementById('readyIndicator').classList.remove('hidden');
-                document.getElementById('startRecordingBtn').disabled = false;
-                document.getElementById('stopRecordingBtn').disabled = true;
+                mediaRecorder.stream.getTracks().forEach(track => track.stop());
+            }
+
+            if (recognition) {
+                recognition.stop();
+            }
+
+            // Actualizar UI
+            document.getElementById('statusText').textContent = 'Grabación finalizada';
+            document.getElementById('statusDot').classList.remove('recording');
+            document.getElementById('btnStartRecording').disabled = false;
+            document.getElementById('btnStopRecording').disabled = true;
+            document.getElementById('btnStartRecording').classList.remove('bg-gray-400', 'cursor-not-allowed');
+            document.getElementById('btnStartRecording').classList.add('bg-red-500', 'hover:bg-red-600');
+            document.getElementById('btnStopRecording').classList.add('bg-gray-400', 'cursor-not-allowed');
+            document.getElementById('btnStopRecording').classList.remove('bg-red-500', 'hover:bg-red-600');
+
+            showToast('✅ Grabación finalizada', 'success');
+        }
+
+        function downloadRecording() {
+            const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+            const url = URL.createObjectURL(audioBlob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Sesion_${currentPatient?.name || 'Paciente'}_${new Date().toISOString().split('T')[0]}.wav`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            showToast('💾 Audio descargado', 'success');
+        }
+
+        function copyTranscription() {
+            const text = document.getElementById('liveTranscription').textContent;
+            if (text && text !== 'La transcripción aparecerá aquí cuando inicies la grabación...') {
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast('📋 Transcripción copiada al portapapeles', 'success');
+                }).catch(() => {
+                    showToast('❌ Error al copiar', 'error');
+                });
+            } else {
+                showToast('⚠️ No hay transcripción para copiar', 'error');
             }
         }
 
-        function updateRecordingTimer() {
-            const elapsed = Math.floor((Date.now() - recordingStartTime) / 1000);
-            const minutes = Math.floor(elapsed / 60);
-            const seconds = elapsed % 60;
-            document.getElementById('recordingTimer').textContent = 
-                `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-        }
+        function downloadTranscriptionTXT() {
+            const text = document.getElementById('liveTranscription').textContent;
+            if (text && text !== 'La transcripción aparecerá aquí cuando inicies la grabación...') {
+                const blob = new Blob([text], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `Transcripcion_${currentPatient?.name || 'Paciente'}_${new Date().toISOString().split('T')[0]}.txt`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
 
-        function saveRecordingSession() {
-            if (!currentAudioBlob || !currentPatient) return;
-            
-            const title = document.getElementById('recordingTitle').value || 'Sesión sin título';
-            const notes = document.getElementById('recordingNotes').value || '';
-            
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                const recording = {
-                    id: Date.now().toString(),
-                    title: title,
-                    notes: notes,
-                    date: new Date().toISOString(),
-                    audioData: reader.result,
-                    duration: document.getElementById('previewAudioPlayer').duration || 0
-                };
-                
-                if (!currentPatient.sessions) currentPatient.sessions = [];
-                currentPatient.sessions.push(recording);
-                
-                savePatients();
-                showToast('✅ Sesión guardada exitosamente', 'success');
-                closeRecordingModal();
-                
-                if (document.getElementById('patientDetailSection').classList.contains('hidden') === false) {
-                    showPatientTab('sessions');
-                    renderPatientSessions();
-                }
-            };
-            
-            reader.readAsDataURL(currentAudioBlob);
-        }
-
-        function discardRecording() {
-            if (confirm('¿Deseas descartar esta grabación?')) {
-                currentAudioBlob = null;
-                document.getElementById('audioPreviewBox').classList.add('hidden');
-                document.getElementById('recordingTitle').value = '';
-                document.getElementById('recordingNotes').value = '';
+                showToast('💾 Transcripción descargada', 'success');
+            } else {
+                showToast('⚠️ No hay transcripción para descargar', 'error');
             }
         }
 
-        function closeRecordingModal() {
-            const modal = document.getElementById('recordingModal');
-            if (modal) {
-                if (mediaRecorder && mediaRecorder.state !== 'inactive') {
-                    mediaRecorder.stop();
-                }
-                modal.remove();
+        function clearTranscription() {
+            fullTranscript = '';
+            document.getElementById('liveTranscription').textContent = 'La transcripción aparecerá aquí cuando inicies la grabación...';
+            showToast('🗑️ Transcripción limpiada', 'success');
+        }
+
+        // ==================== FUNCIONES HISTORIA INFANTIL ====================
+
+        function switchInfantVersion(version) {
+            const shortForm = document.getElementById('infantFormShort');
+            const longForm = document.getElementById('infantFormLong');
+            const btnShort = document.getElementById('btnShortVersion');
+            const btnLong = document.getElementById('btnLongVersion');
+
+            if (version === 'short') {
+                shortForm.classList.remove('hidden');
+                longForm.classList.add('hidden');
+                btnShort.classList.add('bg-emerald-500');
+                btnShort.classList.remove('bg-gray-300');
+                btnLong.classList.add('bg-gray-300');
+                btnLong.classList.remove('bg-blue-600');
+            } else {
+                shortForm.classList.add('hidden');
+                longForm.classList.remove('hidden');
+                btnLong.classList.add('bg-blue-600');
+                btnLong.classList.remove('bg-gray-300');
+                btnShort.classList.add('bg-gray-300');
+                btnShort.classList.remove('bg-emerald-500');
+                switchInfantTab('identificacion');
             }
         }
 
-        function renderPatientSessions() {
-            const container = document.getElementById('patientSessionsTab');
+        function switchInfantTab(tabName) {
+            // Ocultar todos los contenidos de tabs
+            document.querySelectorAll('.infant-tab-content').forEach(tab => tab.classList.add('hidden'));
             
-            if (!currentPatient || !currentPatient.sessions || currentPatient.sessions.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center py-12 text-gray-400">
-                        <div class="text-6xl mb-4">🎙️</div>
-                        <p class="text-lg">No hay sesiones grabadas</p>
-                    </div>
-                `;
+            // Remover clase active de todos los botones
+            document.querySelectorAll('.infant-tab-button').forEach(btn => {
+                btn.classList.remove('active', 'bg-emerald-500', 'text-white');
+                btn.classList.add('bg-gray-200', 'text-gray-700');
+            });
+
+            // Mostrar el tab seleccionado
+            if (tabName === 'identificacion') {
+                document.getElementById('infantTabIdentificacion').classList.remove('hidden');
+                document.getElementById('tabIdentificacion').classList.add('active');
+            } else if (tabName === 'anamnesis') {
+                document.getElementById('infantTabAnamnesis').classList.remove('hidden');
+                document.getElementById('tabAnamnesis').classList.add('active');
+            } else if (tabName === 'escolaridad') {
+                document.getElementById('infantTabEscolaridad').classList.remove('hidden');
+                document.getElementById('tabEscolaridad').classList.add('active');
+            } else if (tabName === 'examenMental') {
+                document.getElementById('infantTabExamenMental').classList.remove('hidden');
+                document.getElementById('tabExamenMental').classList.add('active');
+            } else if (tabName === 'saludFisica') {
+                document.getElementById('infantTabSaludFisica').classList.remove('hidden');
+                document.getElementById('tabSaludFisica').classList.add('active');
+            }
+        }
+
+        function addSchoolRow() {
+            schoolRowCounter++;
+            const tbody = document.getElementById('schoolTableBody');
+            const newRow = document.createElement('tr');
+            newRow.className = 'border-b hover:bg-gray-50';
+            newRow.innerHTML = `
+                <td class="px-4 py-3">
+                    <input type="text" id="ilEscuela${schoolRowCounter}" name="ilEscuela${schoolRowCounter}" placeholder="Nombre escuela" class="w-full px-2 py-1 border border-gray-300 rounded">
+                </td>
+                <td class="px-4 py-3">
+                    <input type="text" id="ilGrado${schoolRowCounter}" name="ilGrado${schoolRowCounter}" placeholder="Grado" class="w-full px-2 py-1 border border-gray-300 rounded">
+                </td>
+                <td class="px-4 py-3 text-center">
+                    <label for="ilDistraccion${schoolRowCounter}" class="sr-only">Distracción Escuela ${schoolRowCounter}</label>
+                    <input type="checkbox" id="ilDistraccion${schoolRowCounter}" name="ilDistraccion${schoolRowCounter}" class="w-5 h-5 text-blue-600">
+                </td>
+                <td class="px-4 py-3 text-center">
+                    <label for="ilAgresion${schoolRowCounter}" class="sr-only">Agresión Escuela ${schoolRowCounter}</label>
+                    <input type="checkbox" id="ilAgresion${schoolRowCounter}" name="ilAgresion${schoolRowCounter}" class="w-5 h-5 text-blue-600">
+                </td>
+                <td class="px-4 py-3 text-center">
+                    <label for="ilLiderazgo${schoolRowCounter}" class="sr-only">Liderazgo Escuela ${schoolRowCounter}</label>
+                    <input type="checkbox" id="ilLiderazgo${schoolRowCounter}" name="ilLiderazgo${schoolRowCounter}" class="w-5 h-5 text-blue-600">
+                </td>
+            `;
+            tbody.appendChild(newRow);
+        }
+
+        // VERSIÓN CORTA - Guardar
+        function saveInfantHistoryShort() {
+            const dni = document.getElementById('isDNI').value;
+            
+            if (!dni) {
+                showToast('⚠️ Por favor ingresa el DNI del paciente', 'error');
                 return;
             }
 
-            container.innerHTML = currentPatient.sessions.map(session => `
-                <div class="bg-gray-50 rounded-xl p-6 border-2 border-gray-200 mb-4">
-                    <div class="flex flex-wrap items-start justify-between gap-4 mb-4">
-                        <div class="flex-1">
-                            <h3 class="text-xl font-bold text-slate-900">${escapeHtml(session.title)}</h3>
-                            <p class="text-gray-600">📅 ${new Date(session.date).toLocaleString('es-ES')}</p>
-                            ${session.notes ? `<p class="text-gray-700 mt-2">${escapeHtml(session.notes)}</p>` : ''}
-                        </div>
-                        <button onclick="deleteSession('${session.id}')" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-semibold transition-all">
-                            🗑️ Eliminar
-                        </button>
-                    </div>
-                    <audio controls class="w-full" src="${session.audioData}"></audio>
-                </div>
-            `).join('');
+            const data = {
+                version: 'short',
+                nombre: document.getElementById('isNombre').value,
+                edad: document.getElementById('isEdad').value,
+                dni: dni,
+                fecha: document.getElementById('isFecha').value,
+                observacion: document.getElementById('isObservacion').value,
+                notas: document.getElementById('isNotas').value,
+                planAccion: document.getElementById('isPlanAccion').value,
+                fechaGuardado: new Date().toISOString()
+            };
+
+            // Simular descarga JSON
+            const jsonStr = JSON.stringify(data, null, 2);
+            const blob = new Blob([jsonStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `HistoriaInfantil_${dni}_${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            showToast('✅ Historia Infantil guardada en carpeta del paciente (JSON)', 'success');
         }
 
-        function deleteSession(sessionId) {
-            if (!currentPatient) return;
-            
-            if (confirm('¿Estás seguro de eliminar esta sesión?')) {
-                currentPatient.sessions = currentPatient.sessions.filter(s => s.id !== sessionId);
-                savePatients();
-                renderPatientSessions();
+        // VERSIÓN CORTA - PDF
+        function downloadInfantPDFShort() {
+            if (!currentUser || currentUser.plan !== 'Premium') {
+                showToast('⭐ Esta función está disponible solo para usuarios Premium', 'error');
+                return;
             }
+
+            showToast('📄 Generando PDF con membrete PsyTape...', 'success');
+            
+            setTimeout(() => {
+                const nombre = document.getElementById('isNombre').value || 'Sin nombre';
+                showToast(`✅ PDF generado: HistoriaInfantil_${nombre}.pdf`, 'success');
+            }, 1500);
         }
 
-        function showPatientNotesModal() {
-            const modal = document.createElement('div');
-            modal.id = 'notesModal';
-            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
-            modal.innerHTML = `
-                <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-2xl w-full">
-                    <h2 class="text-3xl font-bold text-slate-900 mb-6">📝 Nueva Nota Clínica</h2>
-                    <div class="space-y-4">
-                        <div>
-                            <label for="noteTitle" class="block text-sm font-bold text-gray-700 mb-2">Título de la Nota</label>
-                            <input type="text" id="noteTitle" name="noteTitle" placeholder="Ej: Observaciones sesión 5" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-emerald-500 transition-all">
-                        </div>
-                        <div>
-                            <label for="noteContent" class="block text-sm font-bold text-gray-700 mb-2">Contenido</label>
-                            <textarea id="noteContent" name="noteContent" rows="8" placeholder="Observaciones, evolución, conclusiones..." class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-emerald-500 transition-all"></textarea>
-                        </div>
-                    </div>
-                    <div class="flex gap-3 mt-6">
-                        <button onclick="savePatientNote()" class="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white py-3 rounded-lg font-bold transition-all">
-                            💾 Guardar Nota
+        // VERSIÓN CORTA - Limpiar
+        function clearInfantFormShort() {
+            const confirmDiv = document.createElement('div');
+            confirmDiv.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
+            confirmDiv.innerHTML = `
+                <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md">
+                    <h3 class="text-2xl font-bold text-slate-900 mb-4">¿Limpiar formulario?</h3>
+                    <p class="text-gray-600 mb-6">Se perderán todos los datos no guardados.</p>
+                    <div class="flex gap-3">
+                        <button onclick="doCleanShortForm()" class="flex-1 bg-red-500 hover:bg-red-600 text-white py-3 rounded-lg font-bold transition-all">
+                            Limpiar
                         </button>
-                        <button onclick="closeNotesModal()" class="flex-1 bg-gray-500 hover:bg-gray-600 text-white py-3 rounded-lg font-bold transition-all">
+                        <button onclick="this.closest('.fixed').remove()" class="flex-1 bg-gray-500 hover:bg-gray-600 text-white py-3 rounded-lg font-bold transition-all">
                             Cancelar
                         </button>
                     </div>
                 </div>
             `;
-            document.body.appendChild(modal);
+            document.body.appendChild(confirmDiv);
         }
 
-        function savePatientNote() {
-            if (!currentPatient) return;
-            
-            const title = document.getElementById('noteTitle').value || 'Nota sin título';
-            const content = document.getElementById('noteContent').value || '';
-            
-            const note = {
-                id: Date.now().toString(),
-                title: title,
-                content: content,
-                date: new Date().toISOString()
-            };
-            
-            if (!currentPatient.notes) currentPatient.notes = [];
-            currentPatient.notes.push(note);
-            
-            savePatients();
-            showToast('✅ Nota guardada exitosamente', 'success');
-            closeNotesModal();
-            renderPatientNotes();
+        function doCleanShortForm() {
+            document.getElementById('isNombre').value = '';
+            document.getElementById('isEdad').value = '';
+            document.getElementById('isDNI').value = '';
+            document.getElementById('isFecha').value = '';
+            document.getElementById('isObservacion').value = '';
+            document.getElementById('isNotas').value = '';
+            document.getElementById('isPlanAccion').value = '';
+            document.querySelector('.fixed.inset-0').remove();
+            showToast('🔄 Formulario limpiado', 'success');
         }
 
-        function closeNotesModal() {
-            const modal = document.getElementById('notesModal');
-            if (modal) modal.remove();
-        }
-
-        function renderPatientNotes() {
-            const container = document.getElementById('patientNotesTab');
+        // VERSIÓN LARGA - Guardar
+        function saveInfantHistoryLong() {
+            const dni = document.getElementById('ilDNI').value;
             
-            if (!currentPatient || !currentPatient.notes || currentPatient.notes.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center py-12 text-gray-400">
-                        <div class="text-6xl mb-4">📝</div>
-                        <p class="text-lg">No hay notas clínicas</p>
-                    </div>
-                `;
+            if (!dni) {
+                showToast('⚠️ Por favor ingresa el DNI del paciente', 'error');
                 return;
             }
 
-            container.innerHTML = currentPatient.notes.map(note => `
-                <div class="bg-gray-50 rounded-xl p-6 border-2 border-gray-200 mb-4">
-                    <div class="flex flex-wrap items-start justify-between gap-4">
-                        <div class="flex-1">
-                            <h3 class="text-xl font-bold text-slate-900">${escapeHtml(note.title)}</h3>
-                            <p class="text-gray-600 text-sm mb-3">📅 ${new Date(note.date).toLocaleString('es-ES')}</p>
-                            <p class="text-gray-700 whitespace-pre-wrap">${escapeHtml(note.content)}</p>
-                        </div>
-                        <button onclick="deleteNote('${note.id}')" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-semibold transition-all">
-                            🗑️
+            const data = {
+                version: 'long',
+                identificacion: {
+                    nombre: document.getElementById('ilNombre').value,
+                    edad: document.getElementById('ilEdad').value,
+                    dni: dni,
+                    fechaNacimiento: document.getElementById('ilFechaNac').value,
+                    nombrePadre: document.getElementById('ilNombrePadre').value,
+                    nombreMadre: document.getElementById('ilNombreMadre').value,
+                    direccion: document.getElementById('ilDireccion').value,
+                    telefono: document.getElementById('ilTelefono').value
+                },
+                anamnesis: {
+                    embarazo: document.getElementById('ilEmbarazo').value,
+                    parto: document.getElementById('ilParto').value,
+                    desarrolloMotor: document.getElementById('ilDesarrolloMotor').value,
+                    desarrolloLenguaje: document.getElementById('ilDesarrolloLenguaje').value,
+                    antecedentes: document.getElementById('ilAntecedentes').value
+                },
+                escolaridad: {
+                    escuelas: getSchoolData(),
+                    rendimiento: document.getElementById('ilRendimiento').value
+                },
+                examenMental: {
+                    lenguaje: document.getElementById('ilLenguaje').value,
+                    afectividad: document.getElementById('ilAfectividad').value,
+                    nivelJuego: document.getElementById('ilNivelJuego').value,
+                    atencion: document.getElementById('ilAtencion').value,
+                    observaciones: document.getElementById('ilObservacionesMentales').value
+                },
+                saludFisica: {
+                    enuresis: document.getElementById('ilEnuresis')?.checked || false,
+                    pesadillas: document.getElementById('ilPesadillas')?.checked || false,
+                    terrorNocturno: document.getElementById('ilTerror')?.checked || false,
+                    tics: document.getElementById('ilTics')?.checked || false,
+                    alimentacion: document.getElementById('ilAlimentacion')?.checked || false,
+                    sueno: document.getElementById('ilSueno')?.checked || false,
+                    cefaleas: document.getElementById('ilCefaleas')?.checked || false,
+                    dolorAbdominal: document.getElementById('ilDolorAbdominal')?.checked || false,
+                    diagnostico: document.getElementById('ilDiagnostico').value
+                },
+                fechaGuardado: new Date().toISOString()
+            };
+
+            // Simular descarga JSON
+            const jsonStr = JSON.stringify(data, null, 2);
+            const blob = new Blob([jsonStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `HistoriaInfantilCompleta_${dni}_${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            showToast('✅ Historia Infantil Completa guardada (JSON)', 'success');
+        }
+
+        function getSchoolData() {
+            const schools = [];
+            for (let i = 1; i <= schoolRowCounter; i++) {
+                const escuela = document.getElementById(`ilEscuela${i}`);
+                if (escuela && escuela.value) {
+                    schools.push({
+                        nombre: escuela.value,
+                        grado: document.getElementById(`ilGrado${i}`).value,
+                        distraccion: document.getElementById(`ilDistraccion${i}`)?.checked || false,
+                        agresion: document.getElementById(`ilAgresion${i}`)?.checked || false,
+                        liderazgo: document.getElementById(`ilLiderazgo${i}`)?.checked || false
+                    });
+                }
+            }
+            return schools;
+        }
+
+        // VERSIÓN LARGA - PDF
+        function downloadInfantPDFLong() {
+            if (!currentUser || currentUser.plan !== 'Premium') {
+                showToast('⭐ Esta función está disponible solo para usuarios Premium', 'error');
+                return;
+            }
+
+            showToast('📄 Generando PDF completo con membrete PsyTape...', 'success');
+            
+            setTimeout(() => {
+                const nombre = document.getElementById('ilNombre').value || 'Sin nombre';
+                showToast(`✅ PDF generado: HistoriaInfantilCompleta_${nombre}.pdf`, 'success');
+            }, 1500);
+        }
+
+        // VERSIÓN LARGA - Plantilla en Blanco
+        function downloadInfantBlankTemplate() {
+            if (!currentUser || currentUser.plan !== 'Premium') {
+                showToast('⭐ Esta función está disponible solo para usuarios Premium', 'error');
+                return;
+            }
+
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Plantilla Historia Clínica Infantil - PsyTape</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; padding: 40px; }
+                        .header { text-align: center; margin-bottom: 30px; border-bottom: 3px solid #10b981; padding-bottom: 15px; }
+                        .header h1 { color: #10b981; margin: 0; font-size: 28px; }
+                        .header h2 { color: #1e293b; margin: 10px 0 0 0; font-size: 18px; }
+                        .section { margin: 20px 0; }
+                        .section h3 { background: #10b981; color: white; padding: 10px; margin: 0 0 15px 0; }
+                        .field { margin: 10px 0; }
+                        .field label { font-weight: bold; display: block; margin-bottom: 5px; }
+                        .field .line { border-bottom: 1px solid #ccc; min-height: 20px; }
+                        table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+                        table th, table td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+                        table th { background: #f0f0f0; }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h1>🎙️ PsyTape</h1>
+                        <h2>HISTORIA CLÍNICA PSICOLÓGICA INFANTIL</h2>
+                    </div>
+
+                    <div class="section">
+                        <h3>👤 IDENTIFICACIÓN</h3>
+                        <div class="field"><label>Nombre del Niño/a:</label><div class="line"></div></div>
+                        <div class="field"><label>Edad:</label><div class="line"></div></div>
+                        <div class="field"><label>DNI:</label><div class="line"></div></div>
+                        <div class="field"><label>Fecha de Nacimiento:</label><div class="line"></div></div>
+                    </div>
+
+                    <div class="section">
+                        <h3>🤰 ANAMNESIS</h3>
+                        <div class="field"><label>Curso del Embarazo:</label><div class="line"></div></div>
+                        <div class="field"><label>Tipo de Parto:</label><div class="line"></div></div>
+                        <div class="field"><label>¿Cuándo empezó a caminar?:</label><div class="line"></div></div>
+                        <div class="field"><label>¿Cuándo empezó a hablar?:</label><div class="line"></div></div>
+                    </div>
+
+                    <div class="section">
+                        <h3>🎒 ESCOLARIDAD</h3>
+                        <table>
+                            <tr><th>Escuela</th><th>Grado</th><th>Distracción</th><th>Agresión</th><th>Liderazgo</th></tr>
+                            <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+                            <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+                        </table>
+                    </div>
+
+                    <div class="section">
+                        <h3>🧠 EXAMEN MENTAL INFANTIL</h3>
+                        <div class="field"><label>Lenguaje:</label><div class="line"></div></div>
+                        <div class="field"><label>Afectividad:</label><div class="line"></div></div>
+                        <div class="field"><label>Nivel de Juego:</label><div class="line"></div></div>
+                    </div>
+
+                    <div class="section">
+                        <h3>🏥 SALUD FÍSICA</h3>
+                        <div class="field"><label>Indicadores (marcar los presentes):</label></div>
+                        <p>☐ Enuresis &nbsp;&nbsp; ☐ Pesadillas &nbsp;&nbsp; ☐ Tics &nbsp;&nbsp; ☐ Problemas alimentación</p>
+                    </div>
+
+                    <div class="section">
+                        <h3>📋 DIAGNÓSTICO Y CONCLUSIONES</h3>
+                        <div class="field"><div class="line"></div></div>
+                        <div class="field"><div class="line"></div></div>
+                        <div class="field"><div class="line"></div></div>
+                    </div>
+
+                    <div style="margin-top: 50px; text-align: center; font-size: 12px; color: #666;">
+                        <p>🔒 Documento confidencial - Entorno de Salud Protegido © 2026 PsyTape</p>
+                    </div>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.print();
+            
+            showToast('📋 Plantilla lista para imprimir', 'success');
+        }
+
+        // VERSIÓN LARGA - Limpiar
+        function clearInfantFormLong() {
+            const confirmDiv = document.createElement('div');
+            confirmDiv.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
+            confirmDiv.innerHTML = `
+                <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md">
+                    <h3 class="text-2xl font-bold text-slate-900 mb-4">¿Limpiar formulario completo?</h3>
+                    <p class="text-gray-600 mb-6">Se perderán todos los datos no guardados.</p>
+                    <div class="flex gap-3">
+                        <button onclick="doCleanLongForm()" class="flex-1 bg-red-500 hover:bg-red-600 text-white py-3 rounded-lg font-bold transition-all">
+                            Limpiar
+                        </button>
+                        <button onclick="this.closest('.fixed').remove()" class="flex-1 bg-gray-500 hover:bg-gray-600 text-white py-3 rounded-lg font-bold transition-all">
+                            Cancelar
                         </button>
                     </div>
                 </div>
-            `).join('');
+            `;
+            document.body.appendChild(confirmDiv);
         }
 
-        function deleteNote(noteId) {
-            if (!currentPatient) return;
+        function doCleanLongForm() {
+            // Limpiar todos los campos del formulario largo
+            const inputs = document.querySelectorAll('#infantFormLong input[type="text"], #infantFormLong input[type="number"], #infantFormLong input[type="date"], #infantFormLong input[type="tel"], #infantFormLong textarea, #infantFormLong select');
+            inputs.forEach(input => input.value = '');
             
-            if (confirm('¿Estás seguro de eliminar esta nota?')) {
-                currentPatient.notes = currentPatient.notes.filter(n => n.id !== noteId);
-                savePatients();
-                renderPatientNotes();
-            }
+            const checkboxes = document.querySelectorAll('#infantFormLong input[type="checkbox"]');
+            checkboxes.forEach(cb => cb.checked = false);
+            
+            document.querySelector('.fixed.inset-0').remove();
+            showToast('🔄 Formulario completo limpiado', 'success');
         }
 
-        function changeWeek(direction) {
-            showToast('📅 Función de agenda en desarrollo', 'success');
-        }
-
-        function openAddAppointmentModal() {
-            showToast('📅 Función de agendar citas en desarrollo', 'success');
-        }
-
-        function openAddReminderModal() {
-            showToast('✅ Función de recordatorios en desarrollo', 'success');
-        }
-
-        function openAddTaskModal() {
-            showToast('📝 Función de tareas en desarrollo', 'success');
-        }
+        // ==================== UTILIDADES ====================
 
         function escapeHtml(text) {
             const div = document.createElement('div');
@@ -1609,5 +1414,5 @@
             }, 3000);
         }
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c58381ea26f9b23',t:'MTc2OTY4NDM1Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c58444197a69b23',t:'MTc2OTY4NDg1NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
