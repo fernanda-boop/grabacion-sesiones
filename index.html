@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PsyTape - Sistema Profesional</title>
-  <link href="https://fonts.googleapis.com/css2?family=Righteous&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
         * {
@@ -15,8 +15,8 @@
 
         body {
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #cf4c23;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #F8FAFC;
             height: 100%;
             overflow-x: hidden;
         }
@@ -40,7 +40,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: #cf4c23;
+            background: #1E293B;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -74,7 +74,7 @@
             align-items: center;
             min-height: 100%;
             padding: 20px;
-            background: #cf4c23;
+            background: #1E293B;
         }
 
         .welcome-card {
@@ -98,11 +98,18 @@
         }
 
         .app-logo {
-            font-size: 95px;
+            font-size: 65px;
             font-weight: 800;
-            font-family: 'Righteous', 'Arial Black', sans-serif;
-            color: #e4d936;
+            font-family: 'Inter', sans-serif;
+            color: #10B981;
             margin-bottom: 20px;
+            letter-spacing: -2px;
+        }
+        
+        @media (min-width: 768px) {
+            .app-logo {
+                font-size: 95px;
+            }
         }
 
         .logo-icons {
@@ -133,31 +140,43 @@
         }
 
         .btn-welcome {
-            background: #fffff7;
-            color: #000000;
+            background: #10B981;
+            color: white;
             border: none;
-            padding: 18px 50px;
-            font-size: 30px;
-            font-weight: 700;
-            font-family: 'Righteous', 'Arial Black', sans-serif;
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            min-width: 300px;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+            border-radius: 8px;
+            text-transform: none;
+            letter-spacing: 0px;
+            min-width: 250px;
+            width: 100%;
+            max-width: 350px;
+        }
+        
+        @media (min-width: 768px) {
+            .btn-welcome {
+                padding: 18px 50px;
+                font-size: 20px;
+                min-width: 300px;
+            }
         }
 
         .btn-welcome:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+            background: #059669;
         }
 
         #authScreen {
             display: none;
             min-height: 100%;
             padding: 20px;
-            background: #cf4c23;
+            background: #F8FAFC;
         }
 
         #authScreen.active {
@@ -167,21 +186,22 @@
         }
 
         .auth-card {
-            background: #0097b2;
+            background: white;
             padding: 50px 40px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             max-width: 500px;
             width: 100%;
             animation: fadeIn 0.5s ease;
+            border-radius: 12px;
         }
 
         .auth-card h2 {
             text-align: center;
-            color: #fffff7;
-            font-size: 40px;
+            color: #1E293B;
+            font-size: 32px;
             margin-bottom: 30px;
             font-weight: 700;
-            font-family: 'Righteous', 'Arial Black', sans-serif;
+            font-family: 'Inter', sans-serif;
         }
 
         .form-group {
@@ -191,20 +211,28 @@
         .form-group label {
             display: block;
             margin-bottom: 8px;
-            color: #fffff7;
+            color: #1E293B;
             font-weight: 600;
-            font-size: 1rem;
+            font-size: 0.95rem;
         }
 
         .form-group input,
         .form-group select {
             width: 100%;
             padding: 14px;
-            border: 2px solid #e5e7eb;
-            border-radius: 10px;
+            border: 2px solid #E2E8F0;
+            border-radius: 8px;
             font-size: 1rem;
             transition: all 0.3s ease;
             background: white;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #10B981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
         }
 
         .verification-hint {
@@ -221,27 +249,32 @@
         .btn-auth {
             width: 100%;
             padding: 16px;
-            background: #cf4c23;
+            background: #10B981;
             color: white;
             border: none;
-            font-size: 1.1rem;
-            font-weight: 700;
-            font-family: 'Righteous', 'Arial Black', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
             cursor: pointer;
             transition: all 0.3s ease;
             margin-top: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            text-transform: none;
+            letter-spacing: 0px;
+            border-radius: 8px;
         }
 
         .btn-auth:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(207, 76, 35, 0.4);
-            background: #b03d1a;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+            background: #059669;
         }
 
         .btn-auth.secondary {
-            background: #6b7280;
+            background: #64748B;
+        }
+
+        .btn-auth.secondary:hover {
+            background: #475569;
         }
 
         .error-message {
@@ -268,7 +301,7 @@
 
         #mainApp {
             display: none;
-            background: #cf4c23;
+            background: #F8FAFC;
             min-height: 100%;
             width: 100%;
         }
@@ -280,55 +313,116 @@
         .container {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 10px;
+        }
+        
+        @media (min-width: 768px) {
+            .container {
+                padding: 20px;
+            }
         }
 
         header {
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-            gap: 15px;
+            margin-bottom: 20px;
+            gap: 0px;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        
+        @media (min-width: 1024px) {
+            header {
+                flex-direction: column;
+                margin-bottom: 30px;
+                padding: 30px;
+            }
         }
 
         .header-content {
             text-align: center;
             flex: 1;
-            color: white;
+            color: #1E293B;
         }
 
         header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-            font-family: 'Righteous', 'Arial Black', sans-serif;
+            font-size: 36px;
+            margin-bottom: 8px;
+            font-family: 'Inter', sans-serif;
+            color: #1E293B;
+            font-weight: 800;
         }
 
         .subtitle {
-            font-size: 1.1rem;
-            opacity: 0.9;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            color: #64748B;
+            padding: 0 10px;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        @media (min-width: 768px) {
+            header h1 {
+                font-size: 48px;
+            }
+            
+            .subtitle {
+                font-size: 16px;
+                padding: 0;
+                text-align: center;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            header h1 {
+                font-size: 56px;
+            }
         }
 
         .header-controls {
             display: flex;
-            gap: 10px;
+            gap: 6px;
             flex-wrap: wrap;
             align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+        
+        @media (min-width: 768px) {
+            .header-controls {
+                gap: 10px;
+                width: auto;
+            }
         }
 
         .btn {
-            padding: 12px 20px;
+            padding: 10px 16px;
             border: none;
-            font-size: 0.95rem;
-            font-weight: 700;
-            font-family: 'Righteous', 'Arial Black', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
             cursor: pointer;
             transition: all 0.3s ease;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             white-space: nowrap;
+            border-radius: 8px;
+            background: #1E293B;
+            color: white;
+        }
+        
+        @media (min-width: 768px) {
+            .btn {
+                padding: 12px 20px;
+                font-size: 0.95rem;
+                gap: 8px;
+            }
         }
 
         .btn:disabled {
@@ -336,49 +430,63 @@
             cursor: not-allowed;
         }
 
-        .btn-header {
-            background: #fffff7;
-            color: #000000;
+        .btn:hover:not(:disabled) {
+            opacity: 0.9;
+            transform: translateY(-2px);
         }
 
-        .btn-header:hover {
-            background: #f5f5ed;
-            transform: translateY(-2px);
+        .btn-header {
+            background: #1E293B;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+        }
+        
+        @media (min-width: 768px) {
+            .btn-header {
+                font-size: 15px;
+            }
         }
 
         .btn-plan {
-            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-            color: #000000;
-            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.4);
+            background: #10B981;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
         }
 
         .btn-plan:hover {
+            background: #059669;
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(251, 191, 36, 0.6);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
         }
 
         .btn-primary {
-            background: #0097b2;
+            background: #1E293B;
             color: white;
-        }
-
-        .btn-primary:hover {
-            background: #007a91;
-            transform: translateY(-2px);
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
         }
 
         .btn-danger {
-            background: #ef4444;
+            background: #EF4444;
             color: white;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
         }
 
         .btn-danger:hover {
-            background: #dc2626;
+            background: #DC2626;
         }
 
         .btn-success {
-            background: #10b981;
+            background: #10B981;
             color: white;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
         }
 
         .btn-success:hover {
@@ -386,48 +494,101 @@
         }
 
         .btn-secondary {
-            background: #6b7280;
+            background: #64748B;
             color: white;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
         }
 
         .btn-secondary:hover {
-            background: #4b5563;
+            background: #475569;
         }
 
         .card {
             background: white;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            margin-bottom: 30px;
+            padding: 15px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            margin-bottom: 20px;
+            border-radius: 12px;
+        }
+        
+        @media (min-width: 768px) {
+            .card {
+                padding: 25px;
+                margin-bottom: 30px;
+            }
         }
 
         .card h2 {
             margin-bottom: 20px;
-            color: #cf4c23;
+            color: #1E293B;
             font-size: 1.5rem;
-            font-family: 'Righteous', 'Arial Black', sans-serif;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+        }
+
+        .search-box {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            border: 2px solid #e5e7eb;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #d1d5db;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            background: #ffffff;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #0097b2;
+            box-shadow: 0 0 0 3px rgba(0, 151, 178, 0.1);
         }
 
         .menu-buttons {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        @media (min-width: 640px) {
+            .menu-buttons {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .menu-buttons {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 20px;
+                margin-top: 30px;
+            }
         }
 
         .menu-card {
-            background: linear-gradient(135deg, #0097b2 0%, #007a91 100%);
+            background: white;
             padding: 30px;
             cursor: pointer;
             transition: all 0.3s ease;
             text-align: center;
-            color: white;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            color: #1E293B;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            border-radius: 12px;
+            border: 2px solid #F1F5F9;
         }
 
         .menu-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            border-color: #10B981;
         }
 
         .menu-card .icon {
@@ -438,7 +599,14 @@
         .menu-card h3 {
             font-size: 1.3rem;
             margin-bottom: 10px;
-            font-family: 'Righteous', 'Arial Black', sans-serif;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            color: #1E293B;
+        }
+
+        .menu-card p {
+            color: #64748B;
+            font-size: 0.95rem;
         }
 
         .section {
@@ -449,7 +617,6 @@
             display: block;
         }
 
-        /* CALENDARIO SEMANAL */
         .calendar-header {
             display: flex;
             justify-content: space-between;
@@ -474,9 +641,27 @@
 
         .calendar-grid {
             display: grid;
-            grid-template-columns: repeat(7, 1fr);
+            grid-template-columns: 1fr;
             gap: 10px;
             margin-top: 20px;
+        }
+        
+        @media (min-width: 640px) {
+            .calendar-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .calendar-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        @media (min-width: 1400px) {
+            .calendar-grid {
+                grid-template-columns: repeat(7, 1fr);
+            }
         }
 
         .day-column {
@@ -515,13 +700,14 @@
         }
 
         .appointment-item {
-            background: white;
+            background: #5facb9;
             padding: 12px;
             margin-bottom: 10px;
             border-left: 4px solid #0097b2;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             cursor: pointer;
             transition: all 0.3s ease;
+            border-radius: 25px;
         }
 
         .appointment-item:hover {
@@ -551,23 +737,33 @@
             color: #6b7280;
         }
 
-        /* LISTA DE ITEMS */
-        .patient-list, .session-list, .note-list {
+        .patient-list {
             display: grid;
             gap: 15px;
             margin-top: 20px;
         }
 
-        .patient-item, .session-item, .note-item {
+        .patient-item {
             background: #f3f4f6;
-            padding: 20px;
+            padding: 15px;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
+            gap: 15px;
             transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        @media (min-width: 768px) {
+            .patient-item {
+                padding: 20px;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                gap: 0;
+            }
         }
 
-        .patient-item:hover, .session-item:hover, .note-item:hover {
+        .patient-item:hover {
             background: #e5e7eb;
             transform: translateX(5px);
         }
@@ -590,11 +786,44 @@
 
         .item-actions {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             flex-wrap: wrap;
+            width: 100%;
+            justify-content: flex-start;
+        }
+        
+        @media (min-width: 768px) {
+            .item-actions {
+                gap: 10px;
+                width: auto;
+                justify-content: flex-end;
+            }
         }
 
-        /* MODALES */
+        .session-item, .note-item {
+            background: #f3f4f6;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #0097b2;
+            transition: all 0.3s ease;
+        }
+
+        .session-item:hover, .note-item:hover {
+            background: #e5e7eb;
+            transform: translateX(5px);
+        }
+
+        .session-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: #0097b2;
+            color: white;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
         .modal {
             display: none;
             position: fixed;
@@ -615,13 +844,28 @@
         }
 
         .modal-content {
-            background: white;
-            padding: 40px;
-            max-width: 600px;
+            background: #5facb9;
+            padding: 20px;
+            max-width: 95%;
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
             box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            border-radius: 25px;
+        }
+        
+        @media (min-width: 640px) {
+            .modal-content {
+                padding: 30px;
+                max-width: 90%;
+            }
+        }
+        
+        @media (min-width: 768px) {
+            .modal-content {
+                padding: 40px;
+                max-width: 600px;
+            }
         }
 
         .modal-content h2 {
@@ -647,8 +891,9 @@
             width: 100%;
             padding: 12px;
             border: 2px solid #e5e7eb;
-            border-radius: 10px;
+            border-radius: 25px;
             font-size: 1rem;
+            background: #ffffff;
         }
 
         .form-group-modal textarea {
@@ -663,7 +908,6 @@
             flex-wrap: wrap;
         }
 
-        /* RECORDING */
         .recording-controls {
             display: flex;
             gap: 15px;
@@ -723,21 +967,29 @@
             border: 2px solid #e5e7eb;
         }
 
-        /* PLANES */
         .plan-cards {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-            margin-top: 30px;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        @media (min-width: 768px) {
+            .plan-cards {
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                gap: 25px;
+                margin-top: 30px;
+            }
         }
 
         .plan-card {
-            background: white;
+            background: #5facb9;
             border: 3px solid #e5e7eb;
             padding: 30px;
             text-align: center;
             transition: all 0.3s ease;
             position: relative;
+            border-radius: 25px;
         }
 
         .plan-card:hover {
@@ -935,43 +1187,75 @@
             }
         }
 
-        @media (max-width: 1200px) {
-            .calendar-grid {
-                grid-template-columns: repeat(4, 1fr);
-            }
+        .patient-detail-header {
+            background: linear-gradient(135deg, #0097b2 0%, #007a91 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
         }
 
-        @media (max-width: 768px) {
-            .app-logo {
-                font-size: 55px;
-            }
+        .patient-detail-header h2 {
+            color: white;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
 
-            .btn-welcome {
-                font-size: 24px;
-                padding: 15px 40px;
-                min-width: 250px;
-            }
+        .record-note-btn {
+            background: #a1ea29;
+            color: #555555;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-family: 'Hammersmith One', sans-serif;
+            font-size: 18px;
+        }
 
-            .auth-card h2 {
-                font-size: 35px;
-            }
+        .record-note-btn:hover {
+            background: #8fce1e;
+            transform: translateY(-2px);
+        }
 
-            header h1 {
-                font-size: 1.8rem;
-            }
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #9ca3af;
+            background: #f9fafb;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
 
-            .calendar-grid {
-                grid-template-columns: 1fr;
+        @media (max-width: 480px) {
+            .item-info h3 {
+                font-size: 1rem;
             }
-
-            .header-controls {
-                width: 100%;
-                justify-content: center;
-            }
-
-            .btn {
+            
+            .item-info p {
                 font-size: 0.85rem;
-                padding: 10px 15px;
+            }
+            
+            .btn {
+                font-size: 0.7rem;
+                padding: 8px 10px;
+            }
+            
+            .menu-card h3 {
+                font-size: 1.1rem;
+            }
+            
+            .menu-card .icon {
+                font-size: 2.5rem;
+            }
+            
+            .search-input {
+                font-size: 0.95rem;
+                padding: 12px 15px;
             }
         }
     </style>
@@ -999,22 +1283,22 @@
        🧠
       </div>
       <div class="logo-icon">
-       📝
+       📋
       </div>
      </div>
-     <div class="welcome-buttons"><button class="btn-welcome" onclick="showLoginForm()">Login</button> <button class="btn-welcome" onclick="showRegistrationForm()">Registration</button>
+     <div class="welcome-buttons"><button class="btn-welcome" onclick="showLoginForm()">Iniciar Sesión</button> <button class="btn-welcome" onclick="showRegistrationForm()">Registro de Cuenta</button>
      </div>
     </div>
    </div><!-- PANTALLA AUTH -->
    <div id="authScreen">
     <div class="auth-card">
-     <h2 id="authTitle">Registration</h2>
+     <h2 id="authTitle">Registro de Cuenta</h2>
      <div id="authErrorMessage" class="error-message hidden"></div>
      <div id="authSuccessMessage" class="success-message hidden"></div>
      <form id="registrationForm" class="hidden">
       <div class="form-group"><label for="regName">Nombre Completo</label> <input type="text" id="regName" required>
       </div>
-      <div class="form-group"><label for="regEmail">Email</label> <input type="email" id="regEmail" required>
+      <div class="form-group"><label for="regEmail">Correo Electrónico</label> <input type="email" id="regEmail" required>
       </div>
       <div class="form-group"><label for="regPassword">Contraseña</label> <input type="password" id="regPassword" required>
       </div>
@@ -1023,11 +1307,11 @@
       <div class="verification-hint">
        Por favor escribe: <strong>PSYTAPE2024</strong>
       </div>
-      <div class="form-group"><label for="regVerification">Código de Verificación</label> <input type="text" id="regVerification" required>
+      <div class="form-group"><label for="regVerification">C�������digo de Verificaci����n</label> <input type="text" id="regVerification" required>
       </div><button type="submit" class="btn-auth">Registrarse</button> <button type="button" class="btn-auth secondary" onclick="showWelcome()">Volver</button>
      </form>
      <form id="loginForm" class="hidden">
-      <div class="form-group"><label for="loginEmail">Email</label> <input type="email" id="loginEmail" required>
+      <div class="form-group"><label for="loginEmail">Correo Electrónico</label> <input type="email" id="loginEmail" required>
       </div>
       <div class="form-group"><label for="loginPassword">Contraseña</label> <input type="password" id="loginPassword" required>
       </div><button type="submit" class="btn-auth">Ingresar</button> <button type="button" class="btn-auth secondary" onclick="showWelcome()">Volver</button>
@@ -1037,33 +1321,35 @@
    <div id="mainApp">
     <div class="container">
      <header>
-      <div class="header-controls"><button class="btn btn-header" onclick="showSection('home')">🏠 Inicio</button> <button class="btn btn-header" onclick="showSection('agenda')">📅 Agenda</button> <button class="btn btn-plan" onclick="showSection('plans')">💎 Mi Plan</button> <button class="btn btn-header" onclick="logoutUser()">🚪 Salir</button>
+      <div style="width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
+       <div style="display: flex; flex-direction: row; gap: 10px; align-items: center; flex-wrap: wrap;"><button class="btn btn-header" onclick="showSection('home')" style="font-size: 14px;">🏠 Inicio</button> <button class="btn btn-plan" onclick="showSection('plans')" style="font-size: 14px; padding: 10px 16px;">💎 Mi Plan</button> <button class="btn btn-header" onclick="showSection('account')" style="font-size: 14px;">👤 Mi Cuenta</button>
+       </div>
+       <h2 style="color: #1E293B; font-family: 'Inter', sans-serif; font-size: 18px; margin: 0; font-weight: 600; text-align: center; flex: 1;">¡Bienvenido/a, Lic. <span id="userNameTop"></span>!</h2><button class="btn btn-danger" onclick="logoutUser()" style="font-size: 14px;">🚪 Salir</button>
       </div>
       <div class="header-content">
        <h1>🎙️ PsyTape</h1>
-       <p class="subtitle">Menos notas, más empatía</p>
+       <p class="subtitle">Menos notas, más empatía. Graba, transcribe y conecta</p>
       </div>
-      <div style="width: 200px;"></div>
+      <div class="header-controls" style="margin-top: 25px;"><button class="btn" style="background: #a1ea29; color: #555555; font-family: 'Righteous', 'Arial Black', sans-serif; font-size: 18px; padding: 14px 24px; border-radius: 0;" onclick="showSection('patients')">👥 Pacientes</button> <button class="btn btn-header" onclick="showSection('agenda')" style="font-size: 18px; padding: 14px 24px;">📅 Agenda</button> <button class="btn btn-header" onclick="showSection('reminders')" style="font-size: 18px; padding: 14px 24px;">✅ Recordatorios</button>
+      </div>
      </header><!-- INICIO -->
      <div id="homeSection" class="section active">
-      <div class="card">
-       <h2>¡Bienvenido/a <span id="userName"></span>!</h2>
-       <p style="color: #6b7280; margin-bottom: 20px;">Tu plan: <strong id="userPlanDisplay">Gratuito 🆓</strong></p>
+      <div style="margin-bottom: 20px;">
+       <p style="color: #6b7280; margin-bottom: 20px; font-family: 'Righteous', 'Arial Black', sans-serif;">Tu plan: <strong id="userPlanDisplay">Premium 👑</strong></p><!-- BUSCADOR AVANZADO -->
+       <div style="display: flex; justify-content: flex-end; margin-bottom: 20px;">
+        <div style="max-width: 400px; width: 100%;">
+         <h4 style="margin-bottom: 10px; color: #1f2937; font-family: 'Righteous', 'Arial Black', sans-serif; font-size: 14px;">🔍 Buscador</h4><input type="text" id="globalSearch" class="search-input" placeholder="Buscar paciente, DNI o fecha..." oninput="performGlobalSearch()" style="padding: 10px 15px; font-size: 0.95rem;">
+        </div>
+       </div>
+       <div id="searchResults"></div>
       </div>
       <div class="menu-buttons">
        <div class="menu-card" onclick="showSection('patients')">
         <div class="icon">
-         👥
+         ��
         </div>
         <h3>Pacientes</h3>
         <p>Gestiona tu lista</p>
-       </div>
-       <div class="menu-card" onclick="showSection('sessions')">
-        <div class="icon">
-         🎙️
-        </div>
-        <h3>Sesiones</h3>
-        <p>Graba y transcribe</p>
        </div>
        <div class="menu-card" onclick="showSection('agenda')">
         <div class="icon">
@@ -1072,19 +1358,28 @@
         <h3>Agenda</h3>
         <p>Calendario semanal</p>
        </div>
-       <div class="menu-card" onclick="showSection('notes')">
+       <div class="menu-card" onclick="showSection('reminders')">
         <div class="icon">
-         📝
+         ✅
         </div>
-        <h3>Notas</h3>
-        <p>Notas clínicas</p>
+        <h3>Recordatorios</h3>
+        <p>Tareas y notas personales</p>
+       </div>
+       <div class="menu-card" onclick="showSection('plans')">
+        <div class="icon">
+         💎
+        </div>
+        <h3>Mi Plan</h3>
+        <p>Gestiona tu suscripción</p>
        </div>
       </div>
      </div><!-- PACIENTES -->
      <div id="patientsSection" class="section">
       <div class="card">
        <h2>👥 Gestión de Pacientes</h2>
-       <div id="patientLimitInfo"></div><button class="btn btn-primary" onclick="openAddPatientModal()">➕ Agregar Paciente</button>
+       <div id="patientLimitInfo"></div>
+       <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;"><button class="btn btn-primary" onclick="openAddPatientModal()">➕ Agregar Paciente</button> <button class="btn btn-success" onclick="downloadFullBackup()">💾 Backup Completo</button>
+       </div>
        <div id="patientList" class="patient-list">
         <div class="empty-state">
          <div class="icon">
@@ -1094,17 +1389,44 @@
         </div>
        </div>
       </div>
-     </div><!-- SESIONES -->
-     <div id="sessionsSection" class="section">
-      <div class="card">
-       <h2>🎙️ Grabación de Sesiones</h2><button class="btn btn-primary" onclick="openRecordSessionModal()">🎙️ Nueva Grabación</button>
-       <div id="sessionList" class="session-list">
-        <div class="empty-state">
+     </div><!-- FICHA DEL PACIENTE -->
+     <div id="patientDetailSection" class="section">
+      <div class="card"><button class="btn btn-secondary" onclick="showSection('patients')" style="margin-bottom: 20px;">⬅️ Volver a Pacientes</button>
+       <div id="patientDetailHeader"></div>
+       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 30px;">
+        <div class="menu-card" onclick="openRecordSessionForPatient()">
          <div class="icon">
           🎙️
          </div>
-         <p>No hay sesiones grabadas</p>
+         <h3>Grabar Sesión</h3>
+         <p>Con transcripción en tiempo real</p>
         </div>
+        <div class="menu-card" onclick="showPatientNotes()">
+         <div class="icon">
+          📝
+         </div>
+         <h3>Notas Clínicas</h3>
+         <p>Escribe o graba</p>
+        </div>
+        <div class="menu-card" onclick="downloadPatientBackup()">
+         <div class="icon">
+          💾
+         </div>
+         <h3>Backup Paciente</h3>
+         <p>Descargar todos los datos</p>
+        </div>
+       </div>
+       <div style="margin-top: 40px;">
+        <h3 style="color: #cf4c23; margin-bottom: 20px;">🎙️ Historial de Sesiones</h3>
+        <div id="patientSessions"></div>
+       </div>
+       <div style="margin-top: 40px;">
+        <h3 style="color: #cf4c23; margin-bottom: 20px;">📝 Notas del Paciente</h3>
+        <div id="patientNotes"></div>
+       </div>
+       <div style="margin-top: 40px;">
+        <h3 style="color: #cf4c23; margin-bottom: 20px;">�� Próximas Citas</h3>
+        <div id="patientAppointments"></div>
        </div>
       </div>
      </div><!-- AGENDA -->
@@ -1112,41 +1434,39 @@
       <div class="card">
        <h2>📅 Agenda Semanal</h2>
        <div class="calendar-header">
-        <div class="calendar-nav"><button class="btn btn-secondary" onclick="changeWeek(-1)">◀ Anterior</button> <span class="week-label" id="weekLabel"></span> <button class="btn btn-secondary" onclick="changeWeek(1)">Siguiente ▶</button>
+        <div class="calendar-nav"><button class="btn btn-secondary" onclick="changeWeek(-1)">��� Anterior</button> <span class="week-label" id="weekLabel"></span> <button class="btn btn-secondary" onclick="changeWeek(1)">Siguiente ▶</button>
         </div><button class="btn btn-primary" onclick="openAddAppointmentModal()">➕ Agendar Cita</button>
        </div>
        <div id="calendarGrid" class="calendar-grid"></div>
       </div>
-     </div><!-- NOTAS -->
-     <div id="notesSection" class="section">
+     </div><!-- RECORDATORIOS Y TAREAS -->
+     <div id="remindersSection" class="section">
       <div class="card">
-       <h2>📝 Notas Clínicas</h2><button class="btn btn-primary" onclick="openAddNoteModal()">➕ Nueva Nota</button>
-       <div id="noteList" class="note-list">
-        <div class="empty-state">
-         <div class="icon">
-          📝
-         </div>
-         <p>No hay notas registradas</p>
-        </div>
+       <h2>✅ Recordatorios y Tareas</h2>
+       <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;"><button class="btn btn-primary" onclick="openAddReminderModal()">➕ Nuevo Recordatorio</button> <button class="btn btn-success" onclick="openAddTaskModal()">��� Nueva Tarea</button>
        </div>
+       <h3 style="color: #555555; margin-top: 30px; margin-bottom: 15px; font-family: 'Hammersmith One', sans-serif; font-size: 22px;">📌 Recordatorios</h3>
+       <div id="remindersList"></div>
+       <h3 style="color: #555555; margin-top: 30px; margin-bottom: 15px; font-family: 'Hammersmith One', sans-serif; font-size: 22px;">📋 Tareas</h3>
+       <div id="tasksList"></div>
       </div>
      </div><!-- PLANES -->
      <div id="plansSection" class="section">
       <div class="card">
-       <h2>💎 Gestión de Planes</h2>
+       <h2 style="font-family: 'Righteous', 'Arial Black', sans-serif; color: #e4d936;">💎 Gestión de Planes</h2>
        <div class="current-plan-info">
-        <h3>Tu Plan Actual: <span id="currentPlanName">Gratuito 🆓</span></h3>
+        <h3>Tu Plan Actual: <span id="currentPlanName">Premium ��</span></h3>
         <p id="planExpiryInfo">Plan activo</p>
         <div class="usage-bars">
          <div class="usage-item">
-          <div class="usage-label"><span>Pacientes</span> <span id="usagePatients">0/5</span>
+          <div class="usage-label"><span>Pacientes</span> <span id="usagePatients">0/∞</span>
           </div>
           <div class="usage-bar">
            <div class="usage-fill" id="fillPatients" style="width: 0%"></div>
           </div>
          </div>
          <div class="usage-item">
-          <div class="usage-label"><span>Minutos de Grabación</span> <span id="usageMinutes">0/10</span>
+          <div class="usage-label"><span>Minutos de Grabación</span> <span id="usageMinutes">0/���</span>
           </div>
           <div class="usage-bar">
            <div class="usage-fill" id="fillMinutes" style="width: 0%"></div>
@@ -1170,7 +1490,7 @@
          </div>
          <div class="plan-features">
           <div class="plan-feature">
-           ✅ 5 pacientes máximo
+           ✅ 5 pacientes m��ximo
           </div>
           <div class="plan-feature">
            ✅ 3 sesiones por paciente
@@ -1184,7 +1504,7 @@
           <div class="plan-feature">
            ❌ Sin exportación PDF
           </div>
-         </div><button class="btn btn-secondary" disabled>Plan Actual</button>
+         </div><button class="btn btn-secondary" disabled>No Disponible</button>
         </div>
         <div class="plan-card recommended" id="planFlexible">
          <div class="plan-badge" style="background: #fbbf24; color: #000;">
@@ -1213,7 +1533,7 @@
            ✅ 40 min de grabación
           </div>
           <div class="plan-feature">
-           ✅ 🤖 Transcripción IA
+           ✅ Transcripción IA
           </div>
           <div class="plan-feature">
            ✅ Exportación PDF
@@ -1221,9 +1541,12 @@
           <div class="plan-feature">
            ✅ Un solo profesional
           </div>
-         </div><button class="btn btn-success" onclick="upgradePlan('flexible')">Actualizar Plan</button>
+         </div><button class="btn btn-secondary" disabled>No Disponible</button>
         </div>
-        <div class="plan-card" id="planPremium">
+        <div class="plan-card current" id="planPremium">
+         <div class="plan-badge">
+          TU PLAN ACTUAL
+         </div>
          <div class="plan-icon">
           👑
          </div>
@@ -1238,16 +1561,19 @@
          </div>
          <div class="plan-features">
           <div class="plan-feature">
-           ✅ ♾️ TODO ILIMITADO
+           ✅ ♾️ Todo Ilimitado
           </div>
           <div class="plan-feature">
-           ✅ 🤖 Transcripción IA
+           ✅ 🤖 Transcripción con IA
           </div>
           <div class="plan-feature">
            ✅ 👥 Hasta 3 profesionales
           </div>
           <div class="plan-feature">
-           ✅ 🏥 Plantillas clínicas
+           ✅ 📋 Plantillas de Historias Clínicas
+          </div>
+          <div class="plan-feature">
+           ✅ 📊 Generador de Informes Clínicos
           </div>
           <div class="plan-feature">
            ✅ ☁️ Respaldo en nube
@@ -1255,32 +1581,84 @@
           <div class="plan-feature">
            ✅ ⚡ Soporte 24/7
           </div>
-         </div><button class="btn btn-success" onclick="upgradePlan('premium')">Actualizar Plan</button>
+         </div><button class="btn btn-secondary" disabled>Plan Actual</button>
         </div>
        </div>
-       <div style="background: #f3f4f6; padding: 20px; margin-top: 30px; border-radius: 10px;">
-        <h3 style="margin-bottom: 15px; color: #1f2937;">💳 Métodos de Pago Aceptados</h3>
-        <p style="color: #6b7280; margin-bottom: 10px;">✅ Tarjetas de crédito/débito (Stripe)</p>
-        <p style="color: #6b7280; margin-bottom: 10px;">✅ Mercado Pago (América Latina)</p>
-        <p style="color: #6b7280; margin-bottom: 10px;">✅ PayPal</p>
-        <p style="color: #6b7280; margin-bottom: 10px;">✅ Transferencia bancaria</p>
-        <p style="color: #3b82f6; font-weight: 600; margin-top: 15px;">📱 Apps móviles iOS y Android próximamente</p>
+      </div>
+     </div><!-- MI CUENTA -->
+     <div id="accountSection" class="section">
+      <div class="card">
+       <h2>👤 Mi Cuenta</h2>
+       <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 30px; border-radius: 12px; margin-bottom: 30px;">
+        <h3 style="font-size: 1.8rem; margin-bottom: 15px; color: white;">Información Personal</h3>
+        <div style="display: grid; gap: 15px;">
+         <div style="display: flex; align-items: center; gap: 10px;"><span style="font-size: 1.5rem;">👤</span>
+          <div>
+           <p style="font-size: 0.9rem; opacity: 0.9; margin: 0;">Nombre Completo</p>
+           <p style="font-size: 1.2rem; font-weight: 600; margin: 5px 0 0 0;" id="accountUserName">Lic. Usuario</p>
+          </div>
+         </div>
+         <div style="display: flex; align-items: center; gap: 10px;"><span style="font-size: 1.5rem;">✉️</span>
+          <div>
+           <p style="font-size: 0.9rem; opacity: 0.9; margin: 0;">Correo Electrónico</p>
+           <p style="font-size: 1.2rem; font-weight: 600; margin: 5px 0 0 0;" id="accountUserEmail">usuario@ejemplo.com</p>
+          </div>
+         </div>
+         <div style="display: flex; align-items: center; gap: 10px;"><span style="font-size: 1.5rem;">🌍</span>
+          <div>
+           <p style="font-size: 0.9rem; opacity: 0.9; margin: 0;">País</p>
+           <p style="font-size: 1.2rem; font-weight: 600; margin: 5px 0 0 0;" id="accountUserCountry">No especificado</p>
+          </div>
+         </div>
+         <div style="display: flex; align-items: center; gap: 10px;"><span style="font-size: 1.5rem;">💎</span>
+          <div>
+           <p style="font-size: 0.9rem; opacity: 0.9; margin: 0;">Plan Actual</p>
+           <p style="font-size: 1.2rem; font-weight: 600; margin: 5px 0 0 0;" id="accountUserPlan">Premium 👑</p>
+          </div>
+         </div>
+        </div>
+       </div>
+       <div style="background: white; padding: 25px; border-radius: 12px; border: 2px solid #E2E8F0;">
+        <h3 style="color: #1E293B; margin-bottom: 20px;">⚙️ Configuración de Cuenta</h3>
+        <div style="display: grid; gap: 15px;"><button class="btn btn-primary" onclick="showToast('Función disponible próximamente', 'info')" style="width: 100%; justify-content: center;"> ✏️ Editar Información Personal </button> <button class="btn btn-secondary" onclick="showToast('Función disponible próximamente', 'info')" style="width: 100%; justify-content: center;"> 🔒 Cambiar Contraseña </button> <button class="btn" style="background: #64748B; color: white; width: 100%; justify-content: center;" onclick="showToast('Función disponible próximamente', 'info')"> 🔔 Preferencias de Notificaciones </button>
+        </div>
+       </div>
+       <div style="background: #FEF3C7; padding: 20px; border-radius: 12px; border: 2px solid #FBBF24; margin-top: 25px;">
+        <h3 style="color: #92400E; margin-bottom: 10px;">⚠️ Zona de Peligro</h3>
+        <p style="color: #92400E; margin-bottom: 15px; font-size: 0.95rem;">Las siguientes acciones son irreversibles.</p><button class="btn btn-danger" onclick="showToast('Función disponible próximamente', 'info')" style="width: 100%; justify-content: center;"> 🗑️ Eliminar Cuenta Permanentemente </button>
        </div>
       </div>
      </div>
     </div>
-   </div><!-- MODAL AGREGAR PACIENTE -->
+   </div><!-- PIE DE PÁGINA LEGAL -->
+   <footer style="background: white; padding: 20px; text-align: center; margin-top: 40px; border-top: 2px solid #E2E8F0; border-radius: 12px; box-shadow: 0 -2px 8px rgba(0,0,0,0.04);">
+    <p style="color: #64748B; font-size: 0.85rem; font-family: 'Inter', sans-serif; margin: 0;">🔒 <strong>Entorno cifrado de extremo a extremo.</strong> Cumple con normativas HIPAA y GDPR.</p>
+    <p style="color: #94A3B8; font-size: 0.75rem; font-family: 'Inter', sans-serif; margin-top: 8px;">© 2026 PsyTape Professional - Todos los derechos reservados</p>
+   </footer><!-- MODAL AGREGAR PACIENTE -->
    <div id="addPatientModal" class="modal">
     <div class="modal-content">
      <h2>Agregar Nuevo Paciente</h2>
      <form id="addPatientForm">
       <div class="form-group-modal"><label for="patientName">Nombre Completo</label> <input type="text" id="patientName" required>
       </div>
+      <div class="form-group-modal"><label for="patientDni">DNI / Identificación</label> <input type="text" id="patientDni" required>
+      </div>
       <div class="form-group-modal"><label for="patientAge">Edad</label> <input type="number" id="patientAge" required>
       </div>
       <div class="form-group-modal"><label for="patientEmail">Email</label> <input type="email" id="patientEmail">
       </div>
       <div class="form-group-modal"><label for="patientPhone">Teléfono</label> <input type="tel" id="patientPhone">
+      </div>
+      <h3 style="color: #000000; margin-top: 30px; margin-bottom: 15px; border-top: 2px solid #e5e7eb; padding-top: 20px; font-family: 'Hammersmith One', sans-serif; font-size: 14px;">👨‍👩‍👧 Contacto de Familiar (Opcional)</h3>
+      <div class="form-group-modal"><label for="familyName">Nombre Completo del Familiar</label> <input type="text" id="familyName" placeholder="Ej: María García">
+      </div>
+      <div class="form-group-modal"><label for="familyRelation">V��nculo con el Paciente</label> <select id="familyRelation"> <option value="">Seleccionar vínculo</option> <option value="Madre">Madre</option> <option value="Padre">Padre</option> <option value="Pareja">Pareja</option> <option value="Hijo/a">Hijo/a</option> <option value="Hermano/a">Hermano/a</option> <option value="Abuelo/a">Abuelo/a</option> <option value="Tío/a">Tío/a</option> <option value="Otro">Otro</option> </select>
+      </div>
+      <div class="form-group-modal"><label for="familyPhone">Teléfono del Familiar</label> <input type="tel" id="familyPhone" placeholder="Ej: +54 9 11 1234-5678">
+      </div>
+      <div class="form-group-modal"><label for="familyEmail">Email del Familiar</label> <input type="email" id="familyEmail" placeholder="Ej: maria@example.com">
+      </div>
+      <div class="form-group-modal"><label for="familyAddress">Dirección del Familiar</label> <input type="text" id="familyAddress" placeholder="Ej: Av. Corrientes 1234, CABA">
       </div>
       <div class="modal-buttons"><button type="submit" class="btn btn-success">Guardar</button> <button type="button" class="btn btn-danger" onclick="closeModal('addPatientModal')">Cancelar</button>
       </div>
@@ -1289,8 +1667,10 @@
    </div><!-- MODAL GRABAR SESIÓN -->
    <div id="recordSessionModal" class="modal">
     <div class="modal-content">
-     <h2>Grabar Sesión</h2>
-     <div class="form-group-modal"><label for="sessionPatient">Seleccionar Paciente</label> <select id="sessionPatient" required> <option value="">Selecciona un paciente</option> </select>
+     <h2>Grabar Sesión - <span id="sessionPatientName"></span></h2><!-- NUEVOS CAMPOS -->
+     <div class="form-group-modal"><label for="sessionDate">📅 Fecha de la Sesi��n</label> <input type="date" id="sessionDate" required>
+     </div>
+     <div class="form-group-modal"><label for="sessionType">��� Tipo de Sesión</label> <select id="sessionType" required> <option value="Individual">Individual</option> <option value="Familiar">Familiar</option> <option value="Evaluación">Evaluación</option> <option value="Otro">Otro</option> </select>
      </div>
      <div id="sessionLimitInfo"></div>
      <div class="recording-status" id="recordingStatus">
@@ -1299,7 +1679,7 @@
      <div class="recording-timer" id="recordingTimer">
       00:00
      </div>
-     <div class="recording-controls"><button class="record-button" id="recordButton" onclick="toggleRecording()">🎙️</button>
+     <div class="recording-controls"><button class="record-button" id="recordButton" onclick="toggleRecording()">���️</button>
      </div>
      <div class="transcription-box" id="transcriptionBox">
       <p style="color: #9ca3af;">La transcripción aparecerá aquí...</p>
@@ -1326,20 +1706,72 @@
       </div>
      </form>
     </div>
-   </div><!-- MODAL NUEVA NOTA -->
-   <div id="addNoteModal" class="modal">
+   </div><!-- MODAL RECORDATORIO -->
+   <div id="reminderModal" class="modal">
     <div class="modal-content">
-     <h2>Nueva Nota Clínica</h2>
-     <form id="addNoteForm">
-      <div class="form-group-modal"><label for="notePatient">Paciente</label> <select id="notePatient" required> <option value="">Selecciona un paciente</option> </select>
+     <h2>Nuevo Recordatorio</h2>
+     <form id="reminderForm">
+      <div class="form-group-modal"><label for="reminderTitle">Título del Recordatorio</label> <input type="text" id="reminderTitle" required>
       </div>
+      <div class="form-group-modal"><label for="reminderContent">Contenido</label> <textarea id="reminderContent" style="min-height: 150px;" required></textarea>
+      </div>
+      <div style="text-align: center; margin: 20px 0;"><button type="button" class="record-note-btn" onclick="toggleReminderRecording()"> <span id="reminderRecordIcon">🎙️</span> <span id="reminderRecordText">Grabar Recordatorio</span> </button>
+       <div class="recording-timer" id="reminderRecordingTimer" style="display: none; margin-top: 10px;">
+        00:00
+       </div>
+      </div>
+      <div class="modal-buttons"><button type="submit" class="btn btn-success">Guardar Recordatorio</button> <button type="button" class="btn btn-danger" onclick="closeModal('reminderModal')">Cancelar</button>
+      </div>
+     </form>
+    </div>
+   </div><!-- MODAL TAREA -->
+   <div id="taskModal" class="modal">
+    <div class="modal-content">
+     <h2 style="text-align: center; font-size: 2.5rem; color: #e4d936; font-family: 'Righteous', 'Arial Black', sans-serif;">Nueva Tarea</h2>
+     <form id="taskForm">
+      <div class="form-group-modal"><label for="taskTitle">Título de la Tarea</label> <input type="text" id="taskTitle" required>
+      </div>
+      <div class="form-group-modal"><label for="taskContent">Descripción</label> <textarea id="taskContent" style="min-height: 120px;" required></textarea>
+      </div>
+      <div style="text-align: center; margin: 20px 0;"><button type="button" class="record-note-btn" onclick="toggleTaskRecording()"> <span id="taskRecordIcon">��️</span> <span id="taskRecordText">Grabar Descripción</span> </button>
+       <div class="recording-timer" id="taskRecordingTimer" style="display: none; margin-top: 10px;">
+        00:00
+       </div>
+      </div>
+      <div class="form-group-modal"><label for="taskDueDate">📅 Fecha de Entrega</label> <input type="date" id="taskDueDate" required>
+      </div>
+      <div class="form-group-modal"><label for="taskDueTime">�� Hora de Entrega</label> <input type="time" id="taskDueTime" required>
+      </div>
+      <div class="modal-buttons"><button type="submit" class="btn btn-success">Guardar Tarea</button> <button type="button" class="btn btn-danger" onclick="closeModal('taskModal')">Cancelar</button>
+      </div>
+     </form>
+    </div>
+   </div><!-- MODAL NOTAS -->
+   <div id="noteModal" class="modal">
+    <div class="modal-content">
+     <h2>Nota Clínica - <span id="notePatientName"></span></h2>
+     <form id="noteForm">
       <div class="form-group-modal"><label for="noteTitle">Título</label> <input type="text" id="noteTitle" required>
       </div>
       <div class="form-group-modal"><label for="noteContent">Contenido</label> <textarea id="noteContent" style="min-height: 200px;" required></textarea>
       </div>
-      <div class="modal-buttons"><button type="submit" class="btn btn-success">Guardar Nota</button> <button type="button" class="btn btn-danger" onclick="closeModal('addNoteModal')">Cancelar</button>
+      <div style="text-align: center; margin: 20px 0;"><button type="button" class="record-note-btn" onclick="toggleNoteRecording()"> <span id="noteRecordIcon">🎙️</span> <span id="noteRecordText">Grabar Nota</span> </button>
+       <div class="recording-timer" id="noteRecordingTimer" style="display: none; margin-top: 10px;">
+        00:00
+       </div>
+      </div>
+      <div class="modal-buttons"><button type="submit" class="btn btn-success">Guardar Nota</button> <button type="button" class="btn btn-danger" onclick="closeModal('noteModal')">Cancelar</button>
       </div>
      </form>
+    </div>
+   </div><!-- MODAL INFORME -->
+   <div id="reportModal" class="modal">
+    <div class="modal-content" style="max-width: 800px;">
+     <h2 style="color: #2ECC71; text-align: center; font-size: 2rem;">📊 Informe Autom��tico de Sesión</h2>
+     <div id="reportContent" style="background: white; padding: 30px; border-radius: 10px; margin: 20px 0; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"><!-- El contenido del informe se generará aquí -->
+     </div>
+     <div class="modal-buttons"><button class="btn" style="background: #2ECC71; color: white; box-shadow: 0px 4px 15px rgba(0,0,0,0.2);" onclick="downloadReport()">💾 Descargar Informe</button> <button class="btn btn-secondary" onclick="closeModal('reportModal')">Cerrar</button>
+     </div>
     </div>
    </div>
   </div>
@@ -1349,7 +1781,7 @@
 
         let supabaseClient;
         let currentUser = null;
-        let userPlan = 'free';
+        let userPlan = 'premium';
 
         const PLANS = {
             free: { patients: 5, sessionsPerPatient: 3, recordingMinutes: 10, transcription: false },
@@ -1361,13 +1793,40 @@
         let sessions = [];
         let appointments = [];
         let notes = [];
+        let reminders = [];
+        let tasks = [];
         let usedMinutes = 0;
+        let currentPatientId = null;
 
         let isRecording = false;
         let mediaRecorder;
         let audioChunks = [];
         let recordingStartTime = 0;
         let recordingInterval;
+        let recognition;
+        let currentTranscript = '';
+
+        let isRecordingNote = false;
+        let noteMediaRecorder;
+        let noteAudioChunks = [];
+        let noteRecordingStartTime = 0;
+        let noteRecordingInterval;
+        let noteRecognition;
+        let currentNoteTranscript = '';
+
+        let isRecordingReminder = false;
+        let reminderMediaRecorder;
+        let reminderRecordingStartTime = 0;
+        let reminderRecordingInterval;
+        let reminderRecognition;
+        let currentReminderTranscript = '';
+
+        let isRecordingTask = false;
+        let taskMediaRecorder;
+        let taskRecordingStartTime = 0;
+        let taskRecordingInterval;
+        let taskRecognition;
+        let currentTaskTranscript = '';
 
         let currentWeekStart = new Date();
 
@@ -1405,20 +1864,28 @@
                     .single();
 
                 if (data) {
-                    document.getElementById('userName').textContent = data.name;
-                    userPlan = data.plan || 'free';
+                    document.getElementById('userNameTop').textContent = data.name;
+                    document.getElementById('accountUserName').textContent = 'Lic. ' + data.name;
+                    document.getElementById('accountUserEmail').textContent = data.email || currentUser.email;
+                    document.getElementById('accountUserCountry').textContent = data.country || 'No especificado';
+                    document.getElementById('accountUserPlan').textContent = 'Premium 👑';
+                    userPlan = 'premium';
                 } else {
-                    document.getElementById('userName').textContent = 'Usuario';
+                    document.getElementById('userNameTop').textContent = 'Usuario';
+                    document.getElementById('accountUserName').textContent = 'Lic. Usuario';
+                    document.getElementById('accountUserEmail').textContent = currentUser.email;
                 }
                 
                 updatePlanDisplay();
             } catch (err) {
-                document.getElementById('userName').textContent = 'Usuario';
+                document.getElementById('userNameTop').textContent = 'Usuario';
+                document.getElementById('accountUserName').textContent = 'Lic. Usuario';
+                document.getElementById('accountUserEmail').textContent = currentUser?.email || 'usuario@ejemplo.com';
             }
         }
 
         function updatePlanDisplay() {
-            const planNames = { free: 'Gratuito 🆓', flexible: 'Flexible ⚡', premium: 'Premium 👑' };
+            const planNames = { free: 'Gratuito ����', flexible: 'Flexible ⚡', premium: 'Premium 👑' };
             document.getElementById('userPlanDisplay').textContent = planNames[userPlan];
             document.getElementById('currentPlanName').textContent = planNames[userPlan];
             
@@ -1426,15 +1893,15 @@
             planCards.forEach(card => {
                 card.classList.remove('current');
                 const btn = card.querySelector('button');
-                if (card.id === 'plan' + userPlan.charAt(0).toUpperCase() + userPlan.slice(1)) {
+                if (card.id === 'planPremium') {
                     card.classList.add('current');
                     btn.textContent = 'Plan Actual';
                     btn.disabled = true;
                     btn.className = 'btn btn-secondary';
                 } else {
-                    btn.disabled = false;
-                    btn.className = 'btn btn-success';
-                    btn.textContent = 'Actualizar Plan';
+                    btn.disabled = true;
+                    btn.className = 'btn btn-secondary';
+                    btn.textContent = 'No Disponible';
                 }
             });
 
@@ -1445,15 +1912,15 @@
             const plan = PLANS[userPlan];
             
             const patientCount = patients.length;
-            const patientPercent = userPlan === 'premium' ? 10 : Math.min((patientCount / plan.patients) * 100, 100);
-            document.getElementById('usagePatients').textContent = userPlan === 'premium' ? `${patientCount}/∞` : `${patientCount}/${plan.patients}`;
+            const patientPercent = 10;
+            document.getElementById('usagePatients').textContent = `${patientCount}/∞`;
             document.getElementById('fillPatients').style.width = patientPercent + '%';
-            document.getElementById('fillPatients').className = 'usage-fill' + (patientPercent > 80 ? ' danger' : patientPercent > 60 ? ' warning' : '');
+            document.getElementById('fillPatients').className = 'usage-fill';
 
-            const minutePercent = userPlan === 'premium' ? 10 : Math.min((usedMinutes / plan.recordingMinutes) * 100, 100);
-            document.getElementById('usageMinutes').textContent = userPlan === 'premium' ? `${usedMinutes}/∞` : `${usedMinutes}/${plan.recordingMinutes}`;
+            const minutePercent = 10;
+            document.getElementById('usageMinutes').textContent = `${usedMinutes}/∞`;
             document.getElementById('fillMinutes').style.width = minutePercent + '%';
-            document.getElementById('fillMinutes').className = 'usage-fill' + (minutePercent > 80 ? ' danger' : minutePercent > 60 ? ' warning' : '');
+            document.getElementById('fillMinutes').className = 'usage-fill';
         }
 
         function loadLocalData() {
@@ -1461,12 +1928,14 @@
             sessions = JSON.parse(localStorage.getItem(`sessions_${currentUser.id}`)) || [];
             appointments = JSON.parse(localStorage.getItem(`appointments_${currentUser.id}`)) || [];
             notes = JSON.parse(localStorage.getItem(`notes_${currentUser.id}`)) || [];
+            reminders = JSON.parse(localStorage.getItem(`reminders_${currentUser.id}`)) || [];
+            tasks = JSON.parse(localStorage.getItem(`tasks_${currentUser.id}`)) || [];
             usedMinutes = parseInt(localStorage.getItem(`usedMinutes_${currentUser.id}`)) || 0;
             
             renderPatients();
-            renderSessions();
-            renderAppointments();
-            renderNotes();
+            renderCalendar();
+            renderReminders();
+            renderTasks();
             updateUsageBars();
         }
 
@@ -1475,6 +1944,8 @@
             localStorage.setItem(`sessions_${currentUser.id}`, JSON.stringify(sessions));
             localStorage.setItem(`appointments_${currentUser.id}`, JSON.stringify(appointments));
             localStorage.setItem(`notes_${currentUser.id}`, JSON.stringify(notes));
+            localStorage.setItem(`reminders_${currentUser.id}`, JSON.stringify(reminders));
+            localStorage.setItem(`tasks_${currentUser.id}`, JSON.stringify(tasks));
             localStorage.setItem(`usedMinutes_${currentUser.id}`, usedMinutes.toString());
         }
 
@@ -1503,7 +1974,7 @@
         function showRegistrationForm() {
             hideAllScreens();
             document.getElementById('authScreen').classList.add('active');
-            document.getElementById('authTitle').textContent = 'Registration';
+            document.getElementById('authTitle').textContent = 'Registro de Cuenta';
             document.getElementById('registrationForm').classList.remove('hidden');
             document.getElementById('loginForm').classList.add('hidden');
             clearAuthMessages();
@@ -1512,7 +1983,7 @@
         function showLoginForm() {
             hideAllScreens();
             document.getElementById('authScreen').classList.add('active');
-            document.getElementById('authTitle').textContent = 'Login';
+            document.getElementById('authTitle').textContent = 'Iniciar Sesión';
             document.getElementById('loginForm').classList.remove('hidden');
             document.getElementById('registrationForm').classList.add('hidden');
             clearAuthMessages();
@@ -1566,19 +2037,19 @@
                     email: email,
                     name: name,
                     country: country,
-                    plan: 'free',
+                    plan: 'premium',
                     created_at: new Date().toISOString()
                 }]);
 
             currentUser = authData.user;
-            userPlan = 'free';
+            userPlan = 'premium';
             showAuthSuccess('Registro exitoso. Redirigiendo...');
             
             setTimeout(async () => {
                 await loadUserProfile();
                 loadLocalData();
                 showMainApp();
-                showToast('¡Bienvenido a PsyTape! 🎉', 'success');
+                showToast('¡Bienvenido a PsyTape Premium! 👑', 'success');
             }, 1500);
         });
 
@@ -1606,7 +2077,7 @@
             
             setTimeout(() => {
                 showMainApp();
-                showToast('¡Bienvenido de vuelta! 👋', 'success');
+                showToast('¡Bienvenido de vuelta! �����', 'success');
             }, 1000);
         });
 
@@ -1622,15 +2093,6 @@
         }
 
         function openAddPatientModal() {
-            const plan = PLANS[userPlan];
-            const limitInfo = document.getElementById('patientLimitInfo');
-            
-            if (patients.length >= plan.patients) {
-                limitInfo.innerHTML = `<div class="limit-error">❌ Has alcanzado el límite de ${plan.patients} pacientes. <a href="#" onclick="showSection('plans'); return false;" style="color: #991b1b; text-decoration: underline;">Actualiza tu plan</a> para agregar más.</div>`;
-                showToast('Límite de pacientes alcanzado', 'error');
-                return;
-            }
-            
             document.getElementById('addPatientModal').classList.add('active');
             document.getElementById('addPatientForm').reset();
         }
@@ -1640,31 +2102,42 @@
             if (modalId === 'recordSessionModal' && isRecording) {
                 stopRecording();
             }
+            if (modalId === 'noteModal' && isRecordingNote) {
+                stopNoteRecording();
+            }
         }
 
         function updatePatientSelects() {
-            const selects = ['sessionPatient', 'appointmentPatient', 'notePatient'];
-            selects.forEach(selectId => {
-                const select = document.getElementById(selectId);
-                select.innerHTML = '<option value="">Selecciona un paciente</option>';
-                patients.forEach(patient => {
-                    const option = document.createElement('option');
-                    option.value = patient.id;
-                    option.textContent = patient.name;
-                    select.appendChild(option);
-                });
+            const select = document.getElementById('appointmentPatient');
+            select.innerHTML = '<option value="">Selecciona un paciente</option>';
+            patients.forEach(patient => {
+                const option = document.createElement('option');
+                option.value = patient.id;
+                option.textContent = `${patient.name} (DNI: ${patient.dni})`;
+                select.appendChild(option);
             });
         }
 
         document.getElementById('addPatientForm').addEventListener('submit', (e) => {
             e.preventDefault();
             
+            const familyName = document.getElementById('familyName').value.trim();
+            const familyContact = familyName ? {
+                name: familyName,
+                relation: document.getElementById('familyRelation').value,
+                phone: document.getElementById('familyPhone').value.trim(),
+                email: document.getElementById('familyEmail').value.trim(),
+                address: document.getElementById('familyAddress').value.trim()
+            } : null;
+            
             const patient = {
                 id: Date.now().toString(),
                 name: document.getElementById('patientName').value,
+                dni: document.getElementById('patientDni').value,
                 age: document.getElementById('patientAge').value,
                 email: document.getElementById('patientEmail').value,
                 phone: document.getElementById('patientPhone').value,
+                familyContact: familyContact,
                 createdAt: new Date().toISOString()
             };
 
@@ -1680,18 +2153,18 @@
             const list = document.getElementById('patientList');
             
             if (patients.length === 0) {
-                list.innerHTML = '<div class="empty-state"><div class="icon">👤</div><p>No hay pacientes registrados</p></div>';
+                list.innerHTML = '<div class="empty-state"><div class="icon">����</div><p>No hay pacientes registrados</p></div>';
                 return;
             }
 
             list.innerHTML = patients.map(patient => `
-                <div class="patient-item">
+                <div class="patient-item" onclick="showPatientDetail('${patient.id}')">
                     <div class="item-info">
                         <h3>${patient.name}</h3>
-                        <p>Edad: ${patient.age} | Email: ${patient.email || 'N/A'} | Tel: ${patient.phone || 'N/A'}</p>
+                        <p>DNI: ${patient.dni} | Edad: ${patient.age} | Email: ${patient.email || 'N/A'} | Tel: ${patient.phone || 'N/A'}</p>
                     </div>
                     <div class="item-actions">
-                        <button class="btn btn-danger" onclick="deletePatient('${patient.id}')">🗑️</button>
+                        <button class="btn btn-danger" onclick="event.stopPropagation(); deletePatient('${patient.id}')">🗑️ Eliminar</button>
                     </div>
                 </div>
             `).join('');
@@ -1705,47 +2178,135 @@
             showToast('Paciente eliminado', 'info');
         }
 
-        function openRecordSessionModal() {
-            if (patients.length === 0) {
-                showToast('Primero debes agregar pacientes', 'error');
+        function showPatientDetail(patientId) {
+            currentPatientId = patientId;
+            const patient = patients.find(p => p.id === patientId);
+            if (!patient) return;
+
+            const familyContactHtml = patient.familyContact ? `
+                <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid rgba(255,255,255,0.3);">
+                    <h3 style="color: white; margin-bottom: 10px;">👨‍👩‍👧 Contacto Familiar</h3>
+                    <p><strong>${patient.familyContact.name}</strong> (${patient.familyContact.relation})</p>
+                    <p>📞 ${patient.familyContact.phone || 'N/A'} | ✉️ ${patient.familyContact.email || 'N/A'}</p>
+                    <p>��� ${patient.familyContact.address || 'N/A'}</p>
+                </div>
+            ` : '';
+
+            document.getElementById('patientDetailHeader').innerHTML = `
+                <div class="patient-detail-header">
+                    <h2>👤 ${patient.name}</h2>
+                    <p>DNI: ${patient.dni} | Edad: ${patient.age} años | Email: ${patient.email || 'N/A'} | Teléfono: ${patient.phone || 'N/A'}</p>
+                    ${familyContactHtml}
+                </div>
+            `;
+
+            renderPatientSessions();
+            renderPatientNotes();
+            renderPatientAppointments();
+            showSection('patientDetail');
+        }
+
+        function renderPatientSessions() {
+            const container = document.getElementById('patientSessions');
+            const patientSessions = sessions.filter(s => s.patientId === currentPatientId);
+
+            if (patientSessions.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="icon">🎙️</div><p style="color: #636161;">No hay sesiones grabadas</p></div>';
                 return;
             }
-            
-            updatePatientSelects();
+
+            container.innerHTML = patientSessions.map(session => `
+                <div class="session-item">
+                    <div class="item-info">
+                        <h3>
+                            Sesión del ${new Date(session.sessionDate || session.date).toLocaleDateString('es-ES')}
+                            <span class="session-badge">${session.sessionType || 'Individual'}</span>
+                        </h3>
+                        <p>Duración: ${session.duration}</p>
+                        <p style="margin-top: 10px; color: #6b7280;">${session.transcription}</p>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn" style="background: #2ECC71; color: white; border-radius: 9999px; box-shadow: 0px 4px 15px rgba(0,0,0,0.2);" onclick="generateReport('${session.id}')">📊 Generar Informe</button>
+                        ${session.audioData ? `<button class="btn btn-primary" onclick="downloadAudio('${session.id}')">🎧 Audio</button>` : ''}
+                        <button class="btn btn-success" onclick="downloadTranscript('${session.id}')">📄 Transcripción</button>
+                        <button class="btn btn-danger" onclick="deleteSession('${session.id}')">🗑️</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderPatientNotes() {
+            const container = document.getElementById('patientNotes');
+            const patientNotes = notes.filter(n => n.patientId === currentPatientId);
+
+            if (patientNotes.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="icon">📝</div><p style="color: #636161;">No hay notas registradas</p></div>';
+                return;
+            }
+
+            container.innerHTML = patientNotes.map(note => `
+                <div class="note-item">
+                    <div class="item-info">
+                        <h3>${note.title}</h3>
+                        <p style="color: #6b7280; margin-top: 5px;">${new Date(note.date).toLocaleDateString('es-ES')}</p>
+                        <p style="margin-top: 10px;">${note.content}</p>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn btn-danger" onclick="deleteNote('${note.id}')">🗑️</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderPatientAppointments() {
+            const container = document.getElementById('patientAppointments');
+            const now = new Date();
+            const patientAppointments = appointments
+                .filter(a => a.patientId === currentPatientId)
+                .filter(a => new Date(`${a.date}T${a.time}`) >= now)
+                .sort((a, b) => new Date(`${a.date}T${a.time}`) - new Date(`${b.date}T${b.time}`));
+
+            if (patientAppointments.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="icon">📅</div><p style="color: #636161;">No hay citas próximas</p></div>';
+                return;
+            }
+
+            container.innerHTML = patientAppointments.map(apt => `
+                <div class="appointment-item" onclick="editAppointment('${apt.id}')">
+                    <div class="appointment-time">${apt.time}</div>
+                    <div class="appointment-patient">${new Date(apt.date).toLocaleDateString('es-ES')}</div>
+                    <div class="appointment-duration">${apt.duration} min</div>
+                </div>
+            `).join('');
+        }
+
+        function openRecordSessionForPatient() {
+            const patient = patients.find(p => p.id === currentPatientId);
+            if (!patient) return;
+
+            // Establecer fecha actual
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('sessionDate').value = today;
+
+            document.getElementById('sessionPatientName').textContent = patient.name;
             document.getElementById('recordSessionModal').classList.add('active');
             document.getElementById('recordingStatus').textContent = 'Listo para grabar';
             document.getElementById('recordingTimer').textContent = '00:00';
             document.getElementById('transcriptionBox').innerHTML = '<p style="color: #9ca3af;">La transcripción aparecerá aquí...</p>';
-            
-            const plan = PLANS[userPlan];
-            const limitInfo = document.getElementById('sessionLimitInfo');
-            const remainingMinutes = plan.recordingMinutes - usedMinutes;
-            
-            if (userPlan === 'premium') {
-                limitInfo.innerHTML = '<div style="background: #d1fae5; padding: 10px; border-radius: 5px; margin: 10px 0;">✅ Grabación ilimitada disponible</div>';
-            } else if (remainingMinutes <= 0) {
-                limitInfo.innerHTML = '<div class="limit-error">❌ Has agotado tus minutos de grabación. <a href="#" onclick="showSection(\'plans\'); closeModal(\'recordSessionModal\'); return false;" style="color: #991b1b; text-decoration: underline;">Actualiza tu plan</a></div>';
-            } else if (remainingMinutes < 5) {
-                limitInfo.innerHTML = `<div class="limit-warning">⚠️ Te quedan solo ${remainingMinutes} minutos de grabación</div>`;
-            } else {
-                limitInfo.innerHTML = `<div style="background: #e0f2fe; padding: 10px; border-radius: 5px; margin: 10px 0;">ℹ️ Tienes ${remainingMinutes} minutos disponibles</div>`;
-            }
+            document.getElementById('sessionLimitInfo').innerHTML = '<div style="background: #d1fae5; padding: 10px; border-radius: 5px; margin: 10px 0;">✅ Grabación ilimitada disponible (Premium)</div>';
+        }
+
+        function showPatientNotes() {
+            const patient = patients.find(p => p.id === currentPatientId);
+            if (!patient) return;
+
+            document.getElementById('notePatientName').textContent = patient.name;
+            document.getElementById('noteModal').classList.add('active');
+            document.getElementById('noteForm').reset();
         }
 
         async function toggleRecording() {
-            if (!document.getElementById('sessionPatient').value) {
-                showToast('Selecciona un paciente primero', 'error');
-                return;
-            }
-
-            const plan = PLANS[userPlan];
-            const remainingMinutes = plan.recordingMinutes - usedMinutes;
-            
             if (!isRecording) {
-                if (userPlan !== 'premium' && remainingMinutes <= 0) {
-                    showToast('Has agotado tus minutos de grabación', 'error');
-                    return;
-                }
                 startRecording();
             } else {
                 stopRecording();
@@ -1757,6 +2318,7 @@
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                 mediaRecorder = new MediaRecorder(stream);
                 audioChunks = [];
+                currentTranscript = '';
 
                 mediaRecorder.ondataavailable = (event) => {
                     audioChunks.push(event.data);
@@ -1766,8 +2328,47 @@
                 isRecording = true;
                 recordingStartTime = Date.now();
 
+                // Iniciar reconocimiento de voz en tiempo real
+                if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                    recognition = new SpeechRecognition();
+                    recognition.continuous = true;
+                    recognition.interimResults = true;
+                    recognition.lang = 'es-ES';
+
+                    recognition.onresult = (event) => {
+                        let interimTranscript = '';
+                        let finalTranscript = '';
+
+                        for (let i = event.resultIndex; i < event.results.length; i++) {
+                            const transcript = event.results[i][0].transcript;
+                            if (event.results[i].isFinal) {
+                                finalTranscript += transcript + ' ';
+                            } else {
+                                interimTranscript += transcript;
+                            }
+                        }
+
+                        if (finalTranscript) {
+                            currentTranscript += finalTranscript;
+                        }
+
+                        document.getElementById('transcriptionBox').innerHTML = 
+                            `<p style="color: #1f2937;">${currentTranscript}<span style="color: #9ca3af;">${interimTranscript}</span></p>`;
+                    };
+
+                    recognition.onerror = (event) => {
+                        console.error('Error en reconocimiento:', event.error);
+                    };
+
+                    recognition.start();
+                } else {
+                    document.getElementById('transcriptionBox').innerHTML = 
+                        '<p style="color: #ef4444;">��️ Tu navegador no soporta reconocimiento de voz en tiempo real</p>';
+                }
+
                 document.getElementById('recordButton').classList.add('recording');
-                document.getElementById('recordingStatus').textContent = '🔴 Grabando...';
+                document.getElementById('recordingStatus').textContent = '🔴 Grabando y transcribiendo...';
                 
                 recordingInterval = setInterval(() => {
                     const elapsed = Math.floor((Date.now() - recordingStartTime) / 1000);
@@ -1775,17 +2376,9 @@
                     const seconds = elapsed % 60;
                     document.getElementById('recordingTimer').textContent = 
                         `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-                    
-                    const plan = PLANS[userPlan];
-                    const totalUsedMinutes = usedMinutes + minutes;
-                    
-                    if (userPlan !== 'premium' && totalUsedMinutes >= plan.recordingMinutes) {
-                        stopRecording();
-                        showToast('Has alcanzado el límite de minutos de grabación', 'warning');
-                    }
                 }, 1000);
 
-                showToast('Grabación iniciada', 'success');
+                showToast('Grabación y transcripción iniciadas', 'success');
             } catch (error) {
                 showToast('Error al acceder al micrófono', 'error');
             }
@@ -1798,6 +2391,11 @@
                 isRecording = false;
                 clearInterval(recordingInterval);
 
+                // Detener reconocimiento de voz
+                if (recognition) {
+                    recognition.stop();
+                }
+
                 const elapsed = Math.floor((Date.now() - recordingStartTime) / 1000);
                 const minutes = Math.ceil(elapsed / 60);
                 usedMinutes += minutes;
@@ -1805,75 +2403,309 @@
                 updateUsageBars();
 
                 document.getElementById('recordButton').classList.remove('recording');
-                document.getElementById('recordingStatus').textContent = 'Grabación detenida';
+                document.getElementById('recordingStatus').textContent = 'Grabación detenida - Transcripción finalizada';
                 
-                const transcriptionText = userPlan !== 'free' 
-                    ? '🤖 [Transcripción con IA]: La sesión se desarrolló de manera satisfactoria. El paciente mostró avances significativos en las áreas trabajadas. Se observa mejor manejo emocional y disposición para continuar el tratamiento...'
-                    : 'ℹ️ La transcripción automática con IA está disponible en los planes Flexible y Premium. Actualiza tu plan para acceder a esta funcionalidad.';
+                if (currentTranscript.trim() === '') {
+                    currentTranscript = '[No se detectó audio o el navegador no soporta reconocimiento de voz]';
+                    document.getElementById('transcriptionBox').innerHTML = `<p style="color: #ef4444;">${currentTranscript}</p>`;
+                }
                 
-                document.getElementById('transcriptionBox').innerHTML = `<p style="color: #10b981;">${transcriptionText}</p>`;
-                showToast('Grabación detenida', 'info');
+                showToast('Grabación y transcripción detenidas', 'info');
             }
         }
 
         function saveSession() {
-            const patientId = document.getElementById('sessionPatient').value;
-            if (!patientId) {
-                showToast('Selecciona un paciente', 'error');
+            if (!currentPatientId) {
+                showToast('Error: No hay paciente seleccionado', 'error');
                 return;
             }
 
-            const patient = patients.find(p => p.id === patientId);
-            const plan = PLANS[userPlan];
-            const patientSessions = sessions.filter(s => s.patientId === patientId).length;
+            const sessionDate = document.getElementById('sessionDate').value;
+            const sessionType = document.getElementById('sessionType').value;
+
+            if (!sessionDate) {
+                showToast('Por favor selecciona la fecha de la sesión', 'error');
+                return;
+            }
+
+            const patient = patients.find(p => p.id === currentPatientId);
             
-            if (userPlan !== 'premium' && patientSessions >= plan.sessionsPerPatient) {
-                showToast(`Este paciente ya tiene ${plan.sessionsPerPatient} sesiones (límite de tu plan)`, 'error');
-                return;
+            // Convertir audio a base64 para guardarlo
+            let audioBase64 = null;
+            if (audioChunks.length > 0) {
+                const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                const reader = new FileReader();
+                reader.onloadend = function() {
+                    audioBase64 = reader.result;
+                    
+                    const session = {
+                        id: Date.now().toString(),
+                        patientId: currentPatientId,
+                        patientName: patient.name,
+                        date: new Date().toISOString(),
+                        sessionDate: sessionDate,
+                        sessionType: sessionType,
+                        transcription: currentTranscript || '[Sin transcripción]',
+                        audioData: audioBase64,
+                        duration: document.getElementById('recordingTimer').textContent
+                    };
+
+                    sessions.push(session);
+                    saveLocalData();
+                    renderPatientSessions();
+                    closeModal('recordSessionModal');
+                    showToast('Sesión, audio y transcripción guardados', 'success');
+                };
+                reader.readAsDataURL(audioBlob);
+            } else {
+                const session = {
+                    id: Date.now().toString(),
+                    patientId: currentPatientId,
+                    patientName: patient.name,
+                    date: new Date().toISOString(),
+                    sessionDate: sessionDate,
+                    sessionType: sessionType,
+                    transcription: currentTranscript || '[Sin transcripción]',
+                    audioData: null,
+                    duration: document.getElementById('recordingTimer').textContent
+                };
+
+                sessions.push(session);
+                saveLocalData();
+                renderPatientSessions();
+                closeModal('recordSessionModal');
+                showToast('Sesión guardada', 'success');
             }
-
-            const session = {
-                id: Date.now().toString(),
-                patientId: patientId,
-                patientName: patient.name,
-                date: new Date().toISOString(),
-                transcription: document.getElementById('transcriptionBox').textContent,
-                duration: document.getElementById('recordingTimer').textContent
-            };
-
-            sessions.push(session);
-            saveLocalData();
-            renderSessions();
-            closeModal('recordSessionModal');
-            showToast('Sesión guardada exitosamente', 'success');
-        }
-
-        function renderSessions() {
-            const list = document.getElementById('sessionList');
-            
-            if (sessions.length === 0) {
-                list.innerHTML = '<div class="empty-state"><div class="icon">🎙️</div><p>No hay sesiones grabadas</p></div>';
-                return;
-            }
-
-            list.innerHTML = sessions.map(session => `
-                <div class="session-item">
-                    <div class="item-info">
-                        <h3>Sesión con ${session.patientName}</h3>
-                        <p>${new Date(session.date).toLocaleDateString('es-ES')} | Duración: ${session.duration}</p>
-                    </div>
-                    <div class="item-actions">
-                        <button class="btn btn-danger" onclick="deleteSession('${session.id}')">🗑️</button>
-                    </div>
-                </div>
-            `).join('');
         }
 
         function deleteSession(id) {
             sessions = sessions.filter(s => s.id !== id);
             saveLocalData();
-            renderSessions();
+            renderPatientSessions();
             showToast('Sesión eliminada', 'info');
+        }
+
+        function downloadAudio(sessionId) {
+            const session = sessions.find(s => s.id === sessionId);
+            if (!session || !session.audioData) {
+                showToast('Audio no disponible', 'error');
+                return;
+            }
+
+            const link = document.createElement('a');
+            link.href = session.audioData;
+            link.download = `${session.patientName}_${new Date(session.sessionDate || session.date).toISOString().split('T')[0]}_audio.webm`;
+            link.click();
+            showToast('Descargando audio...', 'success');
+        }
+
+        function downloadTranscript(sessionId) {
+            const session = sessions.find(s => s.id === sessionId);
+            if (!session) {
+                showToast('Sesión no encontrada', 'error');
+                return;
+            }
+
+            const content = `TRANSCRIPCIÓN DE SESIÓN\n\nPaciente: ${session.patientName}\nFecha: ${new Date(session.sessionDate || session.date).toLocaleDateString('es-ES')}\nTipo: ${session.sessionType || 'Individual'}\nDuración: ${session.duration}\n\n--- TRANSCRIPCIÓN ---\n\n${session.transcription}`;
+            
+            const blob = new Blob([content], { type: 'text/plain' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `${session.patientName}_${new Date(session.sessionDate || session.date).toISOString().split('T')[0]}_transcripcion.txt`;
+            link.click();
+            showToast('Descargando transcripción...', 'success');
+        }
+
+        function downloadPatientBackup() {
+            if (!currentPatientId) {
+                showToast('Error: No hay paciente seleccionado', 'error');
+                return;
+            }
+
+            const patient = patients.find(p => p.id === currentPatientId);
+            if (!patient) {
+                showToast('Paciente no encontrado', 'error');
+                return;
+            }
+
+            const patientSessions = sessions.filter(s => s.patientId === currentPatientId);
+            const patientNotes = notes.filter(n => n.patientId === currentPatientId);
+            const patientAppointments = appointments.filter(a => a.patientId === currentPatientId);
+
+            const backupData = {
+                patient: patient,
+                sessions: patientSessions,
+                notes: patientNotes,
+                appointments: patientAppointments,
+                backupDate: new Date().toISOString()
+            };
+
+            const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: 'application/json' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `BACKUP_${patient.name.replace(/\s/g, '_')}_${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            showToast('Backup del paciente descargado', 'success');
+        }
+
+        function downloadFullBackup() {
+            if (patients.length === 0) {
+                showToast('No hay pacientes para respaldar', 'error');
+                return;
+            }
+
+            const backupData = {
+                patients: patients,
+                sessions: sessions,
+                notes: notes,
+                appointments: appointments,
+                userPlan: userPlan,
+                usedMinutes: usedMinutes,
+                backupDate: new Date().toISOString()
+            };
+
+            const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: 'application/json' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `BACKUP_COMPLETO_PsyTape_${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            showToast('Backup completo descargado exitosamente', 'success');
+        }
+
+        async function toggleNoteRecording() {
+            if (!isRecordingNote) {
+                startNoteRecording();
+            } else {
+                stopNoteRecording();
+            }
+        }
+
+        async function startNoteRecording() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                noteMediaRecorder = new MediaRecorder(stream);
+                noteAudioChunks = [];
+                currentNoteTranscript = '';
+
+                noteMediaRecorder.ondataavailable = (event) => {
+                    noteAudioChunks.push(event.data);
+                };
+
+                noteMediaRecorder.start();
+                isRecordingNote = true;
+                noteRecordingStartTime = Date.now();
+
+                // Iniciar reconocimiento de voz para notas
+                if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                    noteRecognition = new SpeechRecognition();
+                    noteRecognition.continuous = true;
+                    noteRecognition.interimResults = true;
+                    noteRecognition.lang = 'es-ES';
+
+                    noteRecognition.onresult = (event) => {
+                        let interimTranscript = '';
+                        let finalTranscript = '';
+
+                        for (let i = event.resultIndex; i < event.results.length; i++) {
+                            const transcript = event.results[i][0].transcript;
+                            if (event.results[i].isFinal) {
+                                finalTranscript += transcript + ' ';
+                            } else {
+                                interimTranscript += transcript;
+                            }
+                        }
+
+                        if (finalTranscript) {
+                            currentNoteTranscript += finalTranscript;
+                        }
+                    };
+
+                    noteRecognition.onerror = (event) => {
+                        console.error('Error en reconocimiento de nota:', event.error);
+                    };
+
+                    noteRecognition.start();
+                }
+
+                document.getElementById('noteRecordIcon').textContent = '⏹️';
+                document.getElementById('noteRecordText').textContent = 'Detener Grabación';
+                document.getElementById('noteRecordingTimer').style.display = 'block';
+                
+                noteRecordingInterval = setInterval(() => {
+                    const elapsed = Math.floor((Date.now() - noteRecordingStartTime) / 1000);
+                    const minutes = Math.floor(elapsed / 60);
+                    const seconds = elapsed % 60;
+                    document.getElementById('noteRecordingTimer').textContent = 
+                        `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                }, 1000);
+
+                showToast('Grabando nota con transcripción en tiempo real...', 'success');
+            } catch (error) {
+                showToast('Error al acceder al micrófono', 'error');
+            }
+        }
+
+        function stopNoteRecording() {
+            if (noteMediaRecorder && isRecordingNote) {
+                noteMediaRecorder.stop();
+                noteMediaRecorder.stream.getTracks().forEach(track => track.stop());
+                isRecordingNote = false;
+                clearInterval(noteRecordingInterval);
+
+                // Detener reconocimiento de voz de notas
+                if (noteRecognition) {
+                    noteRecognition.stop();
+                }
+
+                const elapsed = Math.floor((Date.now() - noteRecordingStartTime) / 1000);
+                const minutes = Math.ceil(elapsed / 60);
+                usedMinutes += minutes;
+                saveLocalData();
+                updateUsageBars();
+
+                document.getElementById('noteRecordIcon').textContent = '🎙️';
+                document.getElementById('noteRecordText').textContent = 'Grabar Nota';
+                document.getElementById('noteRecordingTimer').style.display = 'none';
+                
+                const currentContent = document.getElementById('noteContent').value;
+                const newContent = currentNoteTranscript || '[No se detectó audio]';
+                document.getElementById('noteContent').value = currentContent + (currentContent ? '\n\n' : '') + newContent;
+                
+                showToast('Transcripción agregada a la nota', 'success');
+            }
+        }
+
+        document.getElementById('noteForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            if (!currentPatientId) {
+                showToast('Error: No hay paciente seleccionado', 'error');
+                return;
+            }
+
+            const patient = patients.find(p => p.id === currentPatientId);
+            const note = {
+                id: Date.now().toString(),
+                patientId: currentPatientId,
+                patientName: patient.name,
+                title: document.getElementById('noteTitle').value,
+                content: document.getElementById('noteContent').value,
+                date: new Date().toISOString()
+            };
+
+            notes.push(note);
+            saveLocalData();
+            renderPatientNotes();
+            closeModal('noteModal');
+            showToast('Nota guardada exitosamente', 'success');
+        });
+
+        function deleteNote(id) {
+            notes = notes.filter(n => n.id !== id);
+            saveLocalData();
+            renderPatientNotes();
+            showToast('Nota eliminada', 'info');
         }
 
         function setCurrentWeekStart() {
@@ -1938,10 +2770,14 @@
                         const patient = patients.find(p => p.id === apt.patientId);
                         
                         return `
-                            <div class="appointment-item ${isPast ? 'past' : ''}" onclick="editAppointment('${apt.id}')">
+                            <div class="appointment-item ${isPast ? 'past' : ''}">
                                 <div class="appointment-time">${apt.time}</div>
                                 <div class="appointment-patient">${patient ? patient.name : 'Paciente eliminado'}</div>
                                 <div class="appointment-duration">${apt.duration} min</div>
+                                <div style="display: flex; gap: 5px; margin-top: 8px;">
+                                    <button class="btn btn-primary" style="padding: 5px 10px; font-size: 0.75rem;" onclick="event.stopPropagation(); editAppointment('${apt.id}')">✏️ Editar</button>
+                                    <button class="btn btn-danger" style="padding: 5px 10px; font-size: 0.75rem;" onclick="event.stopPropagation(); deleteAppointment('${apt.id}')">🗑️</button>
+                                </div>
                             </div>
                         `;
                     }).join('');
@@ -1976,6 +2812,14 @@
             document.getElementById('addAppointmentModal').classList.add('active');
         }
 
+        function deleteAppointment(id) {
+            appointments = appointments.filter(a => a.id !== id);
+            saveLocalData();
+            renderCalendar();
+            renderPatientAppointments();
+            showToast('Cita eliminada', 'info');
+        }
+
         document.getElementById('addAppointmentForm').addEventListener('submit', (e) => {
             e.preventDefault();
             
@@ -2007,75 +2851,565 @@
             closeModal('addAppointmentModal');
         });
 
-        function renderAppointments() {
-            renderCalendar();
+        // RECORDATORIOS Y TAREAS
+        function openAddReminderModal() {
+            document.getElementById('reminderModal').classList.add('active');
+            document.getElementById('reminderForm').reset();
         }
 
-        function openAddNoteModal() {
-            if (patients.length === 0) {
-                showToast('Primero debes agregar pacientes', 'error');
-                return;
+        function openAddTaskModal() {
+            document.getElementById('taskModal').classList.add('active');
+            document.getElementById('taskForm').reset();
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('taskDueDate').value = today;
+        }
+
+        async function toggleReminderRecording() {
+            if (!isRecordingReminder) {
+                startReminderRecording();
+            } else {
+                stopReminderRecording();
             }
-            updatePatientSelects();
-            document.getElementById('addNoteModal').classList.add('active');
-            document.getElementById('addNoteForm').reset();
         }
 
-        document.getElementById('addNoteForm').addEventListener('submit', (e) => {
+        async function startReminderRecording() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                reminderMediaRecorder = new MediaRecorder(stream);
+                isRecordingReminder = true;
+                reminderRecordingStartTime = Date.now();
+                currentReminderTranscript = '';
+
+                if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                    reminderRecognition = new SpeechRecognition();
+                    reminderRecognition.continuous = true;
+                    reminderRecognition.interimResults = true;
+                    reminderRecognition.lang = 'es-ES';
+
+                    reminderRecognition.onresult = (event) => {
+                        let finalTranscript = '';
+                        for (let i = event.resultIndex; i < event.results.length; i++) {
+                            if (event.results[i].isFinal) {
+                                finalTranscript += event.results[i][0].transcript + ' ';
+                            }
+                        }
+                        if (finalTranscript) {
+                            currentReminderTranscript += finalTranscript;
+                        }
+                    };
+
+                    reminderRecognition.start();
+                }
+
+                reminderMediaRecorder.start();
+                document.getElementById('reminderRecordIcon').textContent = '⏹️';
+                document.getElementById('reminderRecordText').textContent = 'Detener Grabación';
+                document.getElementById('reminderRecordingTimer').style.display = 'block';
+                
+                reminderRecordingInterval = setInterval(() => {
+                    const elapsed = Math.floor((Date.now() - reminderRecordingStartTime) / 1000);
+                    const minutes = Math.floor(elapsed / 60);
+                    const seconds = elapsed % 60;
+                    document.getElementById('reminderRecordingTimer').textContent = 
+                        `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                }, 1000);
+
+                showToast('Grabando recordatorio...', 'success');
+            } catch (error) {
+                showToast('Error al acceder al micrófono', 'error');
+            }
+        }
+
+        function stopReminderRecording() {
+            if (reminderMediaRecorder && isRecordingReminder) {
+                reminderMediaRecorder.stop();
+                reminderMediaRecorder.stream.getTracks().forEach(track => track.stop());
+                isRecordingReminder = false;
+                clearInterval(reminderRecordingInterval);
+
+                if (reminderRecognition) {
+                    reminderRecognition.stop();
+                }
+
+                const elapsed = Math.floor((Date.now() - reminderRecordingStartTime) / 1000);
+                const minutes = Math.ceil(elapsed / 60);
+                usedMinutes += minutes;
+                saveLocalData();
+                updateUsageBars();
+
+                document.getElementById('reminderRecordIcon').textContent = '🎙️';
+                document.getElementById('reminderRecordText').textContent = 'Grabar Recordatorio';
+                document.getElementById('reminderRecordingTimer').style.display = 'none';
+                
+                const currentContent = document.getElementById('reminderContent').value;
+                const newContent = currentReminderTranscript || '[No se detectó audio]';
+                document.getElementById('reminderContent').value = currentContent + (currentContent ? '\n\n' : '') + newContent;
+                
+                showToast('Transcripción agregada', 'success');
+            }
+        }
+
+        async function toggleTaskRecording() {
+            if (!isRecordingTask) {
+                startTaskRecording();
+            } else {
+                stopTaskRecording();
+            }
+        }
+
+        async function startTaskRecording() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                taskMediaRecorder = new MediaRecorder(stream);
+                isRecordingTask = true;
+                taskRecordingStartTime = Date.now();
+                currentTaskTranscript = '';
+
+                if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                    taskRecognition = new SpeechRecognition();
+                    taskRecognition.continuous = true;
+                    taskRecognition.interimResults = true;
+                    taskRecognition.lang = 'es-ES';
+
+                    taskRecognition.onresult = (event) => {
+                        let finalTranscript = '';
+                        for (let i = event.resultIndex; i < event.results.length; i++) {
+                            if (event.results[i].isFinal) {
+                                finalTranscript += event.results[i][0].transcript + ' ';
+                            }
+                        }
+                        if (finalTranscript) {
+                            currentTaskTranscript += finalTranscript;
+                        }
+                    };
+
+                    taskRecognition.start();
+                }
+
+                taskMediaRecorder.start();
+                document.getElementById('taskRecordIcon').textContent = '⏹️';
+                document.getElementById('taskRecordText').textContent = 'Detener Grabación';
+                document.getElementById('taskRecordingTimer').style.display = 'block';
+                
+                taskRecordingInterval = setInterval(() => {
+                    const elapsed = Math.floor((Date.now() - taskRecordingStartTime) / 1000);
+                    const minutes = Math.floor(elapsed / 60);
+                    const seconds = elapsed % 60;
+                    document.getElementById('taskRecordingTimer').textContent = 
+                        `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                }, 1000);
+
+                showToast('Grabando tarea...', 'success');
+            } catch (error) {
+                showToast('Error al acceder al micrófono', 'error');
+            }
+        }
+
+        function stopTaskRecording() {
+            if (taskMediaRecorder && isRecordingTask) {
+                taskMediaRecorder.stop();
+                taskMediaRecorder.stream.getTracks().forEach(track => track.stop());
+                isRecordingTask = false;
+                clearInterval(taskRecordingInterval);
+
+                if (taskRecognition) {
+                    taskRecognition.stop();
+                }
+
+                const elapsed = Math.floor((Date.now() - taskRecordingStartTime) / 1000);
+                const minutes = Math.ceil(elapsed / 60);
+                usedMinutes += minutes;
+                saveLocalData();
+                updateUsageBars();
+
+                document.getElementById('taskRecordIcon').textContent = '🎙️';
+                document.getElementById('taskRecordText').textContent = 'Grabar Descripción';
+                document.getElementById('taskRecordingTimer').style.display = 'none';
+                
+                const currentContent = document.getElementById('taskContent').value;
+                const newContent = currentTaskTranscript || '[No se detectó audio]';
+                document.getElementById('taskContent').value = currentContent + (currentContent ? '\n\n' : '') + newContent;
+                
+                showToast('Transcripción agregada', 'success');
+            }
+        }
+
+        document.getElementById('reminderForm').addEventListener('submit', (e) => {
             e.preventDefault();
-            
-            const patientId = document.getElementById('notePatient').value;
-            const patient = patients.find(p => p.id === patientId);
-            
-            const note = {
+
+            const reminder = {
                 id: Date.now().toString(),
-                patientId: patientId,
-                patientName: patient.name,
-                title: document.getElementById('noteTitle').value,
-                content: document.getElementById('noteContent').value,
+                title: document.getElementById('reminderTitle').value,
+                content: document.getElementById('reminderContent').value,
                 date: new Date().toISOString()
             };
 
-            notes.push(note);
+            reminders.push(reminder);
             saveLocalData();
-            renderNotes();
-            closeModal('addNoteModal');
-            showToast('Nota guardada exitosamente', 'success');
+            renderReminders();
+            closeModal('reminderModal');
+            showToast('Recordatorio guardado', 'success');
         });
 
-        function renderNotes() {
-            const list = document.getElementById('noteList');
+        document.getElementById('taskForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const task = {
+                id: Date.now().toString(),
+                title: document.getElementById('taskTitle').value,
+                content: document.getElementById('taskContent').value,
+                dueDate: document.getElementById('taskDueDate').value,
+                dueTime: document.getElementById('taskDueTime').value,
+                completed: false,
+                createdAt: new Date().toISOString()
+            };
+
+            tasks.push(task);
+            saveLocalData();
+            renderTasks();
+            closeModal('taskModal');
+            showToast('Tarea creada exitosamente', 'success');
+        });
+
+        function renderReminders() {
+            const container = document.getElementById('remindersList');
             
-            if (notes.length === 0) {
-                list.innerHTML = '<div class="empty-state"><div class="icon">📝</div><p>No hay notas registradas</p></div>';
+            if (reminders.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="icon">📌</div><p style="color: #e4d936;">No hay recordatorios</p></div>';
                 return;
             }
 
-            list.innerHTML = notes.map(note => `
+            container.innerHTML = reminders.map(reminder => `
                 <div class="note-item">
                     <div class="item-info">
-                        <h3>${note.title}</h3>
-                        <p>${note.patientName} | ${new Date(note.date).toLocaleDateString('es-ES')}</p>
+                        <h3>${reminder.title}</h3>
+                        <p style="color: #6b7280; margin-top: 5px;">${new Date(reminder.date).toLocaleDateString('es-ES')}</p>
+                        <p style="margin-top: 10px;">${reminder.content}</p>
                     </div>
                     <div class="item-actions">
-                        <button class="btn btn-danger" onclick="deleteNote('${note.id}')">🗑️</button>
+                        <button class="btn btn-danger" onclick="deleteReminder('${reminder.id}')">🗑️</button>
                     </div>
                 </div>
             `).join('');
         }
 
-        function deleteNote(id) {
-            notes = notes.filter(n => n.id !== id);
+        function renderTasks() {
+            const container = document.getElementById('tasksList');
+            
+            if (tasks.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="icon">📋</div><p style="color: #e4d936;">No hay tareas pendientes</p></div>';
+                return;
+            }
+
+            const sortedTasks = [...tasks].sort((a, b) => {
+                if (a.completed !== b.completed) return a.completed ? 1 : -1;
+                return new Date(`${a.dueDate}T${a.dueTime}`) - new Date(`${b.dueDate}T${b.dueTime}`);
+            });
+
+            container.innerHTML = sortedTasks.map(task => {
+                const dueDateTime = new Date(`${task.dueDate}T${task.dueTime}`);
+                const isOverdue = dueDateTime < new Date() && !task.completed;
+                
+                return `
+                <div class="session-item" style="${task.completed ? 'opacity: 0.6; background: #f0fdf4;' : ''} ${isOverdue ? 'border-left-color: #ef4444;' : ''}">
+                    <div class="item-info">
+                        <h3>
+                            ${task.completed ? '✅' : '⏳'} ${task.title}
+                            ${isOverdue ? '<span class="session-badge" style="background: #ef4444;">VENCIDA</span>' : ''}
+                        </h3>
+                        <p style="color: #6b7280; margin-top: 5px;">�� ${dueDateTime.toLocaleDateString('es-ES')} a las ${task.dueTime}</p>
+                        <p style="margin-top: 10px;">${task.content}</p>
+                    </div>
+                    <div class="item-actions">
+                        ${!task.completed ? `<button class="btn btn-success" onclick="completeTask('${task.id}')">�� Completar</button>` : ''}
+                        <button class="btn btn-danger" onclick="deleteTask('${task.id}')">🗑️</button>
+                    </div>
+                </div>
+            `}).join('');
+        }
+
+        function deleteReminder(id) {
+            reminders = reminders.filter(r => r.id !== id);
             saveLocalData();
-            renderNotes();
-            showToast('Nota eliminada', 'info');
+            renderReminders();
+            showToast('Recordatorio eliminado', 'info');
+        }
+
+        function deleteTask(id) {
+            tasks = tasks.filter(t => t.id !== id);
+            saveLocalData();
+            renderTasks();
+            showToast('Tarea eliminada', 'info');
+        }
+
+        function completeTask(id) {
+            const task = tasks.find(t => t.id === id);
+            if (task) {
+                task.completed = true;
+                saveLocalData();
+                renderTasks();
+                showToast('���Tarea completada! 🎉', 'success');
+            }
+        }
+
+        // 🔍 BUSCADOR AVANZADO
+        function performGlobalSearch() {
+            const query = document.getElementById('globalSearch').value.trim().toLowerCase();
+            const resultsContainer = document.getElementById('searchResults');
+
+            if (query.length < 2) {
+                resultsContainer.innerHTML = '';
+                return;
+            }
+
+            const results = [];
+
+            // Buscar en pacientes (por nombre o DNI)
+            patients.forEach(patient => {
+                if (patient.name.toLowerCase().includes(query) || 
+                    patient.dni.toLowerCase().includes(query)) {
+                    results.push({
+                        type: 'patient',
+                        data: patient,
+                        title: `👤 Paciente: ${patient.name}`,
+                        subtitle: `DNI: ${patient.dni} | Edad: ${patient.age} años`,
+                        action: () => showPatientDetail(patient.id)
+                    });
+                }
+            });
+
+            // Buscar en sesiones (por nombre de paciente o fecha)
+            sessions.forEach(session => {
+                const sessionDate = new Date(session.sessionDate || session.date);
+                const formattedDate = sessionDate.toLocaleDateString('es-ES');
+                
+                if (session.patientName.toLowerCase().includes(query) || 
+                    formattedDate.includes(query) ||
+                    session.sessionType?.toLowerCase().includes(query)) {
+                    const patient = patients.find(p => p.id === session.patientId);
+                    results.push({
+                        type: 'session',
+                        data: session,
+                        title: `🎙️ Sesión: ${session.patientName}`,
+                        subtitle: `Fecha: ${formattedDate} | Tipo: ${session.sessionType || 'Individual'}`,
+                        action: () => {
+                            if (patient) {
+                                showPatientDetail(session.patientId);
+                                showToast('Mostrando sesiones del paciente', 'info');
+                            } else {
+                                showToast('Paciente no encontrado', 'error');
+                            }
+                        }
+                    });
+                }
+            });
+
+            // Buscar en citas (por nombre de paciente o fecha)
+            appointments.forEach(apt => {
+                const aptDate = new Date(apt.date);
+                const formattedDate = aptDate.toLocaleDateString('es-ES');
+                
+                if (apt.patientName.toLowerCase().includes(query) || 
+                    formattedDate.includes(query)) {
+                    results.push({
+                        type: 'appointment',
+                        data: apt,
+                        title: `��� Cita: ${apt.patientName}`,
+                        subtitle: `Fecha: ${formattedDate} a las ${apt.time}`,
+                        action: () => {
+                            showSection('agenda');
+                            showToast('Mostrando agenda', 'info');
+                        }
+                    });
+                }
+            });
+
+            // Renderizar resultados
+            if (results.length === 0) {
+                resultsContainer.innerHTML = `
+                    <div class="no-results">
+                        <div class="icon">🔍</div>
+                        <p>No se encontraron resultados para "${query}"</p>
+                    </div>
+                `;
+            } else {
+                resultsContainer.innerHTML = `
+                    <div class="card">
+                        <h3 style="margin-bottom: 15px; color: #1f2937;">Resultados de búsqueda (${results.length})</h3>
+                        ${results.map(result => `
+                            <div class="patient-item" onclick="searchResultClick('${result.type}', '${result.data.id}')">
+                                <div class="item-info">
+                                    <h3>${result.title}</h3>
+                                    <p>${result.subtitle}</p>
+                                </div>
+                                <div class="item-actions">
+                                    <button class="btn btn-primary">Ver</button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+        }
+
+        function searchResultClick(type, id) {
+            if (type === 'patient') {
+                showPatientDetail(id);
+            } else if (type === 'session') {
+                const session = sessions.find(s => s.id === id);
+                if (session) {
+                    showPatientDetail(session.patientId);
+                }
+            } else if (type === 'appointment') {
+                showSection('agenda');
+            }
         }
 
         async function upgradePlan(newPlan) {
-            const planNames = { flexible: 'Flexible ⚡', premium: 'Premium 👑' };
-            const planPrices = { flexible: '$19.99', premium: '$49.99' };
-            
-            showToast(`Para actualizar al plan ${planNames[newPlan]} (${planPrices[newPlan]}/mes), contacta a soporte@psytape.com`, 'info');
+            showToast('Ya tienes el Plan Premium activado! 👑', 'success');
+        }
+
+        let currentReportSession = null;
+
+        function generateReport(sessionId) {
+            const session = sessions.find(s => s.id === sessionId);
+            if (!session) {
+                showToast('Sesión no encontrada', 'error');
+                return;
+            }
+
+            const patient = patients.find(p => p.id === session.patientId);
+            if (!patient) {
+                showToast('Paciente no encontrado', 'error');
+                return;
+            }
+
+            currentReportSession = session;
+
+            // Generar el contenido del informe
+            const reportHTML = `
+                <div style="font-family: Arial, sans-serif; color: #1f2937;">
+                    <div style="text-align: center; margin-bottom: 30px; border-bottom: 3px solid #2ECC71; padding-bottom: 20px;">
+                        <h1 style="color: #2ECC71; font-size: 2rem; margin-bottom: 5px;">INFORME DE SESIÓN CLÍNICA</h1>
+                        <p style="color: #6b7280; font-size: 0.9rem;">Generado automáticamente por PsyTape Premium</p>
+                    </div>
+
+                    <div style="margin-bottom: 25px;">
+                        <h3 style="color: #cf4c23; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px;">📋 DATOS DEL PACIENTE</h3>
+                        <table style="width: 100%; margin-top: 15px;">
+                            <tr>
+                                <td style="padding: 8px 0; font-weight: bold; width: 30%;">Nombre:</td>
+                                <td style="padding: 8px 0;">${patient.name}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px 0; font-weight: bold;">DNI:</td>
+                                <td style="padding: 8px 0;">${patient.dni}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px 0; font-weight: bold;">Edad:</td>
+                                <td style="padding: 8px 0;">${patient.age} años</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div style="margin-bottom: 25px;">
+                        <h3 style="color: #cf4c23; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px;">📅 DATOS DE LA SESIÓN</h3>
+                        <table style="width: 100%; margin-top: 15px;">
+                            <tr>
+                                <td style="padding: 8px 0; font-weight: bold; width: 30%;">Fecha:</td>
+                                <td style="padding: 8px 0;">${new Date(session.sessionDate || session.date).toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px 0; font-weight: bold;">Tipo de Sesión:</td>
+                                <td style="padding: 8px 0;">${session.sessionType || 'Individual'}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px 0; font-weight: bold;">Duración:</td>
+                                <td style="padding: 8px 0;">${session.duration}</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div style="margin-bottom: 25px;">
+                        <h3 style="color: #cf4c23; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px;">���️ TRANSCRIPCIÓN DE LA SESIÓN</h3>
+                        <div style="background: #f9fafb; padding: 20px; border-radius: 8px; margin-top: 15px; line-height: 1.8;">
+                            ${session.transcription || '[Sin transcripción disponible]'}
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 25px;">
+                        <h3 style="color: #cf4c23; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px;">��� ANÁLISIS DE INDICADORES EMOCIONALES</h3>
+                        <div style="background: #fef3c7; padding: 20px; border-radius: 8px; margin-top: 15px; border-left: 4px solid #fbbf24;">
+                            <p><strong>Nota:</strong> El análisis emocional profundo estará disponible en futuras actualizaciones de PsyTape Premium.</p>
+                            <p style="margin-top: 10px;">Estado emocional general detectado: <strong>En evaluación</strong></p>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 40px; padding-top: 20px; border-top: 2px solid #e5e7eb; text-align: center; color: #6b7280; font-size: 0.85rem;">
+                        <p>Informe generado el ${new Date().toLocaleDateString('es-ES')} a las ${new Date().toLocaleTimeString('es-ES')}</p>
+                        <p>PsyTape Premium - Sistema Profesional de Gestión Clínica</p>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('reportContent').innerHTML = reportHTML;
+            document.getElementById('reportModal').classList.add('active');
+            showToast('Informe generado exitosamente', 'success');
+        }
+
+        function downloadReport() {
+            if (!currentReportSession) {
+                showToast('Error al generar el informe', 'error');
+                return;
+            }
+
+            const patient = patients.find(p => p.id === currentReportSession.patientId);
+            const session = currentReportSession;
+
+            const reportText = `
+╔════════════════════════════════════════════════════════════╗
+║     INFORME DE SESIÓN CLÍNICA - PSYTAPE PREMIUM          ║
+╚════════════════════════════════════════════��═════════════��═���
+
+📋 DATOS DEL PACIENTE
+���━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Nombre:     ${patient.name}
+DNI:        ${patient.dni}
+Edad:       ${patient.age} años
+Email:      ${patient.email || 'N/A'}
+Teléfono:   ${patient.phone || 'N/A'}
+
+📅 DATOS DE LA SESIÓN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Fecha:           ${new Date(session.sessionDate || session.date).toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+Tipo de Sesión:  ${session.sessionType || 'Individual'}
+Duración:        ${session.duration}
+
+🎙️ TRANSCRIPCIÓN DE LA SESIÓN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+${session.transcription || '[Sin transcripción disponible]'}
+
+🧠 ANÁLISIS DE INDICADORES EMOCIONALES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━���━━━━━━��━━━━━━━━���━━━━━━
+Estado emocional general: En evaluación
+Notas: El análisis emocional profundo estará disponible en
+futuras actualizaciones de PsyTape Premium.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Informe generado el ${new Date().toLocaleDateString('es-ES')} 
+a las ${new Date().toLocaleTimeString('es-ES')}
+PsyTape Premium - Sistema Profesional de Gestión Clínica
+━━━━━━���━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            `;
+
+            const blob = new Blob([reportText], { type: 'text/plain;charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `INFORME_${patient.name.replace(/\s/g, '_')}_${new Date(session.sessionDate || session.date).toISOString().split('T')[0]}.txt`;
+            link.click();
+            showToast('Informe descargado exitosamente', 'success');
         }
 
         function showAuthError(message) {
@@ -2110,5 +3444,5 @@
 
         window.addEventListener('load', initApp);
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c57581f65789b23',t:'MTc2OTY3NTE4Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c57dcc796219b23',t:'MTc2OTY4MDYxNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
